@@ -19,20 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../../config.h"
 
-#define USE_SERIAL
+//#define USE_SERIAL
 
-#define EE_HANDS
+//#define EE_HANDS
 
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0
-#define MOUSEKEY_TIME_TO_MAX 60
-#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_TIME_TO_MAX 30
+#define MOUSEKEY_MAX_SPEED 10
 #define MOUSEKEY_WHEEL_DELAY 0
 
 /* RGB LED */
 #define RGB_DI_PIN B3
-#define RGBLED_NUM 10   // Number of LEDs
+#define RGBLED_NUM 10   // Number of LEDs in the board
 #define RGBLIGHT_ANIMATIONS
+
+// Added to avoid problems with Alt while changing layers
+#define PREVENT_STUCK_MODIFIERS
 
 #endif
