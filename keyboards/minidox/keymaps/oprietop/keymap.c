@@ -51,6 +51,7 @@ enum custom_keycodes {
 #define MOVE MO(_MOVE)
 #define RAISE MO(_RAISE)
 #define ADJUST MO(_ADJUST)
+// OSM(MOD_LSFT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -70,13 +71,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
 [_MODDH] = LAYOUT( \
-  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,         KC_J,    KC_L,  KC_U,    KC_Y,    KC_SCLN, \
-  KC_A,    KC_R,    KC_S,   KC_T,   KC_G,         KC_M,    KC_N,  KC_E,    KC_I,    KC_O,    \
-  KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,         KC_K,    KC_H,  KC_COMM, KC_DOT,  KC_SLSH, \
-                    ALTENT, MOVTAB, CTLSPC,       SFTBSPC, RAIDEL, KC_LGUI                   \
+  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,         KC_J,    KC_L,   KC_U,    KC_Y,    KC_SCLN, \
+  KC_A,    KC_R,    KC_S,   KC_T,   KC_G,         KC_M,    KC_N,   KC_E,    KC_I,    KC_O,    \
+  KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,         KC_K,    KC_H,   KC_COMM, KC_DOT,  KC_SLSH, \
+                 KC_LCTL, LOWTAB, KC_MOSP,        SFTBSPC, RAIDEL, KC_LGUI                    \
 ),
 
-/* Qwertyii
+/* Qwerty
  *
  * ,----------------------------------.           ,----------------------------------.
  * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
@@ -95,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_Q,    KC_W,    KC_E,    KC_R,  KC_T,         KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,    \
   KC_A,    KC_S,    KC_D,    KC_F,  KC_G,         KC_H,    KC_J,  KC_K,    KC_L,    KC_SCLN, \
   KC_Z,    KC_X,    KC_C,    KC_V,  KC_B,         KC_N,    KC_M,  KC_COMM, KC_DOT,  KC_SLSH, \
-                    KC_LCTL, LOWER, KC_MOSP,      KC_BSPC, RAISE, OSM(MOD_LSFT)              \
+                 KC_LCTL, LOWTAB, KC_MOSP,        KC_BSPC, RAIDEL, OSM(MOD_LSFT) \
 ),
 
 
@@ -109,7 +110,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl | Shift| GUI  | Alt  |  Del |           |      |      |   `  |   \  |   '  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |      |      |
+ *                  |      |ADJUST|      |    |      |      |      |
  *                  `-------------|      |    |      |------+------.
  *                                |      |    |      |
  *                                `------'    `------'
@@ -131,7 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  Caps| MUTE | VOL- | VOL+ | MEDIA|           |      |      |   ~  |   |  |   "  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |      |  Del |
+ *                  |      |      |      |    |      |ADJUST|      |
  *                  `-------------|      |    | Enter|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
@@ -140,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, \
   KC_ESC,  KC_MPLY, KC_MPRV, KC_MNXT, KC_MSTP,      _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, \
   KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, KC_MSEL,      _______, _______, KC_TILD, KC_PIPE,  KC_DQT, \
-                    _______, _______, _______,      _______, _______, _______                     \
+                    _______, _______, _______,      KC_ENT,  ADJUST,  _______                    \
 ),
 
 /* Movement
@@ -153,16 +154,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl | Shift| GUI  | Alt  |  Del |           | HOME |  END | LEFT | DOWN | RGTH |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |VIMOVE|      |    |      |      |  Del |
+ *                  |      |VIMOVE|      |    |      |      |      |
  *                  `-------------|      |    | Enter|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
  */
-[_MOVE] = LAYOUT(
+[_MOVE] = LAYOUT( \
   KC_ESC,  KC_COPY, KC_WH_U, KC_CUT,  KC_PST,       KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_PGUP, \
   KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,       KC_MS_L, KC_MS_D, KC_MS_R, KC_UP,   KC_PGDN, \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
-                    _______, _______, _______,      _______, ADJUST,  _______                     \
+                    _______, _______, _______,      KC_ENT,  _______, _______                    \
 ),
 
 /* VIM Movement (Testing)
@@ -175,16 +176,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl | Shift| GUI  | Alt  | Del  |           |      | HOME | PGDN | PGUP | END  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |      |  Del |
- *                  `-------------|      |    | Enter|------+------.
+ *                  |      |      |      |    |      |      |      |
+ *                  `-------------|      |    |      |------+------.
  *                                |      |    |      |
  *                                `------'    `------'
  */
-[_VIMOVE] = LAYOUT(
+[_VIMOVE] = LAYOUT( \
   KC_ESC,  KC_CUT,  KC_CPY,  KC_PST,  _______,      _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, \
   KC_TAB,  KC_BTN1, KC_BTN3, KC_BTN2, KC_INS,       _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  \
-                    _______, _______, _______,      _______, _______, _______                     \
+                    _______, _______, _______,      _______, _______, _______                    \
 ),
 
 /* Adjust (Lower + Raise)
