@@ -40,6 +40,18 @@ enum custom_keycodes {
 #define KC_CUT LSFT(KC_DEL)
 #define KC_PST RSFT(KC_INS)
 
+
+#define ALTENT ALT_T(KC_ENT)
+#define LOWTAB LT(_LOWER, KC_TAB)
+#define MOVTAB LT(_MOVE, KC_TAB)
+#define CTLSPC CTL_T(KC_SPC)
+#define SFTBSPC SFT_T(KC_BSPC)
+#define RAIDEL LT(_RAISE, KC_DEL)
+
+#define MOVE MO(_MOVE)
+#define RAISE MO(_RAISE)
+#define ADJUST MO(_ADJUST)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Colemak Mod-DH
@@ -58,13 +70,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
 [_MODDH] = LAYOUT( \
-  KC_Q,    KC_W,    KC_F,    KC_P,  KC_B,         KC_J,    KC_L,  KC_U,    KC_Y,    KC_SCLN, \
-  KC_A,    KC_R,    KC_S,    KC_T,  KC_G,         KC_M,    KC_N,  KC_E,    KC_I,    KC_O,    \
-  KC_Z,    KC_X,    KC_C,    KC_D,  KC_V,         KC_K,    KC_H,  KC_COMM, KC_DOT,  KC_SLSH, \
-                    KC_LCTL, LOWER, KC_MOSP,      KC_BSPC, RAISE, OSM(MOD_LSFT)              \
+  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,         KC_J,    KC_L,  KC_U,    KC_Y,    KC_SCLN, \
+  KC_A,    KC_R,    KC_S,   KC_T,   KC_G,         KC_M,    KC_N,  KC_E,    KC_I,    KC_O,    \
+  KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,         KC_K,    KC_H,  KC_COMM, KC_DOT,  KC_SLSH, \
+                    ALTENT, MOVTAB, CTLSPC,       SFTBSPC, RAIDEL, KC_LGUI                   \
 ),
 
-/* Qwerty
+/* Qwertyii
  *
  * ,----------------------------------.           ,----------------------------------.
  * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
@@ -106,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     \
   KC_TAB,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,      _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,  \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       _______, _______, KC_GRV,  KC_BSLS,  KC_QUOT, \
-                    _______, _______, _______,      _______, _______, _______                     \
+                    _______, ADJUST,  _______,      _______, _______,  _______                    \
 ),
 
 /* Lower
@@ -128,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, \
   KC_ESC,  KC_MPLY, KC_MPRV, KC_MNXT, KC_MSTP,      _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, \
   KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, KC_MSEL,      _______, _______, KC_TILD, KC_PIPE,  KC_DQT, \
-                    _______, _______, _______,      KC_ENT,  _______, KC_DEL                     \
+                    _______, _______, _______,      _______, _______, _______                     \
 ),
 
 /* Movement
@@ -150,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,  KC_COPY, KC_WH_U, KC_CUT,  KC_PST,       KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_PGUP, \
   KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,       KC_MS_L, KC_MS_D, KC_MS_R, KC_UP,   KC_PGDN, \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
-                    _______, VIMOVE,  _______,      KC_ENT,  _______, KC_DEL                     \
+                    _______, _______, _______,      _______, ADJUST,  _______                     \
 ),
 
 /* VIM Movement (Testing)
@@ -172,7 +184,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,  KC_CUT,  KC_CPY,  KC_PST,  _______,      _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, \
   KC_TAB,  KC_BTN1, KC_BTN3, KC_BTN2, KC_INS,       _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  \
-                    _______, _______, _______,      KC_ENT,  _______, KC_DEL                     \
+                    _______, _______, _______,      _______, _______, _______                     \
 ),
 
 /* Adjust (Lower + Raise)
@@ -199,9 +211,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
-	rgblight_enable();
-	rgblight_sethsv(330, 255, 255); // Red Magenta
-	rgblight_mode(3);
+    rgblight_enable();
+    rgblight_sethsv(340, 255, 255); // Red Magenta
+    rgblight_mode(3);
 };
 
 void persistant_default_layer_set(uint16_t default_layer) {
@@ -222,50 +234,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         persistant_default_layer_set(1UL<<_QWERTY);
         SEND_STRING("\nLayout changed to QWERTY.\n");
-      }
-      return false;
-      break;
-    case LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case MOVE:
-      if (record->event.pressed) {
-        layer_on(_MOVE);
-      } else {
-        layer_off(_MOVE);
-      }
-      return false;
-      break;
-    case VIMOVE:
-      if (record->event.pressed) {
-        layer_on(_VIMOVE);
-      } else {
-        layer_off(_VIMOVE);
-      }
-      return false;
-      break;
-    case ADJUST:
-      if (record->event.pressed) {
-        layer_on(_ADJUST);
-      } else {
-        layer_off(_ADJUST);
       }
       return false;
       break;

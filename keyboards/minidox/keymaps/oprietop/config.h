@@ -38,4 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Added to avoid problems with Alt while changing layers
 #define PREVENT_STUCK_MODIFIERS
 
+#define IGNORE_MOD_TAP_INTERRUPT
+
 #endif

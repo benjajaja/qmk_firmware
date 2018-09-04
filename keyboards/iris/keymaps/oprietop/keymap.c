@@ -26,7 +26,7 @@ enum custom_keycodes {
 #define KC_BL_S BL_STEP
 #define KC_BL_B BL_BRTG
 #define KC_DBUG DEBUG
-  
+
 // MOmentary layer switch
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
@@ -148,28 +148,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         set_single_persistent_default_layer(_COLEMDH);
         SEND_STRING(" Layout changed to COLEMAK MOD DH ");
-      }
-      return false;
-      break;
-    case LODE:
-      SEND_STRING("U");
-      if (record->event.pressed) {
-        backlight_increase();
-        SEND_STRING("U");
-      } else {
-        backlight_decrease();
-        SEND_STRING("D");
-      }
-      return false;
-      break;
-    case RABS:
-      SEND_STRING("D");
-      if (record->event.pressed) {
-        SEND_STRING("U");
-        backlight_increase();
-      } else {
-        backlight_decrease();
-        SEND_STRING("D");
       }
       return false;
       break;
