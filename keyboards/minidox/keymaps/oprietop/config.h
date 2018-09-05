@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Added to avoid problems with Alt while changing layers
 #define PREVENT_STUCK_MODIFIERS
 
-#define IGNORE_MOD_TAP_INTERRUPT
+// https://github.com/qmk/qmk_firmware/blob/481797f92f2164d06a948eba9bbb91616d378e68/docs/Key-Functions.md
+#define PERMISSIVE_HOLD
 
 #endif

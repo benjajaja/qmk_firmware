@@ -13,8 +13,8 @@ enum custom_keycodes {
   COLEMDH,
   LOWER,
   RAISE,
-  LODE,
-  RABS,
+  MOVE,
+  ADJUST,
 };
 
 #define KC_     KC_TRNS
@@ -22,6 +22,7 @@ enum custom_keycodes {
 #define KC_COLH COLEMDH
 #define KC_LOWR LOWER
 #define KC_RASE RAISE
+#define KC_ADJU ADJUST
 #define KC_RST  RESET
 #define KC_BL_S BL_STEP
 #define KC_BL_B BL_BRTG
@@ -30,6 +31,10 @@ enum custom_keycodes {
 // MOmentary layer switch
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
+#define ADJUST MO(_RAISE)
+
+// Shift when held, Backspace  when tapped
+#define KC_LSBS LSFT_T(KC_BSPC)
 
 // Shift when held, Enter when tapped
 #define KC_LSEN LSFT_T(KC_ENT)
@@ -58,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSEN, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RALT,
+     LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                        LGUI,LODE,LSSP,         RSEN,RABS,LALT
   //                  `----+----+----'        `----+----+----'
@@ -70,9 +75,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,QUOT,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSEN, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
+     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RALT,
+     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                        LGUI,LODE,LSSP,         RSEN,RABS,LALT
   //                  `----+----+----'        `----+----+----'
@@ -80,29 +85,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     F12 , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
+         , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,PGUP,BTN1,BTN3,BTN2,LPRN,               RPRN,BTN1,MS_U,BTN2,BTN3,PIPE,
+         ,F11 ,F12 ,WH_U,CUT ,PST ,               BTN1,MS_U,BTN2,BTN3,PGUP,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,PGDN,LEFT,RGHT, UP ,LBRC,               RBRC,MS_L,MS_D,MS_R, UP ,    ,
+         ,HOME,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,INS ,HOME,END ,DOWN,LCBR, CPY,     PST ,RCBR,PLUS,MINS,LEFT,DOWN,RGHT,
+         ,END ,ACL0,ACL1,ACL2,DEL ,CPY ,     PST ,HOME,END ,LEFT,DOWN,RGHT,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,    ,             ,    ,
+                           ,    ,    ,             ,ADJU,
   //                  `----+----+----'        `----+----+----'
   ),
 
+
   [_RAISE] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     F12 , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
+         , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,BSLS,
+         ,F11 ,F12 ,MPRV,MNXT,VOLU,               TILD,UNDS,PLUS,LCBR,RCBR,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,MPRV,MNXT,VOLU,PGUP,UNDS,               EQL ,HOME,INS ,ESC ,PGUP,    ,
+         ,MPRV,MNXT,MSTP,MPLY,VOLD,               GRV ,MINS,EQL ,LBRC,RBRC,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     MUTE,MSTP,MPLY,VOLD,PGDN,MINS, CPY,     PST ,PLUS,END ,DEL ,HOME,PGDN,END ,
+         ,MUTE,    ,    ,    ,    ,CPY ,     PST ,BSLS,PIPE,    ,    ,    ,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,    ,             ,    ,
+                           ,ADJU,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -122,18 +128,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-// Handle Tri layer (Lower + Raise) with LT support
-// https://github.com/msandiford/qmk_firmware/commit/de5b55a6c5e14bf54d77db6ac5a7d8c5cb2c9d7c
-#define LOWER_AND_RAISE ((1UL << _LOWER) | (1UL << _RAISE))
-
-uint32_t layer_state_set_kb(uint32_t state) {
-  if ((state & LOWER_AND_RAISE) == LOWER_AND_RAISE) {
-    state |= 1UL << _ADJUST;
-  } else {
-    state &= ~(1UL << _ADJUST);
-  }
-  return state;
-}
+void persistant_default_layer_set(uint16_t default_layer) {
+  eeconfig_update_default_layer(default_layer);
+  default_layer_set(default_layer);
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -154,4 +152,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-

@@ -42,6 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define AUTO_SHIFT_TIMEOUT 175
 
 // https://docs.qmk.fm/#/feature_tap_dance
-#define TAPPING_TERM 175
+// #define TAPPING_TERM 175
 
 #endif

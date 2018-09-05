@@ -11,7 +11,6 @@ extern keymap_config_t keymap_config;
 #define _LOWER 2
 #define _RAISE 3
 #define _MOVE 4
-#define _VIMOVE 5
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -20,7 +19,6 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   MOVE,
-  VIMOVE,
   ADJUST,
 };
 
@@ -47,11 +45,12 @@ enum custom_keycodes {
 #define CTLSPC CTL_T(KC_SPC)
 #define SFTBSPC SFT_T(KC_BSPC)
 #define RAIDEL LT(_RAISE, KC_DEL)
+#define OSMSFT OSM(MOD_LSFT)
 
 #define MOVE MO(_MOVE)
+#define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define ADJUST MO(_ADJUST)
-// OSM(MOD_LSFT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -71,10 +70,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
 [_MODDH] = LAYOUT( \
-  KC_Q,    KC_W,    KC_F,   KC_P,   KC_B,         KC_J,    KC_L,   KC_U,    KC_Y,    KC_SCLN, \
-  KC_A,    KC_R,    KC_S,   KC_T,   KC_G,         KC_M,    KC_N,   KC_E,    KC_I,    KC_O,    \
-  KC_Z,    KC_X,    KC_C,   KC_D,   KC_V,         KC_K,    KC_H,   KC_COMM, KC_DOT,  KC_SLSH, \
-                 KC_LCTL, LOWTAB, KC_MOSP,        SFTBSPC, RAIDEL, KC_LGUI                    \
+  KC_Q,    KC_W,    KC_F, KC_P,   KC_B,         KC_J,    KC_L,   KC_U,    KC_Y,    KC_SCLN, \
+  KC_A,    KC_R,    KC_S, KC_T,   KC_G,         KC_M,    KC_N,   KC_E,    KC_I,    KC_O,    \
+  KC_Z,    KC_X,    KC_C, KC_D,   KC_V,         KC_K,    KC_H,   KC_COMM, KC_DOT,  KC_SLSH, \
+                 KC_LCTL, LOWTAB, KC_MOSP,      SFTBSPC, RAIDEL, KC_LGUI                    \
 ),
 
 /* Qwerty
@@ -107,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  Tab | Left | Down |  Up  | Right|           |      |   -  |   =  |   [  |   ]  |
  * |------+------+------+------+------|           |------+------+------+------+------|
- * | Ctrl | Shift| GUI  | Alt  |  Del |           |      |      |   `  |   \  |   '  |
+ * | Shift| GUI  | Alt  |  Ins | Del  |           |      |      |   `  |   \  |   '  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
  *                  |      |ADJUST|      |    |      |      |      |
@@ -116,10 +115,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                `------'    `------'
  */
 [_RAISE] = LAYOUT( \
-  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     \
-  KC_TAB,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,      _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,  \
-  KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       _______, _______, KC_GRV,  KC_BSLS,  KC_QUOT, \
-                    _______, ADJUST,  _______,      _______, _______,  _______                    \
+  KC_1,   KC_2,    KC_3,    KC_4,    KC_5,         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     \
+  KC_TAB, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,      _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,  \
+  OSMSFT, KC_LGUI, KC_LALT, KC_INS,  KC_DEL,       _______, _______, KC_GRV,  KC_BSLS,  KC_QUOT, \
+                   _______, ADJUST,  _______,      _______, _______,  _______                    \
 ),
 
 /* Lower
@@ -132,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  Caps| MUTE | VOL- | VOL+ | MEDIA|           |      |      |   ~  |   |  |   "  |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |ADJUST|      |
+ *                  |      |      |      |    |      |ADJUST| Del  |
  *                  `-------------|      |    | Enter|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
@@ -141,20 +140,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, \
   KC_ESC,  KC_MPLY, KC_MPRV, KC_MNXT, KC_MSTP,      _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, \
   KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, KC_MSEL,      _______, _______, KC_TILD, KC_PIPE,  KC_DQT, \
-                    _______, _______, _______,      KC_ENT,  ADJUST,  _______                    \
+                    _______, _______, _______,      KC_ENT,  ADJUST, _______                      \
 ),
 
 /* Movement
  *
  * ,----------------------------------.           ,----------------------------------.
- * |  Esc | COPY | WH_U | Cut  | Paste|           |  M_1 |  M_U |  M_2 |  M_3 | PGUP |
+ * |  Esc | Copy | WH_U | Cut  | Paste|           |  M_1 |  M_U |  M_2 |  M_3 | PGUP |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * |  Tab | WH_L | WH_D | WH_R |  Ins |           |  M_L |  M_D |  M_R |  UP  | PGDN |
  * |------+------+------+------+------|           |------+------+------+------+------|
  * | Ctrl | Shift| GUI  | Alt  |  Del |           | HOME |  END | LEFT | DOWN | RGTH |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |VIMOVE|      |    |      |      |      |
+ *                  |      |      |      |    |      |      |      |
  *                  `-------------|      |    | Enter|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
@@ -162,30 +161,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MOVE] = LAYOUT( \
   KC_ESC,  KC_COPY, KC_WH_U, KC_CUT,  KC_PST,       KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_PGUP, \
   KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,       KC_MS_L, KC_MS_D, KC_MS_R, KC_UP,   KC_PGDN, \
-  KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
+  KC_LCTL, OSMSFT,  KC_LGUI, KC_LALT, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
                     _______, _______, _______,      KC_ENT,  _______, _______                    \
-),
-
-/* VIM Movement (Testing)
- *
- * ,----------------------------------.           ,----------------------------------.
- * |  Esc |  CUT | COPY | PASTE|      |           |      | M_L  |  M_D |  M_U | M_L  |
- * |------+------+------+------+------|           |------+------+------+------+------|
- * |  Tab |  M_1 |  M_3 | M_2  | Ins  |           |      | LEFT | DOWN |  UP  | LEFT |
- * |------+------+------+------+------|           |------+------+------+------+------|
- * | Ctrl | Shift| GUI  | Alt  | Del  |           |      | HOME | PGDN | PGUP | END  |
- * `----------------------------------'           `----------------------------------'
- *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |      |      |
- *                  `-------------|      |    |      |------+------.
- *                                |      |    |      |
- *                                `------'    `------'
- */
-[_VIMOVE] = LAYOUT( \
-  KC_ESC,  KC_CUT,  KC_CPY,  KC_PST,  _______,      _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, \
-  KC_TAB,  KC_BTN1, KC_BTN3, KC_BTN2, KC_INS,       _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
-  KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, KC_DEL,       _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  \
-                    _______, _______, _______,      _______, _______, _______                    \
 ),
 
 /* Adjust (Lower + Raise)
