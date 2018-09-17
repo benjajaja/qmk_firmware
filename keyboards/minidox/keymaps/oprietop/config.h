@@ -19,10 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../../config.h"
 
-//#define USE_SERIAL
-
-//#define EE_HANDS
-
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0
@@ -35,10 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLED_NUM 10   // Number of LEDs in the board
 #define RGBLIGHT_ANIMATIONS
 
-// Added to avoid problems with Alt while changing layers
-#define PREVENT_STUCK_MODIFIERS
-
-// https://github.com/qmk/qmk_firmware/blob/481797f92f2164d06a948eba9bbb91616d378e68/docs/Key-Functions.md
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define PERMISSIVE_HOLD
+#define PREVENT_STUCK_MODIFIERS
+#define IGNORE_MOD_TAP_INTERRUPT
+
+#ifdef TAPPING_TERM
+#undef TAPPING_TERM
+#endif // TAPPING_TERM
+#define TAPPING_TERM 100
 
 #endif

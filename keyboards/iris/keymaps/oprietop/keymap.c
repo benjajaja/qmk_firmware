@@ -11,30 +11,20 @@ extern keymap_config_t keymap_config;
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   COLEMDH,
-  LOWER,
-  RAISE,
-  MOVE,
-  ADJUST,
 };
 
 #define KC_     KC_TRNS
 #define KC_QWER QWERTY
 #define KC_COLH COLEMDH
-#define KC_LOWR LOWER
-#define KC_RASE RAISE
-#define KC_ADJU ADJUST
+#define KC_ADJU MO(_ADJUST)
 #define KC_RST  RESET
 #define KC_BL_S BL_STEP
 #define KC_BL_B BL_BRTG
 #define KC_DBUG DEBUG
 
-// MOmentary layer switch
-#define LOWER MO(_LOWER)
-#define RAISE MO(_RAISE)
-#define ADJUST MO(_RAISE)
-
 // Shift when held, Backspace  when tapped
 #define KC_LSBS LSFT_T(KC_BSPC)
+#define KC_RSBS RSFT_T(KC_BSPC)
 
 // Shift when held, Enter when tapped
 #define KC_LSEN LSFT_T(KC_ENT)
@@ -42,11 +32,33 @@ enum custom_keycodes {
 
 // Shift when held, Space when tapped
 #define KC_LSSP LSFT_T(KC_SPC)
+
 // Lower when held, Delete when tapped
 #define KC_LODE LT(_LOWER, KC_DEL)
 
+// Lower when held, Space when tapped
+#define KC_LOSP LT(_LOWER, KC_SPC)
+
+// Lower when held, Tab when tapped
+#define KC_LOTA LT(_LOWER, KC_TAB)
+
+// Shift when held, Tab when tapped
+#define KC_LSTA LSFT_T(KC_TAB)
+
+// Shift when held, Tab when tapped
+#define KC_RSDE RSFT_T(KC_DEL)
+
 // Raise when held, Backspace when tapped
 #define KC_RABS LT(_RAISE, KC_BSPC)
+
+// Raise when held, Enter  when tapped
+#define KC_RAEN LT(_RAISE, KC_ENT)
+
+// Raise when held, Delete when tapped
+#define KC_RADE LT(_RAISE, KC_DEL)
+
+// Shift  when held, Backspace when tapped
+#define KC_SHBS LT(_RAISE, KC_BSPC)
 
 // Cut/Paste shortcuts
 #define KC_CPY LCTL(KC_INS)
@@ -61,11 +73,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,QUOT,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSEN, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
+     LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RCTL,
+     LCTL, Z  , X  , C  , V  , B  ,HOME,     ENT , N  , M  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LODE,LSSP,         RSEN,RABS,LALT
+                       LGUI,LSTA,LOSP,         RABS,RSDE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -77,9 +89,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
+     LCTL, Z  , X  , C  , D  , V  ,HOME,     ENT , K  , H  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LODE,LSSP,         RSEN,RABS,LALT
+                       LGUI,LSTA,LOSP,         RABS,RSDE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -91,12 +103,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,HOME,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,END ,ACL0,ACL1,ACL2,DEL ,CPY ,     PST ,HOME,END ,LEFT,DOWN,RGHT,    ,
+         ,END ,ACL0,ACL1,ACL2,DEL ,CPY ,     BSPC,HOME,END ,LEFT,DOWN,RGHT,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,    ,             ,ADJU,
+                           ,    ,    ,         ENT ,    ,
   //                  `----+----+----'        `----+----+----'
   ),
-
 
   [_RAISE] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.

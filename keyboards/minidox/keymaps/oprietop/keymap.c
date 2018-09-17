@@ -38,10 +38,8 @@ enum custom_keycodes {
 #define KC_CUT LSFT(KC_DEL)
 #define KC_PST RSFT(KC_INS)
 
-
 #define ALTENT ALT_T(KC_ENT)
 #define LOWTAB LT(_LOWER, KC_TAB)
-#define MOVTAB LT(_MOVE, KC_TAB)
 #define CTLSPC CTL_T(KC_SPC)
 #define SFTBSPC SFT_T(KC_BSPC)
 #define RAIDEL LT(_RAISE, KC_DEL)
@@ -140,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, \
   KC_ESC,  KC_MPLY, KC_MPRV, KC_MNXT, KC_MSTP,      _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, \
   KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, KC_MSEL,      _______, _______, KC_TILD, KC_PIPE,  KC_DQT, \
-                    _______, _______, _______,      KC_ENT,  ADJUST, _______                      \
+                    _______, _______, _______,      KC_ENT,  ADJUST, KC_DEL                      \
 ),
 
 /* Movement
@@ -153,7 +151,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl | Shift| GUI  | Alt  |  Del |           | HOME |  END | LEFT | DOWN | RGTH |
  * `----------------------------------'           `----------------------------------'
  *                  ,--------------------.    ,------,-------------.
- *                  |      |      |      |    |      |      |      |
+ *                  |      |      |      |    |      |Space |      |
  *                  `-------------|      |    | Enter|------+------.
  *                                |      |    |      |
  *                                `------'    `------'
@@ -162,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,  KC_COPY, KC_WH_U, KC_CUT,  KC_PST,       KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_PGUP, \
   KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,       KC_MS_L, KC_MS_D, KC_MS_R, KC_UP,   KC_PGDN, \
   KC_LCTL, OSMSFT,  KC_LGUI, KC_LALT, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
-                    _______, _______, _______,      KC_ENT,  _______, _______                    \
+                    _______, _______, _______,      KC_ENT,  KC_SPC,  _______                   \
 ),
 
 /* Adjust (Lower + Raise)
