@@ -15,33 +15,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
+/* Use I2C or Serial, not both */
+
+#define USE_SERIAL
 
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 
-#include "config_common.h"
+#define USE_SERIAL
+//#define USE_I2C
 
-//#define USE_SERIAL
-#define USE_I2C
 #define MASTER_LEFT
-//#define MASTER_RIGHT
 //#define EE_HANDS
 
 //#define BACKLIGHT_BREATHING
 
-#define MOUSEKEY_INTERVAL 20
+/* Mouse Settings */
+#define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0
-#define MOUSEKEY_TIME_TO_MAX 60
-#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_TIME_TO_MAX 30
+#define MOUSEKEY_MAX_SPEED 10
 #define MOUSEKEY_WHEEL_DELAY 0
 
-// https://github.com/qmk/qmk_firmware/blob/481797f92f2164d06a948eba9bbb91616d378e68/docs/Key-Functions.md
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define PERMISSIVE_HOLD
+#define PREVENT_STUCK_MODIFIERS
+#define IGNORE_MOD_TAP_INTERRUPT
 
-// https://docs.qmk.fm/#/feature_auto_shif
-//#define AUTO_SHIFT_TIMEOUT 175
-
-// https://docs.qmk.fm/#/feature_tap_dance
-// #define TAPPING_TERM 175
+#ifdef TAPPING_TERM
+#undef TAPPING_TERM
+#endif // TAPPING_TERM
+#define TAPPING_TERM 100
 
 #endif
+
