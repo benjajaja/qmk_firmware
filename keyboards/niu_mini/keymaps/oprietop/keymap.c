@@ -25,9 +25,8 @@ enum layers {
   _DVORAK,
   _LOWER,
   _RAISE,
-  _ADJUST,
   _FUNCT,
-  _FUNCT2
+  _ADJUST,
 };
 
 enum keycodes {
@@ -38,8 +37,7 @@ enum keycodes {
 };
 
 // MOmentary layer switch
-#define LOWER MO(_LOWER)
-#define RAISE MO(_RAISE)
+#define ADJUST MO(_ADJUST)
 
 // Layer Tap. Switch to <left> layer when held of tap <right>
 #define LOSPC LT(_LOWER, KC_BSPC)
@@ -49,6 +47,11 @@ enum keycodes {
 // Shift when held, Enter when tapped
 #define LSENT LSFT_T(KC_ENT)
 #define RSENT RSFT_T(KC_ENT)
+
+// Cut/Paste shortcuts
+#define KC_CPY LCTL(KC_INS)
+#define KC_CUT LSFT(KC_DEL)
+#define KC_PST RSFT(KC_INS)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Qwerty
@@ -138,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LPRN, KC_RPRN, _______,
   KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS,    KC_PLUS,    KC_LCBR, KC_RCBR, KC_PIPE,
   _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_DEL,  KC_PGUP, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______,    KC_INS,     KC_HOME, KC_PGDN, KC_END
+  _______, _______, _______, _______, _______, _______, _______, ADJUST,     KC_INS,     KC_HOME, KC_PGDN, KC_END
 ),
 
 /* Raise
@@ -153,10 +156,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_ortho_4x12(
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_DEL,  KC_PGUP, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,   KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,  KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
+  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10, KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_DEL,  KC_PGUP, _______,
+  _______, _______, _______, _______, ADJUST, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+),
+
+[_FUNCT] = LAYOUT_ortho_4x12(
+  _______, _______, _______, _______, KC_PST,  _______, KC_ACL0, KC_ACL1, KC_ACL2, KC_BTN3, KC_WH_U, KC_BTN4,
+  _______, _______, _______, _______, KC_CUT,  _______, _______, _______, _______, KC_WH_L, KC_WH_D, KC_WH_R,
+  _______, _______, _______, _______, KC_CPY,  _______, _______, _______, _______, KC_BTN1, KC_MS_U, KC_BTN2,
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_L, KC_MS_D, KC_MS_R
 ),
 
 /* Adjust (Lower + Raise)
@@ -171,45 +181,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_ortho_4x12(
-  RESET,   DEBUG,   _______, _______, _______, _______,   _______,   TERM_ON, TERM_OFF,_______, _______, KC_DEL,
-  _______, _______,  MU_MOD,  AU_ON,   AU_OFF,  AG_NORM,  AG_SWAP,   QWERTY,  COLEMAK, DVORAK,  COLEMDH, _______,
-  KC_ASTG, MUV_DE,   MUV_IN,  MU_ON,   MU_OFF,  MI_ON,    MI_OFF,    _______, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD,
-  BL_TOGG, BL_STEP, _______, _______, _______, S(KC_INS), S(KC_INS), _______, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD
+  RESET,   DEBUG,   _______, _______, _______, _______, _______, TERM_ON, TERM_OFF, _______, _______, KC_DEL,
+  _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, QWERTY,  COLEMAK,  DVORAK,  COLEMDH, _______,
+  KC_ASTG, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, RGB_SAI,  RGB_SAD, RGB_VAI, RGB_VAD,
+  BL_TOGG, BL_STEP, _______, _______, _______, _______, _______, _______, RGB_TOG,  RGB_MOD, RGB_HUI, RGB_HUD
 ),
 
-[_FUNCT] = LAYOUT_ortho_4x12(
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_ACL0, KC_ACL1, KC_ACL2,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BTN3, KC_BTN4, KC_BTN5,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BTN1, KC_MS_U, KC_BTN2,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_L, KC_MS_D, KC_MS_R
-),
-
-[_FUNCT2] = LAYOUT_ortho_4x12(
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_ACL0, KC_ACL1, KC_ACL2,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BTN3, KC_BTN4, KC_BTN5,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BTN1, KC_WH_U, KC_BTN2,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_WH_L, KC_WH_D, KC_WH_R
-)
 };
 
-// Handle Tri layer (Lower + Raise) with LT support
-// https://github.com/msandiford/qmk_firmware/commit/de5b55a6c5e14bf54d77db6ac5a7d8c5cb2c9d7c#diff-013b1ab0d16580ef9aaf2259776a78cd
-#define LOWER_AND_RAISE ((1UL << _LOWER) | (1UL << _RAISE))
-#define FUNCT_AND_LOWER ((1UL << _FUNCT) | (1UL << _LOWER))
-
-uint32_t layer_state_set_kb(uint32_t state) {
-  if ((state & LOWER_AND_RAISE) == LOWER_AND_RAISE) {
-    state |= 1UL << _ADJUST;
-  } else {
-    state &= ~(1UL << _ADJUST);
-  }
-  if ((state & FUNCT_AND_LOWER) == FUNCT_AND_LOWER) {
-    state |= 1UL << _FUNCT2;
-  } else {
-    state &= ~(1UL << _FUNCT2);
-  }
-  return state;
-}
+// Runs boot tasks for keyboard
+void matrix_init_user(void) {
+        rgblight_enable();
+        rgblight_sethsv(150, 255, 255); // Spring Green
+        rgblight_mode(13); // Swirling rainbow
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {

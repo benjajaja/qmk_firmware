@@ -10,13 +10,17 @@
 #define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
 
-// https://github.com/qmk/qmk_firmware/blob/481797f92f2164d06a948eba9bbb91616d378e68/docs/Key-Functions.md
-#define PERMISSIVE_HOLD
-
 // https://docs.qmk.fm/#/feature_auto_shif
-#define AUTO_SHIFT_TIMEOUT 175
+//define AUTO_SHIFT_TIMEOUT 175
 
-// https://docs.qmk.fm/#/feature_tap_dance
-#define TAPPING_TERM 175
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
+#define PERMISSIVE_HOLD
+#define PREVENT_STUCK_MODIFIERS
+#define IGNORE_MOD_TAP_INTERRUPT
+
+#ifdef TAPPING_TERM
+#undef TAPPING_TERM
+#endif // TAPPING_TERM
+#define TAPPING_TERM 100
 
 #endif
