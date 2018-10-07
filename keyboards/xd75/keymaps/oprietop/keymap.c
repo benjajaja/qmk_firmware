@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  },
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        | F1     | F2     | F3     | F4     | F5     | F11    | RESET  | F12    | F6     | F7     | F8     | F9     | F10    |        |        |
+ * |        | F1     | F2     | F3     | F4     | F5     | F11    | RESET  | F12    | F6     | F7     | F8     | F9     | F10    |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        | WWW    | MYCOMP | CALC   | MAIL   | RGB_TOG| M BTN3 | MW UP  | M BTN4 | RGB HD | RGB HI | MOD-DH | P7     | P8     | P9     |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -70,6 +70,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Runs boot tasks for keyboard
 void matrix_init_user(void) {
   rgblight_enable();
-  rgblight_sethsv(150, 255, 255); // Spring Green
-  rgblight_mode(13); // Swirling rainbow
+  //rgblight_sethsv(150, 255, 255); // Spring Green
+  rgblight_sethsv(25, 255, 255); // Orange
+  //rgblight_mode(13); // Swirling rainbow
+  rgblight_mode(3);
 }

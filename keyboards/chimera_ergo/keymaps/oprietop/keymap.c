@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 
-extern keymap_config_t keymap_config;
+// Allow printing version info
+#include "version.h"
 
 // Layers
 #define _QWERTY 0
@@ -8,17 +9,15 @@ extern keymap_config_t keymap_config;
 #define _LOWER 2
 #define _RAISE 3
 #define _ADJUST 16
-
 // Aliases
 #define KC_     KC_TRNS
-#define KC_QWER QWERTY
-#define KC_COLH COLEMDH
+#define KC_XXXX KC_NO
+#define KC_QWER TG(_QWERTY)
+#define KC_COLH TG(_COLEMDH)
 #define KC_ADJU MO(_ADJUST)
 #define KC_RST  RESET
-#define KC_BL_S BL_STEP
-#define KC_BL_B BL_BRTG
 #define KC_DBUG DEBUG
-// Shift when held, Backspace when tapped
+// Shift when held, Backspace  when tapped
 #define KC_LSBS LSFT_T(KC_BSPC)
 #define KC_RSBS RSFT_T(KC_BSPC)
 // Shift when held, Enter when tapped
@@ -35,26 +34,16 @@ extern keymap_config_t keymap_config;
 #define KC_PST RSFT(KC_INS)
 #define KC_CUT LSFT(KC_DEL)
 
-// Test
-// Lower when held, Delete when tapped
-#define KC_LODE LT(_LOWER, KC_DEL)
-// Lower when held, Tab when tapped
-#define KC_LOTA LT(_LOWER, KC_TAB)
-// Shift when held, Tab when tapped
-#define KC_LSTA LSFT_T(KC_TAB)
-// Shift when held, Tab when tapped
-#define KC_RSDE RSFT_T(KC_DEL)
-// Raise when held, Backspace when tapped
-#define KC_RABS LT(_RAISE, KC_BSPC)
-// Raise when held, Enter  when tapped
-#define KC_RAEN LT(_RAISE, KC_ENT)
-
 // Macros
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  COLEMDH,
+  KC_VER = SAFE_RANGE,
+  KC_PULL,
+  KC_PUSH,
+  KC_LS,
+  KC_INCL
 };
 
+// Layouts
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
@@ -63,11 +52,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,QUOT,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RCTL,
-  //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
-  //                  `----+----+----'        `----+----+----'
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+     LCTL, Z  , X  , C  , V  , B  ,                N  , M  ,COMM,DOT ,SLSH,RGUI,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                         ALTA,LOSP,               RSBS,RADE
+  //                    `----+----'              `----+----'
   ),
 
   [_COLEMDH] = LAYOUT_kc(
@@ -77,11 +66,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,QUOT,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
-  //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
-  //                  `----+----+----'        `----+----+----'
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+     LCTL, Z  , X  , C  , D  , V  ,                K  , H  ,COMM,DOT ,SLSH,RGUI,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                         ALTA,LOSP,               RSBS,RADE
+  //                    `----+----'              `----+----'
   ),
 
   [_LOWER] = LAYOUT_kc(
@@ -91,11 +80,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          ,F11 ,F12 ,WH_U,CUT ,PST ,               BTN1,MS_U,BTN2,BTN3,PGUP,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,HOME,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,END ,ACL0,ACL1,ACL2,DEL ,CPY ,     BSPC,HOME,END ,LEFT,DOWN,RGHT,    ,
-  //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,    ,         ENT ,    ,
-  //                  `----+----+----'        `----+----+----'
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,END ,ACL0,ACL1,ACL2,DEL ,               HOME,END ,LEFT,DOWN,RGHT,    ,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                             ,    ,               ENT ,
+  //                    `----+----'              `----+----'
   ),
 
   [_RAISE] = LAYOUT_kc(
@@ -105,50 +94,71 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          ,F11 ,F12 ,MPRV,MNXT,VOLU,               TILD,UNDS,PLUS,LCBR,RCBR,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,MPRV,MNXT,MSTP,MPLY,VOLD,               GRV ,MINS,EQL ,LBRC,RBRC,    ,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,MUTE,    ,    ,    ,    ,CPY ,     PST ,BSLS,PIPE,    ,    ,    ,    ,
-  //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,ADJU,    ,             ,    ,
-  //                  `----+----+----'        `----+----+----'
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,MUTE,INCL,PULL,PUSH,LS  ,               BSLS,PIPE,    ,    ,    ,    ,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                         ADJU,    ,                   ,
+  //                    `----+----'              `----+----'
   ),
 
   [_ADJUST] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     RST ,QWER,COLH,    ,    ,    ,               DBUG,    ,    ,    ,    ,PSCR,
+     RST ,QWER,COLH,VER ,    ,    ,               DBUG,    ,    ,    ,    ,PSCR,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      DBUG,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      CAPS,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,CAPS,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     BL_S,BL_B,    ,    ,    ,    ,    ,         ,    ,    ,    ,    ,    ,    ,
-  //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,    ,             ,    ,
-  //                  `----+----+----'        `----+----+----'
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                             ,    ,                   ,
+  //                    `----+----'              `----+----'
   )
 
 };
 
-void persistant_default_layer_set(uint16_t default_layer) {
-  eeconfig_update_default_layer(default_layer);
-  default_layer_set(default_layer);
-};
-
+// Macros
+// Sendstring keycodes: https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case QWERTY:
-      if (record->event.pressed) {
-        set_single_persistent_default_layer(_QWERTY);
-        SEND_STRING(" Layout changed to QWERTY ");
-      }
-      return false;
-      break;
-    case COLEMDH:
-      if (record->event.pressed) {
-        set_single_persistent_default_layer(_COLEMDH);
-        SEND_STRING(" Layout changed to COLEMAK MOD DH ");
-      }
-      return false;
-      break;
+  if (record->event.pressed) {
+    switch(keycode) {
+      case KC_INCL:
+        SEND_STRING("#include <>"SS_TAP(X_LEFT));
+        return false;
+      case KC_PULL:
+        SEND_STRING("git pull"SS_TAP(X_ENTER));
+        return false;
+      case KC_PUSH:
+        SEND_STRING("git push"SS_TAP(X_ENTER));
+        return false;
+      case KC_LS:
+        SEND_STRING("ls -la"SS_TAP(X_ENTER));
+        return false;
+      case KC_VER:
+        SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP "@" QMK_VERSION "@" QMK_BUILDDATE);
+        return false;
+    }
   }
   return true;
-}
+};
+
+// Change the receiver led
+void matrix_scan_user(void) {
+  uint8_t layer = biton32(layer_state);
+  switch (layer) {
+    case _QWERTY:
+      set_led_green;
+      break;
+    case _COLEMDH:
+      set_led_green;
+      break;
+    case _LOWER:
+      set_led_blue;
+      break;
+    case _RAISE:
+      set_led_red;
+      break;
+    case _ADJUST:
+      set_led_magenta;
+  }
+};
