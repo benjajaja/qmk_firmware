@@ -1,4 +1,4 @@
-#include QMK_KEYBOARD_H
+#include "chimera_ergo.h"
 
 // Allow printing version info
 #include "version.h"
@@ -45,7 +45,7 @@ enum custom_keycodes {
 
 // Layouts
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT_kc(
+  [_QWERTY] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                    `----+----'              `----+----'
   ),
 
-  [_COLEMDH] = LAYOUT_kc(
+  [_COLEMDH] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -73,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                    `----+----'              `----+----'
   ),
 
-  [_LOWER] = LAYOUT_kc(
+  [_LOWER] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                    `----+----'              `----+----'
   ),
 
-  [_RAISE] = LAYOUT_kc(
+  [_RAISE] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -101,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                    `----+----'              `----+----'
   ),
 
-  [_ADJUST] = LAYOUT_kc(
+  [_ADJUST] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      RST ,QWER,COLH,VER ,    ,    ,               DBUG,    ,    ,    ,    ,PSCR,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
