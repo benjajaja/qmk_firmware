@@ -2,17 +2,14 @@
 
 extern keymap_config_t keymap_config;
 
+// Layers
 #define _QWERTY 0
 #define _COLEMDH 1
 #define _LOWER 2
 #define _RAISE 3
 #define _ADJUST 16
 
-enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  COLEMDH,
-};
-
+// Aliases
 #define KC_     KC_TRNS
 #define KC_QWER QWERTY
 #define KC_COLH COLEMDH
@@ -21,52 +18,44 @@ enum custom_keycodes {
 #define KC_BL_S BL_STEP
 #define KC_BL_B BL_BRTG
 #define KC_DBUG DEBUG
-
-// Shift when held, Backspace  when tapped
+// Shift when held, Backspace when tapped
 #define KC_LSBS LSFT_T(KC_BSPC)
 #define KC_RSBS RSFT_T(KC_BSPC)
-
 // Shift when held, Enter when tapped
 #define KC_LSEN LSFT_T(KC_ENT)
 #define KC_RSEN RSFT_T(KC_ENT)
-
-// Shift when held, Space when tapped
-#define KC_LSSP LSFT_T(KC_SPC)
-
-// Lower when held, Delete when tapped
-#define KC_LODE LT(_LOWER, KC_DEL)
-
 // Lower when held, Space when tapped
 #define KC_LOSP LT(_LOWER, KC_SPC)
-
-// Lower when held, Tab when tapped
-#define KC_LOTA LT(_LOWER, KC_TAB)
-
-// Shift when held, Tab when tapped
-#define KC_LSTA LSFT_T(KC_TAB)
-
-// Shift when held, Tab when tapped
-#define KC_RSDE RSFT_T(KC_DEL)
-
-// Raise when held, Backspace when tapped
-#define KC_RABS LT(_RAISE, KC_BSPC)
-
-// Raise when held, Enter  when tapped
-#define KC_RAEN LT(_RAISE, KC_ENT)
-
+// Alt when held, Tab when tapped
+#define KC_ALTA LALT_T(KC_TAB)
 // Raise when held, Delete when tapped
 #define KC_RADE LT(_RAISE, KC_DEL)
-
-// Shift  when held, Backspace when tapped
-#define KC_SHBS LT(_RAISE, KC_BSPC)
-
 // Cut/Paste shortcuts
 #define KC_CPY LCTL(KC_INS)
 #define KC_PST RSFT(KC_INS)
 #define KC_CUT LSFT(KC_DEL)
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+// Test
+// Lower when held, Delete when tapped
+#define KC_LODE LT(_LOWER, KC_DEL)
+// Lower when held, Tab when tapped
+#define KC_LOTA LT(_LOWER, KC_TAB)
+// Shift when held, Tab when tapped
+#define KC_LSTA LSFT_T(KC_TAB)
+// Shift when held, Tab when tapped
+#define KC_RSDE RSFT_T(KC_DEL)
+// Raise when held, Backspace when tapped
+#define KC_RABS LT(_RAISE, KC_BSPC)
+// Raise when held, Enter  when tapped
+#define KC_RAEN LT(_RAISE, KC_ENT)
 
+// Macros
+enum custom_keycodes {
+  QWERTY = SAFE_RANGE,
+  COLEMDH,
+};
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
@@ -75,9 +64,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , V  , B  ,HOME,     ENT , N  , M  ,COMM,DOT ,SLSH,RCTL,
+     LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LSTA,LOSP,         RABS,RSDE,LALT
+                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -89,9 +78,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , D  , V  ,HOME,     ENT , K  , H  ,COMM,DOT ,SLSH,RCTL,
+     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LSTA,LOSP,         RABS,RSDE,LALT
+                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 

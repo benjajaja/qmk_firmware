@@ -17,10 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* Use I2C or Serial, not both */
-
-#define USE_SERIAL
-
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 
@@ -43,11 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define PREVENT_STUCK_MODIFIERS
 #define IGNORE_MOD_TAP_INTERRUPT
-
-#ifdef TAPPING_TERM
-#undef TAPPING_TERM
-#endif // TAPPING_TERM
-#define TAPPING_TERM 100
+#define TAPPING_TERM 175
 
 #endif
 
