@@ -253,10 +253,10 @@ enum planck_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-#include "beakl.h"
+//#include "beakl.h"
 #include "colemak.h"
-#include "qwerty.h"
-#include "steno_layout.h"
+//#include "qwerty.h"
+//#include "steno_layout.h"
 
 // ...................................................... Number / Function Keys
 
