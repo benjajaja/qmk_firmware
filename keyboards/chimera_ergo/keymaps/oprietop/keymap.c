@@ -23,10 +23,13 @@
 // Shift when held, Enter when tapped
 #define KC_LSEN LSFT_T(KC_ENT)
 #define KC_RSEN RSFT_T(KC_ENT)
+#define KC_RSQU RSFT_T(KC_QUOTE)
 // Lower when held, Space when tapped
 #define KC_LOSP LT(_LOWER, KC_SPC)
-// Alt when held, Tab when tapped
-#define KC_ALTA LALT_T(KC_TAB)
+// LAlt when held, Tab when tapped
+#define KC_LATA RALT_T(KC_TAB)
+// RAlt when held, Tab when tapped
+#define KC_RATA RALT_T(KC_TAB)
 // Raise when held, Delete when tapped
 #define KC_RADE LT(_RAISE, KC_DEL)
 // Cut/Paste shortcuts
@@ -49,13 +52,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,QUOT,
+     LATA, Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
+     LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSQU,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LCTL, Z  , X  , C  , V  , B  ,                N  , M  ,COMM,DOT ,SLSH,RGUI,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                         ALTA,LOSP,               RSBS,RADE
+                         RATA,LOSP,               RSBS,RADE
   //                    `----+----'              `----+----'
   ),
 
@@ -63,13 +66,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,QUOT,
+     LATA, Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
+     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSQU,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LCTL, Z  , X  , C  , D  , V  ,                K  , H  ,COMM,DOT ,SLSH,RGUI,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                         ALTA,LOSP,               RSBS,RADE
+                         RATA,LOSP,               RSBS,RADE
   //                    `----+----'              `----+----'
   ),
 
