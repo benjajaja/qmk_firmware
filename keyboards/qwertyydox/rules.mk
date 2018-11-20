@@ -1,7 +1,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+>>>>>>> fa2183a64a1f8619f0b0ce9b8087732eaaa154bf
+=======
 >>>>>>> upstream/master
+>>>>>>> e33afe035a4f0a68b24960adc6abe46556043034
 # MCU name
 #MCU = at90usb1287
 MCU = atmega32u4
@@ -44,7 +48,11 @@ F_USB = $(F_CPU)
 #     different sizes, comment this out, and the correct address will be loaded 
 =======
 #     different sizes, comment this out, and the correct address will be loaded
+<<<<<<< HEAD
+>>>>>>> fa2183a64a1f8619f0b0ce9b8087732eaaa154bf
+=======
 >>>>>>> upstream/master
+>>>>>>> e33afe035a4f0a68b24960adc6abe46556043034
 #     automatically (+60). See bootloader.mk for all options.
 BOOTLOADER = caterina
 
@@ -70,7 +78,11 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.  Do not enable this with audio at the same time.
 =======
 RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.
+<<<<<<< HEAD
+>>>>>>> fa2183a64a1f8619f0b0ce9b8087732eaaa154bf
+=======
 >>>>>>> upstream/master
+>>>>>>> e33afe035a4f0a68b24960adc6abe46556043034
 SUBPROJECT_rev1 = yes
 USE_I2C = yes               # I2C is used between the sides
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
@@ -152,4 +164,8 @@ SPLIT_KEYBOARD = yes
 DEFAULT_FOLDER = qwertyydox/rev1
 >>>>>>> upstream/master
 =======
+<<<<<<< HEAD
+>>>>>>> fa2183a64a1f8619f0b0ce9b8087732eaaa154bf
+=======
 >>>>>>> upstream/master
+>>>>>>> e33afe035a4f0a68b24960adc6abe46556043034
