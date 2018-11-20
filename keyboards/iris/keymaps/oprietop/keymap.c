@@ -24,30 +24,20 @@ extern keymap_config_t keymap_config;
 // Shift when held, Enter when tapped
 #define KC_LSEN LSFT_T(KC_ENT)
 #define KC_RSEN RSFT_T(KC_ENT)
+// Shift when held, Quote when tapped
+#define KC_RSQU RSFT_T(KC_QUOTE)
 // Lower when held, Space when tapped
 #define KC_LOSP LT(_LOWER, KC_SPC)
 // Alt when held, Tab when tapped
 #define KC_ALTA LALT_T(KC_TAB)
+// RAlt when held, Tab when tapped
+#define KC_RATA RALT_T(KC_TAB)
 // Raise when held, Delete when tapped
 #define KC_RADE LT(_RAISE, KC_DEL)
 // Cut/Paste shortcuts
 #define KC_CPY LCTL(KC_INS)
 #define KC_PST RSFT(KC_INS)
 #define KC_CUT LSFT(KC_DEL)
-
-// Test
-// Lower when held, Delete when tapped
-#define KC_LODE LT(_LOWER, KC_DEL)
-// Lower when held, Tab when tapped
-#define KC_LOTA LT(_LOWER, KC_TAB)
-// Shift when held, Tab when tapped
-#define KC_LSTA LSFT_T(KC_TAB)
-// Shift when held, Tab when tapped
-#define KC_RSDE RSFT_T(KC_DEL)
-// Raise when held, Backspace when tapped
-#define KC_RABS LT(_RAISE, KC_BSPC)
-// Raise when held, Enter  when tapped
-#define KC_RAEN LT(_RAISE, KC_ENT)
 
 // Macros
 enum custom_keycodes {
@@ -60,13 +50,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,QUOT,
+     TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSEN,
+     LSBS, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSQU,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
      LCTL, Z  , X  , C  , V  , B  ,HOME,     END , N  , M  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
+                       LGUI,RATA,LOSP,         RSBS,RADE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -74,13 +64,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,QUOT,
+     TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSEN,
+     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSQU,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
      LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,ALTA,LOSP,         RSBS,RADE,LALT
+                       LGUI,RATA,LOSP,         RSBS,RADE,LALT
   //                  `----+----+----'        `----+----+----'
   ),
 
