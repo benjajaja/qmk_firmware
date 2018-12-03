@@ -27,7 +27,7 @@
 // Lower when held, Space when tapped
 #define KC_LOSP LT(_LOWER, KC_SPC)
 // LAlt when held, Tab when tapped
-#define KC_LATA RALT_T(KC_TAB)
+#define KC_LATA LALT_T(KC_TAB)
 // RAlt when held, Tab when tapped
 #define KC_RATA RALT_T(KC_TAB)
 // Raise when held, Delete when tapped
@@ -82,11 +82,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,F11 ,F12 ,WH_U,CUT ,PST ,               BTN1,MS_U,BTN2,BTN3,PGUP,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,HOME,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
+         ,LGUI,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,END ,ACL0,ACL1,ACL2,DEL ,               HOME,END ,LEFT,DOWN,RGHT,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                             ,    ,               ENT ,
+                         LALT,    ,               ENT ,LALT
   //                    `----+----'              `----+----'
   ),
 
