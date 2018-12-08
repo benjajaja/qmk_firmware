@@ -33,12 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define PERMISSIVE_HOLD
-#define PREVENT_STUCK_MODIFIERS
 #define IGNORE_MOD_TAP_INTERRUPT
-
-#ifdef TAPPING_TERM
-#undef TAPPING_TERM
-#endif // TAPPING_TERM
-#define TAPPING_TERM 100
+#define TAPPING_FORCE_HOLD
+#define TAPPING_TERM 175
 
 #endif
