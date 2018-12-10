@@ -82,11 +82,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,F11 ,F12 ,WH_U,CUT ,PST ,               BTN1,MS_U,BTN2,BTN3,PGUP,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,LGUI,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
+         ,TAB ,WH_L,WH_D,WH_R,INS ,               MS_L,MS_D,MS_R, UP ,PGDN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,END ,ACL0,ACL1,ACL2,DEL ,               HOME,END ,LEFT,DOWN,RGHT,    ,
+         ,LCTL,LSFT,LGUI,BTN1,DEL ,               HOME,END ,LEFT,DOWN,RGHT,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                         LALT,    ,               ENT ,LALT
+                             ,    ,               ENT ,LALT
   //                    `----+----'              `----+----'
   ),
 
@@ -100,13 +100,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,MUTE,INCL,PULL,PUSH,LS  ,               BSLS,PIPE,    ,    ,    ,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                         ADJU,    ,                   ,
+                         ADJU,SPC ,               BSPC,
   //                    `----+----'              `----+----'
   ),
 
   [_ADJUST] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     RST ,QWER,COLH,VER ,    ,    ,               DBUG,    ,    ,    ,    ,PSCR,
+     RST ,QWER,COLH,VER ,    ,    ,               DBUG,ACL0,ACL1,ACL2,    ,PSCR,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      DBUG,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
