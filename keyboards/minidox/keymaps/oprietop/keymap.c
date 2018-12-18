@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                  ,---------------------.   ,-------,-------------.
  *                  |CTLESC|LOWTAB|       |   |       |RAIDEL|GUIQUO|
  *                  `-------------|MOVESPC|   |SFTBSPC|------+------.
- was zz*                                |       |   |       |
+ *                                |       |   |       |
  *                                `-------'   `-------'
  */
 [_QWERTY] = LAYOUT( \
