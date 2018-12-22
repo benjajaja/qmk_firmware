@@ -1,186 +1,147 @@
-/* This is the Zen keyboard layout by Xyverz aka u/Zrevyx on r/mk.
-   This is pretty much a direct port of my Atreus62 keymap.
-
-   The bottom row is fairly Kinesis-ish since the Contour and Advantage
-   keyboards have been my daily drivers for the last 17 years. I hope
-   You can get some enjoyment out of this layout should you chose it!
-
-CHANGELOG:
-
- 0.1 - Initial commit. Based off of Profet's default keymap.
+/* This is the Zen keyboard layout by oprietop
 
 TODO:
 
- * Figure out how to make the bottom row work best for me.
- * Add legends in comments for each layer. Maybe.
+ * Figure the best approach for the 1,5 keys.
+ * Still not convinded on the thumbs too.
+ * Determine if i want/need the raise layer and finish/remove it.
 
 */
 
 #include QMK_KEYBOARD_H
 
+// Allow printing version info
+#include "version.h"
+
 extern keymap_config_t keymap_config;
 
-// Each layer gets a name for readability, which is then used in the keymap matrix below.
-// The underscores don't mean anything - you can have a layer called STUFF or any other name.
-// Layer names don't all need to be of the same length, obviously, and you can also skip them
-// entirely and just use numbers.
-#define _DVORAK 0
-#define _QWERTY 1
-#define _COLEMAK 2
-#define _WOW 3
-#define _LOWER 4
-#define _RAISE 5
-#define _ADJUST 16
-
-enum atreus52_keycodes {
-  DVORAK = SAFE_RANGE,
-  QWERTY,
-  COLEMAK,
-  WOW,
-  LOWER,
-  RAISE
+enum layers {
+  _MODDH,
+  _QWERTY,
+  _LOWER,
+  _RAISE,
 };
 
-// Fillers to make layering more clear
-#define _______ KC_TRNS
-#define XXXXXXX KC_NO
+enum keycodes {
+  // Layers
+  MODDH = SAFE_RANGE,
+  QWERTY,
+  // Macros
+  KC_VER,
+  KC_PULL,
+  KC_PUSH,
+  KC_LS,
+  KC_INCL,
+};
 
-// Aliases to make the keymap clearer.
-#define CTLBSPC CTL_T(KC_BSPC) // CTRL when held, BSPC when tapped.
-#define RGB_SWR RGB_M_SW // Swirl Animation alias
-#define RGB_SNK RGB_M_SN // Snake Animation alias
-#define ADJUST MO(_ADJUST)
+// Cut/Paste shortcuts
+#define COPY LCTL(KC_INS)
+#define CUT LSFT(KC_DEL)
+#define PASTE RSFT(KC_INS)
 
-// Shift when held, Enter when tapped
-#define KC_LSEN LSFT_T(KC_ENT)
-#define KC_RSEN RSFT_T(KC_ENT)
+// Mod-Taps 
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
+#define LST(X) LSFT_T(X)
+#define RST(X) RSFT_T(X)
+#define LCT(X) LCTL_T(X)
+#define RCT(X) RCTL_T(X)
+#define LGT(X) LGUI_T(X)
+#define RGT(X) RGUI_T(X)
+#define TAT(X) LALT_T(X)
+#define AGT(X) RALT_T(X)
 
-// Shift when held, Space when tapped
-#define KC_LSSP LSFT_T(KC_SPC)
-
-// Shift when held, ALTGr when tappec
-#define RALSPC RALT_T(KC_SPC)
+// Modifiers 
+#define OS_ALT OSM(MOD_LALT)
+#define OS_CTL OSM(MOD_LCTL)
+#define OS_GUI OSM(MOD_LGUI)
+#define LT_ESC LT(_RAISE, KC_ESC)
+#define LT_SPC LT(_LOWER, KC_SPC)
+#define S_TAB LSFT_T(KC_TAB)
+#define S_DEL RSFT_T(KC_DEL)
+#define LT_BSPC LT(_LOWER, KC_BSPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [_DVORAK] = LAYOUT( \
-    KC_RBRC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, \
-    KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,                      KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH, \
-    KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                      KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS, \
-    KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,                      KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT, \
-    LOWER,   KC_LCTL, KC_LALT, KC_LEFT, KC_RGHT, KC_BSPC, KC_LGUI, KC_ENT,  KC_SPC,  KC_UP,   KC_DOWN, KC_SLSH, KC_EQL,  RAISE   \
+  [_MODDH] = LAYOUT( \
+    KC_ESC,  KC_1,      KC_2,    KC_3,   KC_4,   KC_5,                    KC_6,      KC_7,    KC_8,    KC_9,   KC_0,      KC_BSPC, \
+    KC_LBRC, KC_Q,      KC_W,    KC_F,   KC_P,   AGT(KC_B),               AGT(KC_J), KC_L,    KC_U,    KC_Y,   KC_SCLN,   KC_RBRC, \
+    KC_GRV,  LST(KC_A), KC_R,    KC_S,   KC_T,   KC_G,                    KC_M,      KC_N,    KC_E,    KC_I,   RST(KC_O), KC_QUOT, \
+    KC_MINS, KC_Z,      KC_X,    KC_C,   KC_D,   KC_V,                    KC_K,      KC_H,    KC_COMM, KC_DOT, KC_SLSH,   KC_EQL,  \
+    KC_LCTL, KC_LGUI,   KC_LALT, KC_ENT, LT_ESC, LT_SPC,    S_TAB, S_DEL, LT_BSPC,   KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT,   KC_BSLS  \
   ),
 
   [_QWERTY] = LAYOUT( \
-    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, \
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL , \
-    KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, \
-    LOWER,   KC_LCTL, KC_LALT, KC_LEFT, KC_RGHT, KC_BSPC, KC_LGUI, KC_ENT,  KC_SPC,  KC_UP,   KC_DOWN, KC_RGUI, KC_RCTL, RAISE   \
-  ),
-
-  [_COLEMAK] = LAYOUT( \
-    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
-    KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS, \
-    KC_BSPC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                      KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
-    KC_LSEN, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                      KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSEN, \
-    KC_LCTL, KC_LGUI, KC_LALT, KC_MENU, LOWER,   RALSPC, KC_DEL, KC_BSPC,   KC_RSEN, RAISE,   KC_PSCR, KC_RALT, KC_RGUI, KC_RCTL \
-  ),
-
-  [_WOW] = LAYOUT( \
-    KC_RBRC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, \
-    KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,                      KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH, \
-    KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                      KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS, \
-    KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,                      KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT, \
-    LOWER,   KC_LCTL, KC_LALT, KC_LEFT, KC_RGHT, CTLBSPC, KC_LALT, KC_ENT,  KC_SPC,  KC_UP,   KC_DOWN, KC_SLSH, KC_EQL,  RAISE   \
+    KC_ESC,  KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                 KC_6,    KC_7,    KC_8,    KC_9,   KC_0,    KC_BSPC, \
+    KC_LBRC, KC_Q,   KC_W,   KC_F,   KC_P,   KC_B,                 KC_J,    KC_L,    KC_U,    KC_Y,   KC_SCLN, KC_RBRC, \
+    KC_GRV,  KC_A,   KC_R,   KC_S,   KC_T,   KC_G,                 KC_M,    KC_N,    KC_E,    KC_I,   KC_O,    KC_QUOT, \
+    KC_MINS, KC_Z,   KC_X,   KC_C,   KC_D,   KC_V,                 KC_K,    KC_H,    KC_COMM, KC_DOT, KC_SLSH, KC_EQL,  \
+    KC_BSLS, OS_CTL, OS_GUI, OS_ALT, LT_ESC, KC_SPC, LT_SPC, S_DEL, LT_BSPC, KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT, KC_PIPE  \
   ),
 
   [_LOWER] = LAYOUT( \
-    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12 , \
-    KC_TILD, KC_GRV,  _______, _______, _______, _______,                   _______, _______, _______, _______, _______, KC_PIPE, \
-    KC_CAPS, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______,                   _______, _______, KC_PLUS, KC_LCBR, KC_RCBR, _______, \
-    _______, _______, KC_MPRV, KC_MPLY, KC_MNXT, _______,                   _______, _______, KC_PSCR, KC_SLCK, KC_PAUS, _______, \
-    _______, _______, _______, KC_HOME, KC_END,  KC_DEL,  _______, _______, KC_INS,  KC_PGUP, KC_PGDN, _______, _______, _______ \
+    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
+    KC_LCBR, KC_ESC,  CUT,     KC_WH_U, PASTE,   KC_LBRC,                  KC_RBRC, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_RCBR, \
+    KC_TILD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_GRV,                   KC_QUOT, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGUP, KC_DQUO, \
+    KC_UNDS, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_MINS,                  KC_EQL,  KC_HOME, KC_END,  KC_UP,   KC_PGDN, KC_PLUS, \
+    _______, _______, _______, _______, _______, KC_ENT,  KC_SPC, KC_BSPC, KC_ENT,  KC_PIPE, KC_LEFT, KC_DOWN, KC_RGHT, KC_PIPE  \
   ),
 
   [_RAISE] = LAYOUT( \
-    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12 , \
-    KC_TILD, KC_GRV,  _______, _______, _______, _______,                   _______, _______, _______, _______, _______, KC_PIPE, \
-    KC_CAPS, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______,                   _______, _______, KC_EQL,  KC_LBRC, KC_RBRC, _______, \
-    _______, _______, KC_MPRV, KC_MPLY, KC_MNXT, _______,                   _______, _______, KC_PSCR, KC_SLCK, KC_PAUS, _______, \
+    RESET,  RGB_TOG,  MODDH, QWERTY,  KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12 , \
+    KC_TILD, KC_GRV,  _______, _______, _______, _______,                   MODDH, QWERTY,  _______, _______, _______, KC_PIPE, \
+    _______, _______, RGB_M_P, RGB_M_B, RGB_M_R, _______,                   _______, QWERTY,  _______, _______, _______, _______, \
+    RGB_TOG, RGB_MOD, _______, RGB_M_K, RGB_M_G, RGB_HUI,                   RGB_HUD, RGB_HUI, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, \
     _______, _______, _______, KC_HOME, KC_END,  KC_DEL,  _______, _______, KC_INS,  KC_PGUP, KC_PGDN, _______, _______, _______ \
   ),
 
-  [_ADJUST] = LAYOUT( \
-    RESET,   _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, \
-    _______, _______, RGB_M_P, RGB_M_B, RGB_M_R, RGB_SNK,                   _______, QWERTY,  COLEMAK, DVORAK,  WOW,     _______, \
-    RGB_TOG, RGB_MOD, RGB_SWR, RGB_M_K, RGB_M_G, RGB_HUI,                   RGB_HUD, RGB_HUI, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
-  ),
-
 };
-
 
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
   default_layer_set(default_layer);
 }
 
-void matrix_init_user(void) {
-   // This will disable the red LEDs on the ProMicros
-   DDRD &= ~(1<<5);
-   PORTD &= ~(1<<5);
-   DDRB &= ~(1<<0);
-   PORTB &= ~(1<<0);
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-        case DVORAK:
-          if (record->event.pressed) {
-            persistent_default_layer_set(1UL<<_DVORAK);
-          }
-          return false;
-          break;
-        case QWERTY:
-          if (record->event.pressed) {
-            persistent_default_layer_set(1UL<<_QWERTY);
-          }
-          return false;
-          break;
-        case COLEMAK:
-          if (record->event.pressed) {
-            persistent_default_layer_set(1UL<<_COLEMAK);
-          }
-          return false;
-          break;
-        case WOW:
-          if (record->event.pressed) {
-            persistent_default_layer_set(1UL<<_WOW);
-          }
-          return false;
-          break;
-        case LOWER:
-          if (record->event.pressed) {
-            layer_on(_LOWER);
-            update_tri_layer(_LOWER, _RAISE, _ADJUST);
-          } else {
-            layer_off(_LOWER);
-            update_tri_layer(_LOWER, _RAISE, _ADJUST);
-          }
-          return false;
-          break;
-        case RAISE:
-          if (record->event.pressed) {
-            layer_on(_RAISE);
-            update_tri_layer(_LOWER, _RAISE, _ADJUST);
-          } else {
-            layer_off(_RAISE);
-            update_tri_layer(_LOWER, _RAISE, _ADJUST);
-          }
-          return false;
-          break;
+    // Layers
+    case MODDH:
+      if (record->event.pressed) {
+        set_single_persistent_default_layer(_MODDH);
+        SEND_STRING("\nLayout changed to COLEMAK MOD-DH.\n");
       }
-    return true;
-};
+      return false;
+    case QWERTY:
+      if (record->event.pressed) {
+        set_single_persistent_default_layer(_QWERTY);
+        SEND_STRING("\nLayout changed to QWERTY.\n");
+      }
+      return false;
+    // Macros
+    case KC_INCL:
+      if (record->event.pressed) {
+        SEND_STRING("#include <>"SS_TAP(X_LEFT));
+      }
+      return false;
+    case KC_PULL:
+      if (record->event.pressed) {
+        SEND_STRING("git pull"SS_TAP(X_ENTER));
+      }
+      return false;
+    case KC_PUSH:
+      if (record->event.pressed) {
+        SEND_STRING("git push"SS_TAP(X_ENTER));
+      }
+      return false;
+    case KC_LS: 
+      if (record->event.pressed) {
+        SEND_STRING("ls -la"SS_TAP(X_ENTER));
+      }
+      return false;
+    case KC_VER:
+      if (record->event.pressed) {
+        SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP "@" QMK_VERSION "@" QMK_BUILDDATE);
+      }
+      return false;
+  }
+  return true;
+}
