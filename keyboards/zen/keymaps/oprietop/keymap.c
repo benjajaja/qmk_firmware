@@ -1,12 +1,4 @@
-/* This is the Zen keyboard layout by oprietop
-
-TODO:
-
- * Figure the best approach for the 1,5 keys.
- * Still not convinded on the thumbs too.
- * Determine if i want/need the raise layer and finish/remove it.
-
-*/
+// This is the Zen keyboard layout by oprietop
 
 #include QMK_KEYBOARD_H
 
@@ -15,11 +7,13 @@ TODO:
 
 extern keymap_config_t keymap_config;
 
+// Timer for M_BSPC
+static uint16_t timer;
+
 enum layers {
   _MODDH,
   _QWERTY,
   _LOWER,
-  _RAISE,
 };
 
 enum keycodes {
@@ -27,11 +21,12 @@ enum keycodes {
   MODDH = SAFE_RANGE,
   QWERTY,
   // Macros
-  KC_VER,
-  KC_PULL,
-  KC_PUSH,
-  KC_LS,
-  KC_INCL,
+  M_BSPC,
+  M_VER,
+  M_PULL,
+  M_PUSH,
+  M_LS,
+  M_INCL,
 };
 
 // Cut/Paste shortcuts
@@ -43,55 +38,37 @@ enum keycodes {
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define LST(X) LSFT_T(X)
 #define RST(X) RSFT_T(X)
-#define LCT(X) LCTL_T(X)
-#define RCT(X) RCTL_T(X)
-#define LGT(X) LGUI_T(X)
-#define RGT(X) RGUI_T(X)
-#define TAT(X) LALT_T(X)
 #define AGT(X) RALT_T(X)
 
 // Modifiers 
-#define OS_ALT OSM(MOD_LALT)
-#define OS_CTL OSM(MOD_LCTL)
-#define OS_GUI OSM(MOD_LGUI)
-#define LT_ESC LT(_RAISE, KC_ESC)
-#define LT_SPC LT(_LOWER, KC_SPC)
-#define S_TAB LSFT_T(KC_TAB)
-#define S_DEL RSFT_T(KC_DEL)
-#define LT_BSPC LT(_LOWER, KC_BSPC)
+#define S_SPC LSFT_T(KC_SPC)
+#define LT_TAB LT(_LOWER, KC_TAB)
+#define LT_DEL LT(_LOWER, KC_DEL)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_MODDH] = LAYOUT( \
-    KC_ESC,  KC_1,      KC_2,    KC_3,   KC_4,   KC_5,                    KC_6,      KC_7,    KC_8,    KC_9,   KC_0,      KC_BSPC, \
-    KC_LBRC, KC_Q,      KC_W,    KC_F,   KC_P,   AGT(KC_B),               AGT(KC_J), KC_L,    KC_U,    KC_Y,   KC_SCLN,   KC_RBRC, \
-    KC_GRV,  LST(KC_A), KC_R,    KC_S,   KC_T,   KC_G,                    KC_M,      KC_N,    KC_E,    KC_I,   RST(KC_O), KC_QUOT, \
-    KC_MINS, KC_Z,      KC_X,    KC_C,   KC_D,   KC_V,                    KC_K,      KC_H,    KC_COMM, KC_DOT, KC_SLSH,   KC_EQL,  \
-    KC_LCTL, KC_LGUI,   KC_LALT, KC_ENT, LT_ESC, LT_SPC,    S_TAB, S_DEL, LT_BSPC,   KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT,   KC_BSLS  \
+    KC_ESC,  KC_1,      KC_2,    KC_3,   KC_4,   KC_5,                     KC_6,      KC_7,    KC_8,    KC_9,   KC_0,      KC_BSPC, \
+    KC_LBRC, KC_Q,      KC_W,    KC_F,   KC_P,   AGT(KC_B),                AGT(KC_J), KC_L,    KC_U,    KC_Y,   KC_SCLN,   KC_RBRC, \
+    KC_GRV,  LST(KC_A), KC_R,    KC_S,   KC_T,   KC_G,                     KC_M,      KC_N,    KC_E,    KC_I,   RST(KC_O), KC_QUOT, \
+    KC_MINS, KC_Z,      KC_X,    KC_C,   KC_D,   KC_V,                     KC_K,      KC_H,    KC_COMM, KC_DOT, KC_SLSH,   KC_EQL,  \
+    KC_LCTL, KC_LGUI,   KC_LALT, KC_INS, KC_ESC, S_SPC,    LT_TAB, LT_DEL, M_BSPC,    KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT,   KC_BSLS  \
   ),
 
   [_QWERTY] = LAYOUT( \
-    KC_ESC,  KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                 KC_6,    KC_7,    KC_8,    KC_9,   KC_0,    KC_BSPC, \
-    KC_LBRC, KC_Q,   KC_W,   KC_F,   KC_P,   KC_B,                 KC_J,    KC_L,    KC_U,    KC_Y,   KC_SCLN, KC_RBRC, \
-    KC_GRV,  KC_A,   KC_R,   KC_S,   KC_T,   KC_G,                 KC_M,    KC_N,    KC_E,    KC_I,   KC_O,    KC_QUOT, \
-    KC_MINS, KC_Z,   KC_X,   KC_C,   KC_D,   KC_V,                 KC_K,    KC_H,    KC_COMM, KC_DOT, KC_SLSH, KC_EQL,  \
-    KC_BSLS, OS_CTL, OS_GUI, OS_ALT, LT_ESC, KC_SPC, LT_SPC, S_DEL, LT_BSPC, KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT, KC_PIPE  \
+    KC_ESC,  KC_1,      KC_2,    KC_3,   KC_4,   KC_5,                     KC_6,      KC_7,    KC_8,    KC_9,   KC_0,         KC_BSPC, \
+    KC_LBRC, KC_Q,      KC_W,    KC_E,   KC_R,   AGT(KC_T),                AGT(KC_Y), KC_U,    KC_I,    KC_O,   KC_P,         KC_RBRC, \
+    KC_GRV,  LST(KC_A), KC_S,    KC_D,   KC_F,   KC_G,                     KC_H,      KC_J,    KC_K,    KC_L,   RST(KC_SCLN), KC_QUOT, \
+    KC_MINS, KC_Z,      KC_X,    KC_C,   KC_V,   KC_D,                     KC_N,      KC_M,    KC_COMM, KC_DOT, KC_SLSH,      KC_EQL,  \
+    KC_LCTL, KC_LGUI,   KC_LALT, KC_INS, KC_ESC, S_SPC,    LT_TAB, LT_DEL, M_BSPC,    KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT,      KC_BSLS  \
   ),
 
   [_LOWER] = LAYOUT( \
-    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
-    KC_LCBR, KC_ESC,  CUT,     KC_WH_U, PASTE,   KC_LBRC,                  KC_RBRC, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_RCBR, \
-    KC_TILD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_GRV,                   KC_QUOT, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGUP, KC_DQUO, \
-    KC_UNDS, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_MINS,                  KC_EQL,  KC_HOME, KC_END,  KC_UP,   KC_PGDN, KC_PLUS, \
-    _______, _______, _______, _______, _______, KC_ENT,  KC_SPC, KC_BSPC, KC_ENT,  KC_PIPE, KC_LEFT, KC_DOWN, KC_RGHT, KC_PIPE  \
-  ),
-
-  [_RAISE] = LAYOUT( \
-    RESET,  RGB_TOG,  MODDH, QWERTY,  KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12 , \
-    KC_TILD, KC_GRV,  _______, _______, _______, _______,                   MODDH, QWERTY,  _______, _______, _______, KC_PIPE, \
-    _______, _______, RGB_M_P, RGB_M_B, RGB_M_R, _______,                   _______, QWERTY,  _______, _______, _______, _______, \
-    RGB_TOG, RGB_MOD, _______, RGB_M_K, RGB_M_G, RGB_HUI,                   RGB_HUD, RGB_HUI, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, \
-    _______, _______, _______, KC_HOME, KC_END,  KC_DEL,  _______, _______, KC_INS,  KC_PGUP, KC_PGDN, _______, _______, _______ \
+    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12, \
+    KC_PSCR, KC_ESC,  CUT,     KC_WH_U, PASTE,   KC_LBRC,                  KC_RBRC, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, M_PULL, \
+    RGB_MOD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_GRV,                   KC_QUOT, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGUP, M_PUSH, \
+    RGB_TOG, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_MINS,                  KC_EQL,  KC_HOME, KC_END,  KC_UP,   KC_PGDN, M_LS,   \
+    RESET,   MODDH,   QWERTY,  M_VER,   KC_CAPS, KC_ENT,  KC_SPC, KC_BSPC, KC_ENT,  KC_BSLS, KC_LEFT, KC_DOWN, KC_RGHT, M_INCL  \
   ),
 
 };
@@ -103,6 +80,33 @@ void persistent_default_layer_set(uint16_t default_layer) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    // Our funky backspace key!
+    case M_BSPC:
+      if (record->event.pressed) {
+        timer = timer_read();
+        // Register Right Shift if we are not shifted
+        if (! (get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT)))) {
+          register_code(KC_RSFT);
+        }
+      } else {
+        // Unregister Right Shift if registered
+        if (get_mods() & MOD_BIT(KC_RSHIFT)) {
+          unregister_code(KC_RSFT);
+        }
+        // Check if we are into the TAPPING_TERM threshold
+        if (timer_elapsed(timer) < TAPPING_TERM) {  
+          // Tap Enter if left shifted, Backspace if not
+          if (get_mods() & MOD_BIT(KC_LSHIFT)) {
+            // Avoid sending Left Shift + Enter
+            unregister_code(KC_LSFT);
+            tap_code(KC_ENT);
+            register_code(KC_LSFT);
+          } else {
+            tap_code(KC_BSPC);
+          }
+        }
+      }
+      return false;
     // Layers
     case MODDH:
       if (record->event.pressed) {
@@ -117,27 +121,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     // Macros
-    case KC_INCL:
+    case M_INCL:
       if (record->event.pressed) {
         SEND_STRING("#include <>"SS_TAP(X_LEFT));
       }
       return false;
-    case KC_PULL:
+    case M_PULL:
       if (record->event.pressed) {
         SEND_STRING("git pull"SS_TAP(X_ENTER));
       }
       return false;
-    case KC_PUSH:
+    case M_PUSH:
       if (record->event.pressed) {
         SEND_STRING("git push"SS_TAP(X_ENTER));
       }
       return false;
-    case KC_LS: 
+    case M_LS: 
       if (record->event.pressed) {
         SEND_STRING("ls -la"SS_TAP(X_ENTER));
       }
       return false;
-    case KC_VER:
+    case M_VER:
       if (record->event.pressed) {
         SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP "@" QMK_VERSION "@" QMK_BUILDDATE);
       }
