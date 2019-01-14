@@ -23,7 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Use I2C or Serial, not both */
 
 #define USE_SERIAL
-#define EE_HANDS
+//#define EE_HANDS
+#define MASTER_RIGHT
 
 #undef RGBLED_NUM
 #define RGBLIGHT_ANIMATIONS

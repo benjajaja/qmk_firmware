@@ -74,6 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void matrix_init_user(void) {
   rgblight_enable();
   //rgblight_sethsv(150, 255, 255); // Spring Green
+  //rgblight_sethsv(169, 255, 255); // Pulse Blue
   rgblight_sethsv(25, 255, 255); // Orange
   //rgblight_mode(13); // Swirling rainbow
   rgblight_mode(3);

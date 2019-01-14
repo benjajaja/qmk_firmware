@@ -29,3 +29,7 @@
 #define MOUSEKEY_WHEEL_DELAY 0
 
 #endif
+
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
+#define PERMISSIVE_HOLD
+#define IGNORE_MOD_TAP_INTERRUPT

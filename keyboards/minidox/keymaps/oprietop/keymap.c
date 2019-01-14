@@ -23,7 +23,7 @@ enum custom_keycodes {
 #define CUT LSFT(KC_DEL)
 #define PASTE RSFT(KC_INS)
 
-// Mod-Taps 
+// Mod-Taps
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define LST(X) LSFT_T(X)
 #define RST(X) RSFT_T(X)
@@ -64,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_Q,      KC_W,      KC_F,      KC_P,   AGT(KC_B),    AGT(KC_J),  KC_L,   KC_U,         KC_Y,        KC_SCLN,      \
   LST(KC_A), KC_R,      KC_S,      KC_T,   KC_G,         KC_M,       KC_N,   KC_E,         KC_I,        RST(KC_O),    \
   LCT(KC_Z), LGT(KC_X), TAT(KC_C), KC_D,   KC_V,         KC_K,       KC_H,   TAT(KC_COMM), RGT(KC_DOT), RCT(KC_SLSH), \
-                        CTLESC,    LOWTAB, MOVESPC,      SFTBSPC,    RAIDEL, GUIQUO                          \
+                        CTLESC,    LOWTAB, MOVESPC,      SFTBSPC,    RAIDEL, GUIQUO                                   \
 ),
 
 /* Qwerty
@@ -152,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,        KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_PGUP, \
   KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,       KC_MS_L, KC_MS_D, KC_MS_R, KC_UP,   KC_PGDN, \
   KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL,       KC_HOME, KC_END,  KC_LEFT, KC_DOWN, KC_RGHT, \
-   	            _______, _______, _______,      KC_ENT,  KC_SPC,  _______                    \
+                    _______, _______, _______,      KC_ENT,  KC_SPC,  _______                    \
 ),
 
 /* Adjust (Lower + Raise)
@@ -180,7 +180,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
     rgblight_enable();
-    rgblight_sethsv(340, 255, 255); // Red Magenta
+    //rgblight_sethsv(340, 255, 255); // Red Magenta
+    rgblight_sethsv(276,255,170); // Purple
     rgblight_mode(3);
 };
 
