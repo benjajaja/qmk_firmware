@@ -3,7 +3,6 @@
 #ifdef AUDIO_ENABLE
     #define STARTUP_SONG SONG(ZELDA_PUZZLE)
     // #define STARTUP_SONG SONG(NO_SOUND)
-
     #define DEFAULT_LAYER_SONGS { SONG(QWERTY_SOUND), \
                                   SONG(COLEMAK_SOUND), \
                                   SONG(DVORAK_SOUND) \
@@ -20,5 +19,5 @@
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 //#define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
-#define TAPPING_FORCE_HOLD
+//#define TAPPING_FORCE_HOLD
 //#define TAPPING_TERM 175
