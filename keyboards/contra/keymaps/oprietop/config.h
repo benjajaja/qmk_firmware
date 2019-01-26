@@ -8,7 +8,7 @@
 #define MOUSEKEY_WHEEL_DELAY 0
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
-#define PERMISSIVE_HOLD
+//#define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
-#define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 175
+//#define TAPPING_FORCE_HOLD
+//#define TAPPING_TERM 175
