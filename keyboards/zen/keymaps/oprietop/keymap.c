@@ -34,13 +34,13 @@ enum keycodes {
 #define CUT LSFT(KC_DEL)
 #define PASTE RSFT(KC_INS)
 
-// Mod-Taps 
+// Mod-Taps
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define LST(X) LSFT_T(X)
 #define RST(X) RSFT_T(X)
 #define AGT(X) RALT_T(X)
 
-// Modifiers 
+// Modifiers
 #define S_SPC LSFT_T(KC_SPC)
 #define LT_TAB LT(_LOWER, KC_TAB)
 #define LT_DEL LT(_LOWER, KC_DEL)
@@ -56,11 +56,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_QWERTY] = LAYOUT( \
-    KC_ESC,  KC_1,      KC_2,    KC_3,   KC_4,   KC_5,                     KC_6,      KC_7,    KC_8,    KC_9,   KC_0,         KC_BSPC, \
-    KC_LBRC, KC_Q,      KC_W,    KC_E,   KC_R,   AGT(KC_T),                AGT(KC_Y), KC_U,    KC_I,    KC_O,   KC_P,         KC_RBRC, \
-    KC_GRV,  LST(KC_A), KC_S,    KC_D,   KC_F,   KC_G,                     KC_H,      KC_J,    KC_K,    KC_L,   RST(KC_SCLN), KC_QUOT, \
-    KC_MINS, KC_Z,      KC_X,    KC_C,   KC_V,   KC_D,                     KC_N,      KC_M,    KC_COMM, KC_DOT, KC_SLSH,      KC_EQL,  \
-    KC_LCTL, KC_LGUI,   KC_LALT, KC_INS, KC_ESC, S_SPC,    LT_TAB, LT_DEL, M_BSPC,    KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT,      KC_BSLS  \
+    _______, _______,   _______, _______, _______, _______,                     _______,   _______, _______, _______, _______,      _______, \
+    _______, KC_Q,      KC_W,    KC_E,    KC_R,    AGT(KC_T),                   AGT(KC_Y), KC_U,    KC_I,    KC_O,    KC_P,         _______, \
+    _______, LST(KC_A), KC_S,    KC_D,    KC_F,    KC_G,                        KC_H,      KC_J,    KC_K,    KC_L,    RST(KC_SCLN), _______, \
+    _______, KC_Z,      KC_X,    KC_C,    KC_V,    KC_B,                        KC_N,      KC_M,    KC_COMM, KC_DOT,  KC_SLSH,      _______, \
+    _______, _______,   _______, _______, _______, _______,   _______, _______, _______,   _______, _______, _______, _______,      _______  \
   ),
 
   [_LOWER] = LAYOUT( \
@@ -94,7 +94,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_RSFT);
         }
         // Check if we are into the TAPPING_TERM threshold
-        if (timer_elapsed(timer) < TAPPING_TERM) {  
+        if (timer_elapsed(timer) < TAPPING_TERM) {
           // Tap Enter if left shifted, Backspace if not
           if (get_mods() & MOD_BIT(KC_LSHIFT)) {
             // Avoid sending Left Shift + Enter
@@ -136,7 +136,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING("git push"SS_TAP(X_ENTER));
       }
       return false;
-    case M_LS: 
+    case M_LS:
       if (record->event.pressed) {
         SEND_STRING("ls -la"SS_TAP(X_ENTER));
       }
