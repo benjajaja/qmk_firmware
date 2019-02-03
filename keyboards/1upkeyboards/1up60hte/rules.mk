@@ -1,7 +1,4 @@
 # MCU name
-# atmega32u4 	Teensy2.0
-# atemga32u4	TMK Converter rev.1
-# atemga32u2	TMK Converter rev.2
 MCU = atmega32u4
 
 # Processor frequency.
@@ -15,9 +12,7 @@ MCU = atmega32u4
 #     does not *change* the processor frequency - it should merely be updated to
 #     reflect the processor speed set externally so that the code can use accurate
 #     software delays.
-#
 F_CPU = 16000000
-# F_CPU = 8000000
 
 #
 # LUFA specific
@@ -41,34 +36,21 @@ F_USB = $(F_CPU)
 # Interrupt driven control endpoint task(+60)
 OPT_DEFS += -DINTERRUPT_CONTROL_ENDPOINT
 
-# Bootloader
-#     This definition is optional, and if your keyboard supports multiple bootloaders of
-#     different sizes, comment this out, and the correct address will be loaded
-#     automatically (+60). See bootloader.mk for all options.
-BOOTLOADER = caterina
 
 # Boot Section Size in *bytes*
-#   Teensy halfKay   512
-#   Teensy++ halfKay 1024
-#   Atmel DFU loader 4096	for TMK Converter rev.1/rev.2
-#   LUFA bootloader  4096
-#   USBaspLoader     2048
+OPT_DEFS += -DBOOTLOADER_SIZE=4096
+
 
 # Build Options
 #   comment out to disable the options.
 #
-BOOTMAGIC_ENABLE	= no			# Virtual DIP switch configuration(+1000)
-MOUSEKEY_ENABLE		= no			# Mouse keys(+4700)
-CONSOLE_ENABLE		= no			# Console for debug(+400)
-COMMAND_ENABLE		= no  		# Commands for debug and configuration
-SLEEP_LED_ENABLE 	= no  		# Breathing sleep LED during USB suspend
-NKRO_ENABLE 		  = no			# USB Nkey Rollover - not yet supported in LUFA
-EXTRAKEY_ENABLE		= yes
-USB_HID_ENABLE 		= yes
-BACKLIGHT_ENABLE 	= no
-#BLUETOOTH 			= AdafruitBLE   # For Adafruit Feather 32U4 BLE support, uncomment this line
-
-CUSTOM_MATRIX = yes
-SRC = matrix.c \
-      adb.c \
-			led.c
+BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration(+1000)
+MOUSEKEY_ENABLE = yes	# Mouse keys(+4700)
+EXTRAKEY_ENABLE = yes	# Audio control and System control(+450)
+CONSOLE_ENABLE = no	# Console for debug(+400)
+COMMAND_ENABLE = no    # Commands for debug and configuration
+SLEEP_LED_ENABLE = no  # Breathing sleep LED during USB suspend
+NKRO_ENABLE = yes		# USB Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
+BACKLIGHT_ENABLE = yes  # Enable keyboard backlight functionality
+AUDIO_ENABLE = no
+RGBLIGHT_ENABLE = yes
