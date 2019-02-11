@@ -2,6 +2,12 @@
 
 extern keymap_config_t keymap_config;
 
+// Macros
+enum custom_keycodes {
+  QWERTY = SAFE_RANGE,
+  COLEMDH,
+};
+
 // Layers
 #define _QWERTY 0
 #define _COLEMDH 1
@@ -39,12 +45,6 @@ extern keymap_config_t keymap_config;
 #define KC_PST RSFT(KC_INS)
 #define KC_CUT LSFT(KC_DEL)
 
-// Macros
-enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  COLEMDH,
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
@@ -62,15 +62,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_COLEMDH] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,BSLS,
+         ,    ,    , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSBS, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSQU,
+         , A  , R  , S  , T  ,    ,                M  , N  , E  , I  , O  ,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LCTL, Z  , X  , C  , D  , V  ,HOME,     END , K  , H  ,COMM,DOT ,SLSH,RCTL,
+         ,    ,    ,    , D  , V  ,    ,         , K  , H  ,    ,    ,    ,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,RATA,LOSP,         RSBS,RADE,LALT
+                           ,    ,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
   ),
 

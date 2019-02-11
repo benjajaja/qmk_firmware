@@ -14,10 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_USER_H
-#define CONFIG_USER_H
+#pragma once
 
-#include "../../config.h"
+#define CONFIG_USER_H
 
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
@@ -32,9 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
-//#define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
+//#define PERMISSIVE_HOLD
 //#define TAPPING_FORCE_HOLD
 //#define TAPPING_TERM 175
-
-#endif
