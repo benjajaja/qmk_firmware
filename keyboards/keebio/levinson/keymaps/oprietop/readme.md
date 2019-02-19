@@ -1,2 +1,1 @@
-# 0prietop's Contra Layout
-
+# Oprietop's Levinson Layout
