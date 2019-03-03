@@ -1,5 +1,13 @@
 #pragma once
 
+#define CONFIG_USER_H
+
+/* RGB LED */
+#define RGB_DI_PIN D3
+#undef RGBLED_NUM
+#define RGBLED_NUM 10   // Number of LEDs in the board
+#define RGBLIGHT_ANIMATIONS
+
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0

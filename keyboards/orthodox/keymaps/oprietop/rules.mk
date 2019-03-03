@@ -1,1 +1,2 @@
-BOOTLOADER = caterina
+RGBLIGHT_ENABLE = yes
+UNICODE_ENABLE = yes
