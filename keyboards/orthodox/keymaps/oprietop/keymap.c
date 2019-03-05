@@ -2,13 +2,13 @@
 
 #include QMK_KEYBOARD_H
 
-extern rgblight_config_t rgblight_config;
+#ifdef RGBLIGHT_ENABLE
+  extern rgblight_config_t rgblight_config;
+#endif
+extern keymap_config_t keymap_config;
 
 // Timer for M_BSPC
 static uint16_t timer;
-
-// Default rgb brightness
-static uint8_t brgt_val = 50;
 
 // Layers
 #define _DH 0
@@ -29,6 +29,11 @@ enum custom_keycodes {
   UC_DANC,
   UC_SCRE,
   UC_WALL,
+  UC_SOB,
+  UC_DEAL,
+  UC_RAGE,
+  UC_NOOO,
+  UC_SALU,
 };
 
 // Shortcuts
@@ -76,32 +81,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_LO] = LAYOUT ( \
-    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                                                         KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
-    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,          _______, _______,   KC_ENT,  KC_UP,           KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
-    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL, _______, _______, _______,   A(KC_B), KC_ENT, A(KC_F), KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______  \
+    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                                                          KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
+    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,          KC_VOLU, KC_MPLY,   KC_MPRV, KC_MNXT,          KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
+    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL, _______, KC_VOLD, KC_MUTE,   A(KC_B), KC_ENT,  A(KC_F), KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______  \
   ),
 
   [_RA] = LAYOUT ( \
     KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                         KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
-    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             _______, _______,   C(KC_W), A(KC_D),          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
+    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             _______, KC_CAPS,   C(KC_W), A(KC_D),          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
     KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,  KC_F5,   _______, KC_ENT,  _______,   C(KC_U), C(KC_K), _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12   \
   ),
 
   [_MO] = LAYOUT ( \
-    RESET,   KC_ACL0,  KC_ACL1, KC_ACL2, _______, _______,                                                         _______, _______, _______, TSKMGR,  CALTDEL, KC_PSCR, \
-    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, M_VAI,   _______,          _______, _______,   M_RAN64, _______,          UC_FLIP, UC_TABL, UC_SHRG, UC_DISA, _______, _______, \
-    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, M_VAD,   _______, _______, _______, _______,   _______, _______, _______, UC_DANC, UC_SCRE, UC_WALL, _______, _______, _______  \
+    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                         UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, KC_PSCR, \
+    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, _______,   M_RAN64, _______,          UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, _______, \
+    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, _______, _______, _______, _______,   _______, _______, _______, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, _______  \
   ),
 
 };
 
-// https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
 void matrix_init_user(void) { // Runs boot tasks for keyboard
+  #ifdef UNICODE_ENABLE
     set_unicode_input_mode(UC_LNX);
+  #endif
+  #ifdef RGBLIGHT_ENABLE
     rgblight_enable();
     //rgblight_sethsv(276,255,170); // Purple
-    rgblight_sethsv(0,0,brgt_val); // White
+    rgblight_sethsv(0,0,100); // White
     rgblight_mode(21);
+  #endif
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -133,58 +141,85 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case M_VAD:
-      if (record->event.pressed) {
-          rgblight_decrease_val();
-          brgt_val = rgblight_config.val;
-      }
-      return false;
-    case M_VAI:
-      if (record->event.pressed) {
-          rgblight_increase_val();
-          brgt_val = rgblight_config.val;
-      }
-      return false;
+      break;
     case M_RAN64:
       if (record->event.pressed) {
           tap_random_base64();
       }
       return false;
+      break;
     #ifdef UNICODE_ENABLE
       case UC_FLIP: // (ノಠ痊ಠ)ノ彡┻━┻
         if (record->event.pressed) {
           send_unicode_hex_string("0028 30CE 0CA0 75CA 0CA0 0029 30CE 5F61 253B 2501 253B");
         }
+        return false;
         break;
       case UC_TABL: // ┬─┬ノ( º _ ºノ)
         if (record->event.pressed) {
           send_unicode_hex_string("252C 2500 252C 30CE 0028 0020 00BA 0020 005F 0020 00BA 30CE 0029");
         }
+        return false;
         break;
       case UC_SHRG: // ¯\_(ツ)_/¯
         if (record->event.pressed) {
           send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");
         }
+        return false;
         break;
       case UC_DISA: // ಠ_ಠ
         if (record->event.pressed) {
           send_unicode_hex_string("0CA0 005F 0CA0");
         }
+        return false;
         break;
       case UC_DANC: // (〜￣△￣)〜
         if (record->event.pressed) {
           send_unicode_hex_string("0028 301C FFE3 25B3 FFE3 0029 301C");
         }
+        return false;
         break;
       case UC_SCRE: // ヽ(ﾟДﾟ)ﾉ
         if (record->event.pressed) {
           send_unicode_hex_string("30FD 0028 FF9F 0414 FF9F 0029 FF89");
         }
+        return false;
         break;
       case UC_WALL: // ┬┴┬┴┤(･_├┬┴┬┴
         if (record->event.pressed) {
           send_unicode_hex_string("252C 2534 252C 2534 2524 0028 FF65 005F 251C 252C 2534 252C 2534");
         }
+        return false;
+        break;
+      case UC_SOB: // (ಢ⊱ಢ ｡)
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 0CA2 22B1 0CA2 0020 FF61 0029");
+        }
+        return false;
+        break;
+      case UC_DEAL: // ( ∙_∙) ( ∙_∙)>⌐■-■ (⌐■_■)
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 0020 2219 005F 2219 0029 0020 0028 0020 2219 005F 2219 0029 003E 2310 25A0 002D 25A0 0020 0028 2310 25A0 005F 25A0 0029");
+        }
+        return false;
+        break;
+      case UC_RAGE: // （╬ಠ益ಠ)
+        if (record->event.pressed) {
+          send_unicode_hex_string("FF08 256C 0CA0 76CA 0CA0 0029");
+        }
+        return false;
+        break;
+      case UC_NOOO: // (」ﾟﾛﾟ)｣NOOOooooo━
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 300D FF9F FF9B FF9F 0029 FF63 004E 004F 004F 004F 006F 006F 006F 006F 006F 2501");
+        }
+        return false;
+        break;
+      case UC_SALU: // (￣^￣)ゞ
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 FFE3 005E FFE3 0029 309E");
+        }
+        return false;
         break;
     #endif
   }
@@ -192,23 +227,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 };
 
 // Change LED colors depending on the layer.
-uint32_t layer_state_set_user(uint32_t state) {
-  switch (biton32(state)) {
-    case _DH:
-      rgblight_sethsv(0,0,brgt_val); // White
-      break;
-    case _QW:
-      rgblight_sethsv(276,255,brgt_val); // Purple
-      break;
-    case _LO:
-      rgblight_sethsv(39,255,brgt_val); // Orange
-      break;
-    case _RA:
-      rgblight_sethsv(160,255,brgt_val); // Green
-      break;
-    case _MO:
-      rgblight_sethsv(0,255,brgt_val); // Red
-      break;
-  }
-  return state;
-};
+// https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
+#ifdef RGBLIGHT_ENABLE
+  uint32_t layer_state_set_user(uint32_t state) {
+    switch (biton32(state)) {
+      case _DH:
+        rgblight_sethsv(0,0,rgblight_config.val); // White
+        break;
+      case _QW:
+        rgblight_sethsv(276,255,rgblight_config.val); // Purple
+        break;
+      case _LO:
+        rgblight_sethsv(39,255,rgblight_config.val); // Orange
+        break;
+      case _RA:
+        rgblight_sethsv(160,255,rgblight_config.val); // Green
+        break;
+      case _MO:
+        rgblight_sethsv(0,255,rgblight_config.val); // Red
+        break;
+    }
+    return state;
+  };
+#endif
