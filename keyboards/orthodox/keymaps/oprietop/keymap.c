@@ -5,7 +5,6 @@
 #ifdef RGBLIGHT_ENABLE
   extern rgblight_config_t rgblight_config;
 #endif
-extern keymap_config_t keymap_config;
 
 // Timer for M_BSPC
 static uint16_t timer;
