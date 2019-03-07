@@ -21,22 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define CONFIG_USER_H
-
-#include "config_common.h"
-
-//#define CATERINA_BOOTLOADER
-
-
-#define USE_SERIAL
-// #define USE_I2C
-
-/* Select hand configuration */
-
-// #define MASTER_LEFT
-// #define MASTER_RIGHT
-#define EE_HANDS
-
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0
@@ -46,11 +30,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* RGB LED */
 #define RGB_DI_PIN D3
-#define RGBLED_NUM 10   // Number of LEDs in the board
+#define RGBLED_NUM 10   // Number of LEDs in he board
 #define RGBLIGHT_ANIMATIONS
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
-#define IGNORE_MOD_TAP_INTERRUPT
-//#define PERMISSIVE_HOLD
-//#define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 200
+#define IGNORE_MOD_TAP_INTERRUPT
+//#undef PERMISSIVE_HOLD
+//#define TAPPING_FORCE_HOLD
+//#define RETRO_TAPPING
+
+//https://www.reddit.com/r/olkb/comments/axpglg/qmk_a_pair_of_oddities_with_an_orthodox_keyboard/ehv9zp3
+#undef IS_COMMAND
