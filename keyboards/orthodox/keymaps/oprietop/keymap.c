@@ -7,7 +7,7 @@
 #endif
 
 // Timer for M_BSPC
-static uint16_t timer;
+Nstatic uint16_t timer;
 
 // Layers
 #define _DH 0
@@ -64,13 +64,23 @@ enum custom_keycodes {
 #define GUIQUO RGUI_T(KC_QUOT)
 #define LSSPC LSFT_T(KC_SPC)
 
+// Modifiers
+#define OS_ALT OSM(MOD_LALT)
+#define OS_CTL OSM(MOD_LCTL)
+#define OS_GUI OSM(MOD_LGUI)
+#define LT_ESC LT(_FN, KC_ESC)
+#define LT_SPC LT(_LO, KC_SPC)
+#define S_TAB LSFT_T(KC_TAB)
+#define S_DEL RSFT_T(KC_DEL)
+#define LT_BSPC LT(_RA, KC_BSPC)
+
 // https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes.md
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_DH] = LAYOUT ( \
-    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                      AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
-    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,               KC_PIPE, MODESC,  KC_DEL, KC_BSLS,          KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
-    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      MO(_LO), LSSPC,   LOWTAB,  RAIDEL, M_BSPC,  MO(_RA), KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
+    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                              AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
+    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,             KC_PIPE, MODESC,        KC_DEL,       KC_BSLS,        KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
+    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      S_TAB, LT_SPC,  LCT(KC_ESC),   RGT(KC_QUOT), LT_BSPC, S_DEL, KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
   ),
 
   [_QW] = LAYOUT ( \
@@ -111,16 +121,24 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
   #endif
 };
 
+static uint16_t bspc_role;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    // Our funky backspace key!
+    // Our ounky backspace key!
     case M_BSPC:
+      if (get_mods() & MOD_BIT(KC_LSHIFT)) {
+        bspc_role = KC_ENT;
+      } else {
+        bspc_role = KC_BSPC;
+      }
       if (record->event.pressed) {
-        timer = timer_read();
-        // Register Right Shift if we are not shifted
-        if (! (get_mods() & (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT)))) {
+        if (timer_elapsed(timer) > TAPPING_TERM) {
           register_code(KC_RSFT);
+        } else {
+          register_code(bspc_role);
         }
+        timer = timer_read();
       } else {
         // Unregister Right Shift if registered
         if (get_mods() & MOD_BIT(KC_RSHIFT)) {
@@ -128,16 +146,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         // Check if we are into the TAPPING_TERM threshold
         if (timer_elapsed(timer) < TAPPING_TERM) {
-          // Tap Enter if left shifted, Backspace if not
-          if (get_mods() & MOD_BIT(KC_LSHIFT)) {
-            // Avoid sending Left Shift + Enter
-            unregister_code(KC_LSFT);
-            tap_code(KC_ENT);
-            register_code(KC_LSFT);
-          } else {
-            tap_code(KC_BSPC);
+          switch (bspc_role) {
+            case KC_ENT:
+              unregister_code(KC_LSFT);
+              register_code(bspc_role);
+              register_code(KC_LSFT);
+            case KC_BSPC:
+              register_code(bspc_role);
           }
         }
+        unregister_code(bspc_role);
       }
       return false;
       break;
