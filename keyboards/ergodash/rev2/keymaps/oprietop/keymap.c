@@ -40,7 +40,7 @@ enum custom_keycodes {
 // Cut/Paste shortcuts
 #define PASTE RSFT(KC_INS)
 #define CUT LSFT(KC_DEL)
-#define CPY LCTL(KC_INS)
+#define COPY LCTL(KC_INS)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_CO] = LAYOUT( /* COLEMAK MOD-DH*/
@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,   KC_DEL,         KC_GRV,  KC_J,   KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS, \
     KC_BSPC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,   KC_MINS,        KC_EQL,  KC_M,   KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
     LSEN,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,   KC_TAB,         KC_DEL,  KC_K,   KC_H,    KC_COMM, KC_DOT,  KC_SLSH, RSEN,    \
-    KC_LCTL, KC_LGUI, KC_LALT, KC_RALT, TT(_FN), LSSP,   KC_NO,          KC_NO,   RSEN,   TT(_FN), KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+    KC_LCTL, KC_LGUI, KC_LALT, KC_RALT, TT(_FN), LSSP,   KC_NO,          KC_NO,   M_BSPC, TT(_FN), KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_QW] = LAYOUT( /* QWERTY */
     _______, _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______, _______, \
@@ -58,20 +58,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______, _______  \
   ),
   [_FN] = LAYOUT( /* FUNCTION */
-    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   M_RAN64,       M_RAN64, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
-    _______, KC_ESC,  CUT,     KC_WH_U, PASTE,   KC_VOLU, _______,       _______, KC_MNXT, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_BTN4, \
-    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_VOLD, _______,       _______, KC_MPRV, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGUP, TG(_FN), \
-    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_MUTE, _______,       _______, KC_MPLY, KC_HOME, KC_END,  KC_UP,   KC_PGDN, _______, \
+    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_VOLU,       KC_MNXT, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
+    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,   KC_VOLD,       KC_MPRV, KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_BTN4, \
+    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, _______, KC_MUTE,       KC_MPLY, KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  TG(_FN), \
+    KC_CAPS, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, _______, M_RAN64,       KC_INS,  KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_CAPS, \
     _______, _______, _______, _______, TT(_AD), KC_SPC,  _______,       _______, KC_PENT, TT(_AD), KC_LEFT, KC_DOWN, KC_RGHT, _______  \
   ),
   [_AD] = LAYOUT( /* ADJUST */
-    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP, _______,      _______, _______, _______, _______, KC_SLCK, KC_PAUS, KC_PSCR, \
-    _______, _______,  _______, _______, _______, _______, _______,      M_RAN64, UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, _______, \
-    _______, RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, _______, _______,      _______, UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, _______, \
-    KC_CAPS, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, _______, _______,      _______, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, KC_CAPS, \
-    TG(_QW), RGB_TOG,  _______, _______, _______, _______, _______,      _______, _______, _______, _______, _______, _______, _______  \
+    RESET,    DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, _______, M_RAN64,      M_RAN64, _______, _______, _______, KC_SLCK, KC_PAUS, KC_PSCR, \
+    RGB_M_G,  RGB_M_P,  RGB_M_B, RGB_M_R, RGB_M_K, _______, _______,      _______, UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, _______, \
+    RGB_MOD,  RGB_HUI,  RGB_SAI, RGB_VAI, _______, _______, _______,      _______, UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, _______, \
+    RGB_RMOD, RGB_HUD,  RGB_SAD, RGB_VAD, _______, _______, _______,      _______, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, KC_CAPS, \
+    TG(_QW),  RGB_TOG,  AG_SWAP, _______, _______, TG(_QW), _______,      _______, RGB_TOG, _______, _______, _______, _______, _______  \
   )
-
 };
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
@@ -82,8 +81,9 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     rgblight_enable();
     //rgblight_sethsv(276,255,170); // Purple
     //rgblight_sethsv(0,0,100); // White
-    rgblight_sethsv(51, 255, 100); // gold
-    rgblight_mode(3);
+    //rgblight_sethsv(240,255,50); // blue
+    rgblight_sethsv_noeeprom(43,100,50); // Goldenrod
+    rgblight_mode(21);
   #endif
 };
 
@@ -215,7 +215,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   uint32_t layer_state_set_user(uint32_t state) {
     switch (biton32(state)) {
       case _CO:
-        rgblight_sethsv(51, 255,rgblight_config.val); // gold
+        //rgblight_sethsv(240,255,rgblight_config.val); // blue
+        rgblight_sethsv_noeeprom(43,100,rgblight_config.val); // Goldenrod
         break;
       case _QW:
         rgblight_sethsv(39,255,rgblight_config.val); // Orange
