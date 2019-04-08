@@ -40,5 +40,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define TAPPING_FORCE_HOLD
 //#define RETRO_TAPPING
 
-//https://www.reddit.com/r/olkb/comments/axpglg/qmk_a_pair_of_oddities_with_an_orthodox_keyboard/ehv9zp3
+// Disable the command automation
 #undef IS_COMMAND

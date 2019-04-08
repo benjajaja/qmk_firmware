@@ -7,7 +7,7 @@
 #endif
 
 // Timer for M_BSPC
-Nstatic uint16_t timer;
+static uint16_t timer;
 
 // Layers
 #define _DH 0
@@ -54,21 +54,12 @@ enum custom_keycodes {
 #define TAT(X) LALT_T(X)
 #define AGT(X) RALT_T(X)
 
-// Thumbs
-#define CTLESC CTL_T(KC_ESC)
-#define MODESC LT(_MO, KC_ESC)
-#define LOWTAB LT(_LO, KC_TAB)
-#define MOVESPC LT(_LO, KC_SPC)
-#define SFTBSPC SFT_T(KC_BSPC)
-#define RAIDEL LT(_RA, KC_DEL)
-#define GUIQUO RGUI_T(KC_QUOT)
-#define LSSPC LSFT_T(KC_SPC)
-
 // Modifiers
 #define OS_ALT OSM(MOD_LALT)
 #define OS_CTL OSM(MOD_LCTL)
 #define OS_GUI OSM(MOD_LGUI)
-#define LT_ESC LT(_FN, KC_ESC)
+#define LT_ESC LT(_MO, KC_ESC)
+#define LT_TAB LT(_MO, KC_TAB)
 #define LT_SPC LT(_LO, KC_SPC)
 #define S_TAB LSFT_T(KC_TAB)
 #define S_DEL RSFT_T(KC_DEL)
@@ -78,33 +69,33 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_DH] = LAYOUT ( \
-    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                              AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
-    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,             KC_PIPE, MODESC,        KC_DEL,       KC_BSLS,        KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
-    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      S_TAB, LT_SPC,  LCT(KC_ESC),   RGT(KC_QUOT), LT_BSPC, S_DEL, KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
+    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                        AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
+    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,               KC_PIPE, KC_ESC, KC_QUOT,   KC_BSLS,          KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
+    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      KC_LSFT, LT_SPC,  LT_TAB, G(KC_DEL), LT_BSPC, KC_RSFT, KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
   ),
 
   [_QW] = LAYOUT ( \
-    _______, _______, _______, KC_E,    KC_R, AGT(KC_T),                                                         AGT(KC_Y), KC_U,    KC_I,    KC_O, KC_P,    _______, \
-    _______, _______, KC_S,    KC_D,    KC_F, _______,            _______, _______,   _______, _______,          KC_H,      KC_J,    KC_K,    KC_L, KC_SCLN, _______, \
-    _______, _______, _______, _______, KC_V, KC_B,      _______, _______, _______,   _______, _______, _______, KC_N,      KC_M, _______, _______, _______, _______  \
+    _______, _______, _______, KC_E,    KC_R, AGT(KC_T),                                                       AGT(KC_Y), KC_U,    KC_I,    KC_O, KC_P,    _______, \
+    _______, _______, KC_S,    KC_D,    KC_F, _______,            _______, _______, _______, _______,          KC_H,      KC_J,    KC_K,    KC_L, KC_SCLN, _______, \
+    _______, _______, _______, _______, KC_V, KC_B,      _______, _______, _______, _______, _______, _______, KC_N,      KC_M, _______, _______, _______, _______  \
   ),
 
   [_LO] = LAYOUT ( \
-    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                                                          KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
-    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,          KC_VOLU, KC_MPLY,   KC_MPRV, KC_MNXT,          KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
-    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL, _______, KC_VOLD, KC_MUTE,   A(KC_B), KC_ENT,  A(KC_F), KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______  \
+    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                                                        KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
+    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,          KC_MPLY, KC_VOLU, KC_MPRV, KC_MNXT,          KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
+    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL, KC_MUTE, _______, KC_VOLD, A(KC_B), KC_ENT,  A(KC_F), KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______  \
   ),
 
   [_RA] = LAYOUT ( \
-    KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                         KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
-    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             _______, KC_CAPS,   C(KC_W), A(KC_D),          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
-    KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,  KC_F5,   _______, KC_ENT,  _______,   C(KC_U), C(KC_K), _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12   \
+    KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                       KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
+    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             C(KC_W), A(KC_D), _______, _______,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
+    KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,  KC_F5,   C(KC_U), KC_ENT,  C(KC_K), _______, _______, _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12   \
   ),
 
   [_MO] = LAYOUT ( \
-    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                         UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, KC_PSCR, \
-    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, _______,   M_RAN64, _______,          UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, _______, \
-    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, _______, _______, _______, _______,   _______, _______, _______, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, _______  \
+    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                       UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, KC_PSCR, \
+    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, _______, M_RAN64, KC_UP,            UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, KC_CAPS, \
+    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, _______  \
   ),
 
 };
