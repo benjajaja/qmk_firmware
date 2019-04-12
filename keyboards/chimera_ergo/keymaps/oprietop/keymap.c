@@ -4,23 +4,23 @@
 #include "version.h"
 
 // Layers
-#define _QWERTY 0
-#define _COLEMDH 1
-#define _LOWER 2
-#define _RAISE 3
+#define _DH 0
+#define _QW 1
+#define _LO 2
+#define _RA 3
 // Aliases
 #define KC_     KC_TRNS
 #define KC_XXXX KC_NO
-#define KC_COLH TG(_COLEMDH)
+#define KC_QWER TG(_QW)
 #define KC_RST  RESET
 // Shift when held, Backspace  when tapped
 #define KC_RSBS RSFT_T(KC_BSPC)
 // Lower when held, Space when tapped
-#define KC_LOSP LT(_LOWER, KC_SPC)
+#define KC_LOSP LT(_LO, KC_SPC)
 // RAlt when held, Tab when tapped
 #define KC_RATA RALT_T(KC_TAB)
 // Raise when held, Delete when tapped
-#define KC_RADE LT(_RAISE, KC_DEL)
+#define KC_RADE LT(_RA, KC_DEL)
 // Cut/Paste shortcuts
 #define KC_CPY LCTL(KC_INS)
 #define KC_PST RSFT(KC_INS)
@@ -63,33 +63,33 @@ enum custom_keycodes {
 // Layouts
 // https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes_basic.md
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = KC_KEYMAP(
+  [_DH] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      GUES, 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,GUBS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TALB, Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,TARB,
+     TALB, Q  , W  , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,TARB,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LSGR, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,RSQU,
+     LSGR, A  , R  , S  , T  , G  ,                M  , N  , E  , I  , O  ,RSQU,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     CTMI,GUIZ,TATX, C  , V  , B  ,                N  , M  ,COMM,TADO,GUSL,CTEQ,
+     CTMI,GUIZ,TATX, C  , D  , V  ,                K  , H  ,COMM,TADO,GUSL,CTEQ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
                          RATA,LOSP,               RSBS,RADE
   //                    `----+----'              `----+----'
   ),
-  [_COLEMDH] = KC_KEYMAP(
+  [_QW] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    , F  , P  , B  ,                J  , L  , U  , Y  ,SCLN,    ,
+         ,    ,    , E  , R  , T  ,                Y  , U  , I  , O  , P  ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    , R  , S  , T  ,    ,                M  , N  , E  , I  , O  ,    ,
+         ,    , S  , D  , F  ,    ,                H  , J  , K  , L  ,SCLN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    , C  , D  , V  ,                K  , H  ,    ,    ,    ,    ,
+         ,    ,    , C  , V  , B  ,                N  , M  ,    ,    ,    ,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
                              ,    ,                   ,
   //                    `----+----'              `----+----'
   ),
-  [_LOWER] = KC_KEYMAP(
+  [_LO] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -102,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              ,    ,               ENT ,LALT
   //                    `----+----'              `----+----'
   ),
-  [_RAISE] = KC_KEYMAP(
+  [_RA] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      RST , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,PSCR,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
@@ -110,9 +110,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      CAPS,MPRV,MNXT,MSTP,MPLY,VOLD,               GRV ,MINS,EQL ,LBRC,RBRC,CAPS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     COLH,MUTE,INCL,PULL,PUSH, LS ,               BSLS,PIPE,    ,    ,    ,    ,
+     QWER,MUTE,INCL,PULL,PUSH, LS ,               BSLS,PIPE,    ,    ,    ,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
-                             ,SPC ,               BSPC,
+                             ,ENT ,               ENT ,
   //                    `----+----'              `----+----'
   )
 };
@@ -146,16 +146,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void matrix_scan_user(void) {
   uint8_t layer = biton32(layer_state);
   switch (layer) {
-    case _QWERTY:
+    case _DH:
       set_led_green;
       break;
-    case _COLEMDH:
+    case _QW:
       set_led_green;
       break;
-    case _LOWER:
+    case _LO:
       set_led_blue;
       break;
-    case _RAISE:
+    case _RA:
       set_led_red;
       break;
   }

@@ -129,27 +129,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * `-----------------------------------------------------------------------------------'
    */
   [_QW] = LAYOUT_planck_grid(
-    KC_Q,      KC_W,    KC_E,    KC_R,    AGT(KC_T), _______, _______, AGT(KC_Y), KC_U,    KC_I,    KC_O,    KC_P,
-    LST(KC_A), KC_S,    KC_D,    KC_F,    KC_G,      _______, _______, KC_H,      KC_J,    KC_K,    KC_L,    RST(KC_SCLN),
-    KC_Z,      KC_X,    KC_C,    KC_V,    KC_D,      _______, _______, KC_N,      KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
-    _______,   _______, _______, _______, _______,   _______, _______, _______,   _______, _______, _______, _______
+    _______, _______, KC_E,    KC_R,    AGT(KC_T), _______, _______, AGT(KC_Y), KC_U,    KC_I,    KC_O,    KC_P,
+    _______, KC_S,    KC_D,    KC_F,    _______,   _______, _______, KC_H,      KC_J,    KC_K,    KC_L,    RST(KC_SCLN),
+    _______, _______, _______, KC_V,    KC_D,      _______, _______, KC_N,      KC_M,    _______, _______, _______,
+    _______, _______, _______, _______, _______,   _______, _______, _______,   _______, _______, _______, _______
   ),
   /* Lower
    * ,-----------------------------------------------------------------------------------.
-   * |  Esc |  CUT | WH_U | PASTE|  P*  |  P7  |  P8  |  P9  |  M_1 |  M_U |  M_2 |  M_3 |
+   * |  Esc | COPY | WH_U | CUT  | PASTE|      |      | PgUp |  M_1 |  M_U |  M_2 |  M_3 |
    * |------+------+------+------+------+------+-------------+------+------+------+------|
-   * |  Tab | WH_L | WH_D | WH_R |  P-  |  P4  |  P5  |  P6  |  M_L |  M_D |  M_R | PgUp |
+   * |  Tab | WH_L | WH_D | WH_R | INS  |      |      | Home |  M_L |  M_D |  M_R | End  |,
    * |------+------+------+------+------+------+-------------+------+------+------+------|
-   * | Ctrl | Shft | Gui  | M_1  |  P+  |  P1  |  P2  |  P3  | Home |  End |  Up  | PgDn |
+   * | Ctrl | Shft | Gui  | M_1  | DEL  |      |      | PgDn | Left | Down |  Up  | Right|
    * |------+------+------+------+------+------+------+------+------+------+------+------|
-   * | Reset| CO/QW| PrtSc|NumLck|      |  P0  |  P.  | Enter|   P/ | Left | Down | Right|
+   * | Reset| CO/QW| PrtSc|NumLck|      |      |      | Enter| Ins  | Left | Down | Right|
    * `-----------------------------------------------------------------------------------'
    */
   [_LO] = LAYOUT_planck_grid(
-    KC_ESC,  CUT,     KC_WH_U, PASTE,   KC_PAST, KC_P7,   KC_P8,   KC_P9,   KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3,
-    KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_PMNS, KC_P4,   KC_P5,   KC_P6,   KC_MS_L, KC_MS_D, KC_MS_R, KC_PGUP,
-    KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_PPLS, KC_P1,   KC_P2,   KC_P3,   KC_HOME, KC_END,  KC_UP,   KC_PGDN,
-    RESET,   TG(_QW), KC_PSCR, KC_NLCK, _______, KC_P0,   KC_PDOT, KC_ENT,  KC_PSLS, KC_LEFT, KC_DOWN, KC_RGHT
+    KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,   _______, _______, KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3,
+    KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,  _______, _______, KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,
+    KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL,  _______, _______, KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
+    RESET,   TG(_QW), KC_PSCR, KC_NLCK, _______, _______, _______, KC_ENT,  KC_INS,  KC_LEFT, KC_DOWN, KC_RGHT
   ),
   /* Raise
    * ,-----------------------------------------------------------------------------------.
