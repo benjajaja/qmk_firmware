@@ -82,7 +82,7 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     //rgblight_sethsv(276,255,170); // Purple
     //rgblight_sethsv(0,0,100); // White
     //rgblight_sethsv(240,255,50); // blue
-    rgblight_sethsv_noeeprom(43,100,50); // Goldenrod
+    rgblight_sethsv(43,100,50); // Goldenrod
     rgblight_mode(21);
   #endif
 };
@@ -216,7 +216,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (biton32(state)) {
       case _CO:
         //rgblight_sethsv(240,255,rgblight_config.val); // blue
-        rgblight_sethsv_noeeprom(43,100,rgblight_config.val); // Goldenrod
+        rgblight_sethsv(43,100,rgblight_config.val); // Goldenrod
         break;
       case _QW:
         rgblight_sethsv(39,255,rgblight_config.val); // Orange
