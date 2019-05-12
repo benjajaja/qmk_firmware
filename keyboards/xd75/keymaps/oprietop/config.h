@@ -14,12 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIG_USER_H
-#define CONFIG_USER_H
-
-#include "../../config.h"
-
-// place overrides here
+#pragma once
 
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
@@ -28,8 +23,12 @@
 #define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
 
-#endif
-
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
-#define PERMISSIVE_HOLD
+//#define TAPPING_TERM 200
 #define IGNORE_MOD_TAP_INTERRUPT
+//#undef PERMISSIVE_HOLD
+//#define TAPPING_FORCE_HOLD
+//#define RETRO_TAPPING
+
+// Disable the command automation
+#undef IS_COMMAND

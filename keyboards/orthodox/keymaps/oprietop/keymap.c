@@ -1,10 +1,5 @@
 // oprietop's orthodox keyboard
-
 #include QMK_KEYBOARD_H
-
-#ifdef RGBLIGHT_ENABLE
-  extern rgblight_config_t rgblight_config;
-#endif
 
 // Timer for M_BSPC
 static uint16_t timer;
@@ -14,12 +9,10 @@ static uint16_t timer;
 #define _QW 1
 #define _LO 2
 #define _RA 3
-#define _MO 4
+#define _AD 4
 
 enum custom_keycodes {
   M_BSPC = SAFE_RANGE,
-  M_VAD,
-  M_VAI,
   M_RAN64,
   UC_FLIP,
   UC_TABL,
@@ -36,9 +29,6 @@ enum custom_keycodes {
 };
 
 // Shortcuts
-#define ADJUST MO(_ADJUST)
-#define CALTDEL LCTL(LALT(KC_DEL))
-#define TSKMGR LCTL(LSFT(KC_ESC))
 #define COPY LCTL(KC_INS)
 #define CUT LSFT(KC_DEL)
 #define PASTE RSFT(KC_INS)
@@ -55,23 +45,21 @@ enum custom_keycodes {
 #define AGT(X) RALT_T(X)
 
 // Modifiers
-#define OS_ALT OSM(MOD_LALT)
-#define OS_CTL OSM(MOD_LCTL)
-#define OS_GUI OSM(MOD_LGUI)
-#define LT_ESC LT(_MO, KC_ESC)
-#define LT_TAB LT(_MO, KC_TAB)
+#define LT_ESC LT(_AD, KC_ESC)
+#define LT_TAB LT(_LO, KC_TAB)
+#define LT_DEL LT(_RA, KC_DEL)
 #define LT_SPC LT(_LO, KC_SPC)
+#define S_SPC LSFT_T(KC_SPC)
 #define S_TAB LSFT_T(KC_TAB)
 #define S_DEL RSFT_T(KC_DEL)
 #define LT_BSPC LT(_RA, KC_BSPC)
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes.md
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
   [_DH] = LAYOUT ( \
-    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                        AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
-    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,               KC_PIPE, KC_ESC, KC_QUOT,   KC_BSLS,          KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
-    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      KC_LSFT, LT_SPC,  LT_TAB, G(KC_DEL), LT_BSPC, KC_RSFT, KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
+    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P, AGT(KC_B),                                                    AGT(KC_J), KC_L, KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
+    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T, KC_G,              LT_ESC, KC_DOWN, KC_UP,   KC_BSLS,         KC_M,      KC_N, KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
+    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D, KC_V,      LT_TAB, S_SPC,  KC_LEFT, KC_RGHT, M_BSPC,  LT_DEL, KC_K,      KC_H, KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL)   \
   ),
 
   [_QW] = LAYOUT ( \
@@ -81,23 +69,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_LO] = LAYOUT ( \
-    _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                                                        KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
-    _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_INS,          KC_MPLY, KC_VOLU, KC_MPRV, KC_MNXT,          KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
-    _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_DEL, KC_MUTE, _______, KC_VOLD, A(KC_B), KC_ENT,  A(KC_F), KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______  \
+    KC_ESC,  KC_ACL2, COPY,    KC_WH_U, CUT,     PASTE,                                                         KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_BSPC, \
+    KC_TAB,  KC_LALT, KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,          A(KC_B), _______, _______, A(KC_F),          KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_DEL,  \
+    M_RAN64, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2, XXXXXXX, KC_ENT,  _______, _______, KC_ENT,  KC_RGUI, KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS   \
   ),
 
   [_RA] = LAYOUT ( \
     KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                       KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
-    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             C(KC_W), A(KC_D), _______, _______,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
-    KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,  KC_F5,   C(KC_U), KC_ENT,  C(KC_K), _______, _______, _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12   \
+    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,   KC_5,             C(KC_W), A(KC_D), A(KC_B), A(KC_F),          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
+    KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,  KC_F5,   C(KC_U), KC_ENT,  C(KC_K), M_RAN64, KC_ENT,  XXXXXXX, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12   \
   ),
 
-  [_MO] = LAYOUT ( \
-    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                       UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, _______, KC_PSCR, \
-    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, _______, M_RAN64, KC_UP,            UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  _______, KC_CAPS, \
-    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, _______, _______  \
+  [_AD] = LAYOUT ( \
+    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                       UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_PSCR, \
+    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,          XXXXXXX, KC_MUTE, KC_MPLY, KC_VOLU,          UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
+    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID, XXXXXXX, XXXXXXX, KC_PAUS, KC_MPRV, KC_VOLD, KC_MNXT, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, XXXXXXX  \
   ),
-
 };
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
@@ -105,10 +92,7 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     set_unicode_input_mode(UC_LNX);
   #endif
   #ifdef RGBLIGHT_ENABLE
-    rgblight_enable();
-    //rgblight_sethsv(276,255,170); // Purple
-    rgblight_sethsv(0,0,100); // White
-    rgblight_mode(21);
+    rgblight_mode(21); // knight rider
   #endif
 };
 
@@ -116,7 +100,7 @@ static uint16_t bspc_role;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    // Our ounky backspace key!
+    // Our funky backspace key!
     case M_BSPC:
       if (get_mods() & MOD_BIT(KC_LSHIFT)) {
         bspc_role = KC_ENT;
@@ -240,19 +224,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   uint32_t layer_state_set_user(uint32_t state) {
     switch (biton32(state)) {
       case _DH:
-        rgblight_sethsv(0,0,rgblight_config.val); // White
+        rgblight_sethsv(0,255,rgblight_get_val()); // Red
         break;
       case _QW:
-        rgblight_sethsv(276,255,rgblight_config.val); // Purple
+        rgblight_sethsv(191,255,rgblight_get_val()); // Purple
         break;
       case _LO:
-        rgblight_sethsv(39,255,rgblight_config.val); // Orange
+        rgblight_sethsv(28,255,rgblight_get_val()); // Orange
         break;
       case _RA:
-        rgblight_sethsv(160,255,rgblight_config.val); // Green
+        rgblight_sethsv(128,255,rgblight_get_val()); // Cyan
         break;
-      case _MO:
-        rgblight_sethsv(0,255,rgblight_config.val); // Red
+      case _AD:
+        rgblight_sethsv(0,0,rgblight_get_val()); // White
         break;
     }
     return state;
