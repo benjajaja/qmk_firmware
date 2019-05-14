@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* RGB LED */
 #define RGB_DI_PIN D3
-#define RGBLED_NUM 10   // Number of LEDs in he board
+#define RGBLED_NUM 18 // Number of LEDs in he board
 #define RGBLIGHT_HUE_STEP 5
 #define RGBLIGHT_SAT_STEP 5
 #define RGBLIGHT_VAL_STEP 5
