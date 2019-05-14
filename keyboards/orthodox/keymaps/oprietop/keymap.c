@@ -13,6 +13,7 @@ static uint16_t timer;
 
 enum custom_keycodes {
   M_BSPC = SAFE_RANGE,
+  M_WIPE,
   M_RAN64,
   UC_FLIP,
   UC_TABL,
@@ -81,14 +82,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_AD] = LAYOUT ( \
-    RESET,   DEBUG,    KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP,                                                       UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_PSCR, \
+    RESET, M_WIPE,     KC_ACL0, KC_ACL1, KC_ACL2, AG_TOGG,                                                       UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_PSCR, \
     TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,          XXXXXXX, KC_MUTE, KC_MPLY, KC_VOLU,          UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
     RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID, XXXXXXX, XXXXXXX, KC_PAUS, KC_MPRV, KC_VOLD, KC_MNXT, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, XXXXXXX  \
   ),
 };
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
-  #ifdef UNICODE_ENABLE
+  #ifdef UNICODE_ENABLe
     set_unicode_input_mode(UC_LNX);
   #endif
   #ifdef RGBLIGHT_ENABLE
@@ -134,9 +135,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case M_WIPE: // Wipe the eeprom and reset the board
+      if (record->event.pressed) {
+        eeconfig_init();
+        reset_keyboard();
+      }
+      return false;
+      break;
     case M_RAN64:
       if (record->event.pressed) {
-          tap_random_base64();
+        tap_random_base64();
       }
       return false;
       break;
