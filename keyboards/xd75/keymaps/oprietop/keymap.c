@@ -20,6 +20,7 @@
 
 enum custom_keycodes {
   M_RAN64 = SAFE_RANGE,
+  M_WIPE,
   UC_FLIP,
   UC_TABL,
   UC_SHRG,
@@ -84,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
  /* ADJUST
   * .--------------------------------------------------------------------------------------------------------------------------------------.
-  * | RESET  | DEBUG  | M ACL0 | M ACL1 | M ACL2 | AGSWAP | NUMLCK | SCRLCK | CAPS   | PAUSE  |        |        |        |        | PRSCR  |
+  * | RESET  | M_WIPE | M ACL0 | M ACL1 | M ACL2 | AGSWAP | NUMLCK | SCRLCK | CAPS   | PAUSE  |        |        |        |        | PRSCR  |
   * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
   * |        | STATIC | BREATH | RAINBO | KNIGHT |        |        |        |        |   E    |    M   |   O    |   J    |   I    |        |
   * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -109,15 +110,22 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     set_unicode_input_mode(UC_LNX);
   #endif
   #ifdef RGBLIGHT_ENABLE
-    rgblight_enable();
+    //rgblight_enable();
     rgblight_sethsv(25, 255, 255); // Carbon Orange
     //rgblight_mode(13); // Swirling rainbow
-    rgblight_mode(3);
+    //rgblight_mode(3);
   #endif
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case M_WIPE: // Wipe the eeprom and reset the board
+      if (record->event.pressed) {
+        eeconfig_init();
+        reset_keyboard();
+      }
+      return false;
+      break;
     case M_RAN64:
       if (record->event.pressed) {
           tap_random_base64();
