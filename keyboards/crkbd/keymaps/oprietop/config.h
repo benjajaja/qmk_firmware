@@ -17,44 +17,83 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 /* Select hand configuration */
 #define MASTER_LEFT
 // #define MASTER_RIGHT
-// #define EE_HANDS
-
+//#define EE_HANDS
 
 #undef USE_I2C
 #undef SSD1306OLED
 #define USE_SERIAL_PD2
 
+// #define TAPPING_FORCE_HOLD
+#define TAPPING_TERM 200
+#define FORCE_NKRO
+
+#ifdef RGBLIGHT_ENABLE
+#   undef RGBLED_NUM
+#   define RGBLED_NUM 27
+#   define RGBLIGHT_HUE_STEP 8
+#   define RGBLIGHT_SAT_STEP 8
+#   define RGBLIGHT_VAL_STEP 8
+#   define RGBLIGHT_LIMIT_VAL 100
+#endif
+
+#ifdef RGB_MATRIX_ENABLE
+#   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
+#   define RGB_DISABLE_WHEN_USB_SUSPENDED true // turn off effects when suspended
+#   define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
+#   define RGB_MATRIX_HUE_STEP 8
+#   define RGB_MATRIX_SAT_STEP 8
+#   define RGB_MATRIX_VAL_STEP 8
+#   define RGB_MATRIX_SPD_STEP 10
+//#   define DISABLE_RGB_MATRIX_ALPHAS_MODS
+//#   define DISABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+//#   define DISABLE_RGB_MATRIX_BREATHING
+#   define DISABLE_RGB_MATRIX_BAND_SAT
+//#   define DISABLE_RGB_MATRIX_BAND_VAL
+#   define DISABLE_RGB_MATRIX_BAND_PINWHEEL_SAT
+//#   define DISABLE_RGB_MATRIX_BAND_PINWHEEL_VAL
+#   define DISABLE_RGB_MATRIX_BAND_SPIRAL_SAT
+//#   define DISABLE_RGB_MATRIX_BAND_SPIRAL_VAL
+//#   define DISABLE_RGB_MATRIX_CYCLE_ALL
+//#   define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+//#   define DISABLE_RGB_MATRIX_CYCLE_UP_DOWN
+//#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN
+//#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
+#   define DISABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
+#   define DISABLE_RGB_MATRIX_DUAL_BEACON
+//#   define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
+//#   define DISABLE_RGB_MATRIX_CYCLE_SPIRAL
+#   define DISABLE_RGB_MATRIX_RAINBOW_BEACON
+#   define DISABLE_RGB_MATRIX_RAINBOW_PINWHEELS
+#   define DISABLE_RGB_MATRIX_RAINDROPS
+#   define DISABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS
+//#   define DISABLE_RGB_MATRIX_TYPING_HEATMAP
+#   define DISABLE_RGB_MATRIX_DIGITAL_RAIN
+//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE
+//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
+//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
+//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
+#   define DISABLE_RGB_MATRIX_SPLASH
+#   define DISABLE_RGB_MATRIX_MULTISPLASH
+//#     define DISABLE_RGB_MATRIX_SOLID_SPLASH
+//#     define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
+#endif // RGB_MATRIX_ENABLE
+
+#define OLED_FONT_H "keyboards/crkbd/keymaps/oprietop/danger.c"
+
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_DELAY 0
-#define MOUSEKEY_TIME_TO_MAX 30
-#define MOUSEKEY_MAX_SPEED 10
+#define MOUSEKEY_TIME_TO_MAX 60
+#define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
-
-/* RGB LED */
-//#undef RGBLED_NUM
-//#define RGBLED_NUM 27   // Number of LEDs in he board
-//#define RGBLIGHT_ANIMATIONS
-//#define RGBLIGHT_LIMIT_VAL 120
-//#define RGBLIGHT_HUE_STEP 10
-//#define RGBLIGHT_SAT_STEP 17
-//#define RGBLIGHT_VAL_STEP 17
-
-#define RGB_MATRIX_KEYPRESSES
-#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120
-
-// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
-//#define TAPPING_TERM 120
-#define IGNORE_MOD_TAP_INTERRUPT
-//#undef PERMISSIVE_HOLD
-//#define TAPPING_FORCE_HOLD
-//#define RETRO_TAPPING
-
-// Disable the command automation
-#undef IS_COMMAND
+#define MOUSEKEY_WHEEL_MAX_SPEED 2
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 60

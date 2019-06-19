@@ -3,102 +3,104 @@
 extern keymap_config_t keymap_config;
 extern uint8_t is_master;
 
-#ifdef RGBLIGHT_ENABLE
-//Following line allows macro to read current RGB settings
-extern rgblight_config_t rgblight_config;
-#endif
+// Timer for M_BSPC
+static uint16_t timer;
 
 // Layers
-#define _MODDH 0
-#define _LOWER 1
-#define _RAISE 2
-#define _ADJUST 3
+#define _DH 0
+#define _QW 1
+#define _LO 2
+#define _RA 3
+#define _AD 4
+
+enum custom_keycodes {
+  M_BSPC = SAFE_RANGE,
+  M_WIPE,
+  M_RAN64,
+  UC_FLIP,
+  UC_TABL,
+  UC_SHRG,
+  UC_DISA,
+  UC_DANC,
+  UC_SCRE,
+  UC_WALL,
+  UC_SOB,
+  UC_DEAL,
+  UC_RAGE,
+  UC_NOOO,
+  UC_SALU,
+};
 
 // Shortcuts
-#define KC_COPY LCTL(KC_INS)
-#define KC_CUT LSFT(KC_DEL)
-#define KC_PST RSFT(KC_INS)
-#define KC_      KC_TRNS
-#define KC_XXXXX KC_NO
-#define KC_ADJUS TT(_ADJUST)
-#define KC_RST   RESET
-#define KC_LTOG  RGB_TOG
-#define KC_LHUI  RGB_HUI
-#define KC_LHUD  RGB_HUD
-#define KC_LSAI  RGB_SAI
-#define KC_LSAD  RGB_SAD
-#define KC_LVAI  RGB_VAI
-#define KC_LVAD  RGB_VAD
-#define KC_LMOD  RGB_MOD
+#define COPY LCTL(KC_INS)
+#define CUT LSFT(KC_DEL)
+#define PASTE RSFT(KC_INS)
 
-// Left
-#define KC_GRV_S LSFT_T(KC_GRV)
-#define KC_MIN_C LCTL_T(KC_MINS)
-#define KC_Z_GUI LGUI_T(KC_Z)
-#define KC_X_ALT LALT_T(KC_X)
-#define KC_B_AGR RALT_T(KC_B)
-#define KC_LTESC LT(_LOWER, KC_ESC)
-#define KC_TAB_S LSFT_T(KC_TAB)
-#define KC_LTSPC LT(_LOWER, KC_SPC)
-// Right
-#define KC_QUO_S RSFT_T(KC_QUOT)
-#define KC_EQL_C RCTL_T(KC_EQL)
-#define KC_SLS_G RGUI_T(KC_SLSH)
-#define KC_DOT_A LALT_T(KC_DOT)
-#define KC_J_AGR RALT_T(KC_J)
-#define KC_LTBSP LT(_RAISE, KC_BSPC)
-#define KC_DEL_S RSFT_T(KC_DEL)
-#define KC_LTGUI LT(_RAISE, KC_RGUI)
+// Mod-Taps
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
+#define LST(X) LSFT_T(X)
+#define RST(X) RSFT_T(X)
+#define LCT(X) LCTL_T(X)
+#define RCT(X) RCTL_T(X)
+#define LGT(X) LGUI_T(X)
+#define RGT(X) RGUI_T(X)
+#define TAT(X) LALT_T(X)
+#define AGT(X) RALT_T(X)
+
+// Modifiers
+#define LT_ESC LT(_AD, KC_ESC)
+#define LT_GUI LT(_AD, KC_RGUI)
+#define LT_TAB LT(_LO, KC_TAB)
+#define LT_DEL LT(_RA, KC_DEL)
+#define LT_SPC LT(_LO, KC_SPC)
+#define S_SPC LSFT_T(KC_SPC)
+#define S_TAB LSFT_T(KC_TAB)
+#define S_DEL RSFT_T(KC_DEL)
+#define LT_BSPC LT(_RA, KC_BSPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_MODDH] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-       LBRC,     Q,     W,     F,     P, B_AGR,                  J_AGR,     L,     U,     Y,  SCLN,  RBRC,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      GRV_S,     A,     R,     S,     T,     G,                      M,     N,     E,     I,     O, QUO_S,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      MIN_C, Z_GUI, X_ALT,     C,     D,     V,                      K,     H,  COMM, DOT_A, SLS_G, EQL_C,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  LTESC, TAB_S, LTSPC,    LTBSP, DEL_S, LTGUI \
-                              //`--------------------'  `--------------------'
-  ),
+ [_DH] = LAYOUT (
+   KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P,   AGT(KC_B),                  AGT(KC_J), KC_L,   KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
+   LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T,   KC_G,                       KC_M,      KC_N,   KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
+   LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D,   KC_V,                       KC_K,      KC_H,   KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL),  \
+                                             LT_ESC, S_TAB,     LT_SPC, LT_BSPC, S_DEL,     KC_BSLS \
+ ),
 
-  [_LOWER] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-           ,   ESC,  COPY,  WH_U,   CUT,   PST,                   PGUP,  BTN1,  MS_U,  BTN2,  BTN3,      ,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-           ,   TAB,  WH_L,  WH_D,  WH_R,   INS,                   HOME,  MS_L,  MS_D,  MS_R,   END,      ,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-           ,  LCTL,  LSFT,  LGUI,  BTN1,   DEL,                   PGDN,  LEFT,  DOWN,    UP,  RGHT,      ,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                       ,      ,      ,      ENT, ADJUS,       \
-                              //`--------------------'  `--------------------'
-  ),
+ [_QW] = LAYOUT (
+   _______, _______, _______, KC_E,    KC_R,    AGT(KC_T),                   AGT(KC_Y), KC_U,   KC_I,    KC_O,    KC_P,    _______, \
+   _______, _______, KC_S,    KC_D,    KC_F,    _______,                          KC_H, KC_J,   KC_K,    KC_L,    KC_SCLN, _______, \
+   _______, _______, _______, _______, KC_V,    KC_B,                             KC_N, KC_M,   _______, _______, _______, _______, \
+                                       _______, _______,   _______, _______,   _______, _______ \
+ ),
 
-  [_RAISE] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-       PIPE,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSLS,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-        DOT,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  COMM,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-        F11,    F1,    F2,    F3,    F4,    F5,                     F6,    F7,    F8,    F9,   F10,   F12,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                       , ADJUS,   ENT,         ,      ,       \
-                              //`--------------------'  `--------------------'
-  ),
+ [_LO] = LAYOUT (
+   KC_ESC,  KC_ACL2, COPY,    KC_WH_U, CUT,     PASTE,                     KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_BSPC, \
+   KC_TAB,  KC_LALT, KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,                   KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_DEL,  \
+   M_RAN64, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2,                   KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  \
+                                       _______, _______, _______,  KC_ENT, _______, _______ \
+ ),
 
-  [_ADJUST] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-        RST, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                       ,      ,      ,         ,      ,       \
-                              //`--------------------'  `--------------------'
+ [_RA] = LAYOUT (
+   KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
+   KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
+   KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
+                                     _______, _______, KC_ENT, _______, _______, _______ \
+ ),
+
+ [_AD] = LAYOUT (
+    RESET,   M_WIPE,   KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,                   UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_PSCR, \
+    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,                   UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
+    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,                   UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, XXXXXXX, \
+                                         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX \
   )
 };
+
+void matrix_init_user(void) { // Runs boot tasks for keyboard
+  #ifdef UNICODE_ENABLe
+    set_unicode_input_mode(UC_LNX);
+  #endif
+};
+
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -141,6 +143,8 @@ void add_keylog(uint16_t keycode) {
     if (keycode < 60) {
         keylog_str[0] = code_to_name[keycode];
     }
+    keylog_str[KEYLOG_LEN] = 0;
+
     log_timer = timer_read();
 }
 
@@ -150,25 +154,19 @@ void update_log(void) {
     }
 }
 
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {  add_keylog(keycode); }
-    return true;
-}
-
 void render_status(void) {
-
     oled_write_P(PSTR("Layer"), false);
     switch (biton32(layer_state)) {
         case 0:
             oled_write_P(PSTR("Base "), false);
             break;
-        case _RAISE:
+        case _RA:
             oled_write_P(PSTR("Raise"), false);
             break;
-        case _LOWER:
+        case _LO:
             oled_write_P(PSTR("Lower"), false);
             break;
-        case _ADJUST:
+        case _AD:
             oled_write_P(PSTR("Adjst"), false);
             break;
         default:
@@ -177,7 +175,10 @@ void render_status(void) {
     }
     oled_write_P(PSTR("Lyout"), false);
     switch (biton32(default_layer_state)) {
-        case _MODDH:
+        case _QW:
+            oled_write_P(PSTR("QWRTY"), false);
+            break;
+        case _DH:
             oled_write_P(PSTR("MODDH"), false);
             break;
     }
@@ -190,7 +191,6 @@ void render_status(void) {
     oled_write_P( (modifiers & MOD_MASK_CTRL  || one_shot & MOD_MASK_CTRL ) ? PSTR(" CTL ") : PSTR("     "), false);
     oled_write_P( (modifiers & MOD_MASK_ALT   || one_shot & MOD_MASK_ALT  ) ? PSTR(" ALT ") : PSTR("     "), false);
     oled_write_P( (modifiers & MOD_MASK_GUI   || one_shot & MOD_MASK_GUI  ) ? PSTR(" GUI ") : PSTR("     "), false);
-
 
     oled_write_P(PSTR("BTMGK"), false);
 
@@ -209,7 +209,7 @@ void render_status(void) {
     oled_write(keylog_str, false);
 }
 
-
+//void matrix_render_user(struct CharacterMatrix *matrix) {
 void oled_task_user(void) {
     if (is_master) {
         render_status();     // Renders the current keyboard state (layer, lock, caps, scroll, etc)
@@ -219,5 +219,145 @@ void oled_task_user(void) {
     }
 }
 
-void matrix_scan_keymap(void) { update_log(); }
+void matrix_scan_user(void) { update_log(); }
 #endif
+
+#ifdef RGB_MATRIX_ENABLE
+void suspend_power_down_user(void) {
+    rgb_matrix_set_suspend_state(true);
+}
+
+void suspend_wakeup_init_user(void) {
+    rgb_matrix_set_suspend_state(false);
+}
+#endif
+
+static uint16_t bspc_role;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {  add_keylog(keycode); }
+  switch (keycode) {
+    // Our funky backspace key!
+    case M_BSPC:
+      if (get_mods() & MOD_BIT(KC_LSHIFT)) {
+        bspc_role = KC_ENT;
+      } else {
+        bspc_role = KC_BSPC;
+      }
+      if (record->event.pressed) {
+        if (timer_elapsed(timer) > TAPPING_TERM) {
+          register_code(KC_RSFT);
+        } else {
+          register_code(bspc_role);
+        }
+        timer = timer_read();
+      } else {
+        // Unregister Right Shift if registered
+        if (get_mods() & MOD_BIT(KC_RSHIFT)) {
+          unregister_code(KC_RSFT);
+        }
+        // Check if we are into the TAPPING_TERM threshold
+        if (timer_elapsed(timer) < TAPPING_TERM) {
+          switch (bspc_role) {
+            case KC_ENT:
+              unregister_code(KC_LSFT);
+              register_code(bspc_role);
+              register_code(KC_LSFT);
+            case KC_BSPC:
+              register_code(bspc_role);
+          }
+        }
+        unregister_code(bspc_role);
+      }
+      return false;
+      break;
+    case M_WIPE: // Wipe the eeprom and reset the board
+      if (record->event.pressed) {
+        eeconfig_init();
+        reset_keyboard();
+      }
+      return false;
+      break;
+    case M_RAN64:
+      if (record->event.pressed) {
+        tap_random_base64();
+      }
+      return false;
+      break;
+    #ifdef UNICODE_ENABLE
+      case UC_FLIP: // (ノಠ痊ಠ)ノ彡┻━┻
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 30CE 0CA0 75CA 0CA0 0029 30CE 5F61 253B 2501 253B");
+        }
+        return false;
+        break;
+      case UC_TABL: // ┬─┬ノ( º _ ºノ)
+        if (record->event.pressed) {
+          send_unicode_hex_string("252C 2500 252C 30CE 0028 0020 00BA 0020 005F 0020 00BA 30CE 0029");
+        }
+        return false;
+        break;
+      case UC_SHRG: // ¯\_(ツ)_/¯
+        if (record->event.pressed) {
+          send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");
+        }
+        return false;
+        break;
+      case UC_DISA: // ಠ_ಠ
+        if (record->event.pressed) {
+          send_unicode_hex_string("0CA0 005F 0CA0");
+        }
+        return false;
+        break;
+      case UC_DANC: // (〜￣△￣)〜
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 301C FFE3 25B3 FFE3 0029 301C");
+        }
+        return false;
+        break;
+      case UC_SCRE: // ヽ(ﾟДﾟ)ﾉ
+        if (record->event.pressed) {
+          send_unicode_hex_string("30FD 0028 FF9F 0414 FF9F 0029 FF89");
+        }
+        return false;
+        break;
+      case UC_WALL: // ┬┴┬┴┤(･_├┬┴┬┴
+        if (record->event.pressed) {
+          send_unicode_hex_string("252C 2534 252C 2534 2524 0028 FF65 005F 251C 252C 2534 252C 2534");
+        }
+        return false;
+        break;
+      case UC_SOB: // (ಢ⊱ಢ ｡)
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 0CA2 22B1 0CA2 0020 FF61 0029");
+        }
+        return false;
+        break;
+      case UC_DEAL: // ( ∙_∙) ( ∙_∙)>⌐■-■ (⌐■_■)
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 0020 2219 005F 2219 0029 0020 0028 0020 2219 005F 2219 0029 003E 2310 25A0 002D 25A0 0020 0028 2310 25A0 005F 25A0 0029");
+        }
+        return false;
+        break;
+      case UC_RAGE: // （╬ಠ益ಠ)
+        if (record->event.pressed) {
+          send_unicode_hex_string("FF08 256C 0CA0 76CA 0CA0 0029");
+        }
+        return false;
+        break;
+      case UC_NOOO: // (」ﾟﾛﾟ)｣NOOOooooo━
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 300D FF9F FF9B FF9F 0029 FF63 004E 004F 004F 004F 006F 006F 006F 006F 006F 2501");
+        }
+        return false;
+        break;
+      case UC_SALU: // (￣^￣)ゞ
+        if (record->event.pressed) {
+          send_unicode_hex_string("0028 FFE3 005E FFE3 0029 309E");
+        }
+        return false;
+        break;
+    #endif
+  }
+  return true;
+};
