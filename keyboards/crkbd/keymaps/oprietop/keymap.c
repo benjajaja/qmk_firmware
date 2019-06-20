@@ -59,39 +59,39 @@ enum custom_keycodes {
 #define LT_BSPC LT(_RA, KC_BSPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
- [_DH] = LAYOUT (
-   KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P,   AGT(KC_B),                  AGT(KC_J), KC_L,   KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
-   LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T,   KC_G,                       KC_M,      KC_N,   KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
-   LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D,   KC_V,                       KC_K,      KC_H,   KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL),  \
-                                             LT_ESC, S_TAB,     LT_SPC, LT_BSPC, S_DEL,     KC_BSLS \
- ),
+  [_DH] = LAYOUT (
+    KC_LBRC,      KC_Q,      KC_W,      KC_F, KC_P,   AGT(KC_B),                  AGT(KC_J), KC_L,   KC_U,    KC_Y,        KC_SCLN,      KC_RBRC,      \
+    LST(KC_GRV),  KC_A,      KC_R,      KC_S, KC_T,   KC_G,                       KC_M,      KC_N,   KC_E,    KC_I,        KC_O,         RST(KC_QUOT), \
+    LCT(KC_MINS), LGT(KC_Z), TAT(KC_X), KC_C, KC_D,   KC_V,                       KC_K,      KC_H,   KC_COMM, TAT(KC_DOT), RGT(KC_SLSH), RCT(KC_EQL),  \
+                                              LT_ESC, S_TAB,     LT_SPC, LT_BSPC, S_DEL,     KC_BSLS \
+  ),
 
- [_QW] = LAYOUT (
-   _______, _______, _______, KC_E,    KC_R,    AGT(KC_T),                   AGT(KC_Y), KC_U,   KC_I,    KC_O,    KC_P,    _______, \
-   _______, _______, KC_S,    KC_D,    KC_F,    _______,                          KC_H, KC_J,   KC_K,    KC_L,    KC_SCLN, _______, \
-   _______, _______, _______, _______, KC_V,    KC_B,                             KC_N, KC_M,   _______, _______, _______, _______, \
-                                       _______, _______,   _______, _______,   _______, _______ \
- ),
+  [_QW] = LAYOUT (
+    _______, _______, _______, KC_E,    KC_R,    AGT(KC_T),                   AGT(KC_Y), KC_U,   KC_I,    KC_O,    KC_P,    _______, \
+    _______, _______, KC_S,    KC_D,    KC_F,    _______,                          KC_H, KC_J,   KC_K,    KC_L,    KC_SCLN, _______, \
+    _______, _______, _______, _______, KC_V,    KC_B,                             KC_N, KC_M,   _______, _______, _______, _______, \
+                                        _______, _______,   _______, _______,   _______, _______ \
+  ),
 
- [_LO] = LAYOUT (
-   KC_VOLU, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                     KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_MNXT, \
-   KC_VOLD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,                   KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_MPRV, \
-   KC_MUTE, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2,                   KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_MPLY, \
-                                       _______, _______, _______,  KC_ENT, _______, _______ \
- ),
+  [_LO] = LAYOUT (
+    KC_VOLU, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                     KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_MNXT, \
+    KC_VOLD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,                   KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_MPRV, \
+    KC_MUTE, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2,                   KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_MPLY, \
+                                        _______, _______, _______,  KC_ENT, _______, _______ \
+  ),
 
- [_RA] = LAYOUT (
-   KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
-   KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
-   KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
-                                     _______, _______, KC_ENT, _______, _______, _______ \
- ),
+  [_RA] = LAYOUT (
+    KC_PIPE, KC_EXLM, KC_AT, KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
+    KC_DOT,  KC_1,    KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COMM, \
+    KC_F11,  KC_F1,   KC_F2, KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
+                                      _______, _______, KC_ENT, _______, _______, _______ \
+  ),
 
- [_AD] = LAYOUT (
-    RESET,   M_WIPE,   KC_ACL0, KC_ACL1, KC_ACL2, KC_PSCR,                   UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_NLCK, \
-    DF(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,                   UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
-    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,                   UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, KC_SLCK, \
-                                         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX \
+  [_AD] = LAYOUT (
+     RESET,   M_WIPE,   KC_ACL0, KC_ACL1, KC_ACL2, KC_PSCR,                   UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_NLCK, \
+     DF(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,                   UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
+     RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,                   UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, KC_SLCK, \
+                                          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX \
   )
 };
 
@@ -211,10 +211,10 @@ void render_status(void) {
 
 void oled_task_user(void) {
     if (is_master) {
-        render_status();     // Renders the current keyboard state (layer, lock, caps, scroll, etc)
+        render_status();// Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_crkbd_logo();
-        oled_scroll_left();  // Turns on scrolling
+        oled_scroll_right(); // Turns on scrolling
     }
 }
 
