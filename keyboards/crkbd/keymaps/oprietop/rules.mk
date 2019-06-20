@@ -15,7 +15,6 @@ UNICODE_ENABLE             = yes  # Unicode
 BLUETOOTH_ENABLE           = no  # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE            = no  # Enable WS2812 RGB underlight.
 SWAP_HANDS_ENABLE          = no  # Enable one-hand typing
-RGBLIGHT_STARTUP_ANIMATION = yes
 RGB_MATRIX_ENABLE = WS2812
 
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
@@ -24,9 +23,5 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 BOOTLOADER = qmk-dfu
 
 OLED_DRIVER_ENABLE = yes
-
-ifneq ($(strip $(OLED_DRIVER_ENABLE)), yes)
-    RGB_MATRIX_SPLIT_RIGHT=yes
-endif
 
 LINK_TIME_OPTIMIZATION_ENABLE = yes

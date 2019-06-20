@@ -74,9 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  ),
 
  [_LO] = LAYOUT (
-   KC_ESC,  KC_ACL2, COPY,    KC_WH_U, CUT,     PASTE,                     KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_BSPC, \
-   KC_TAB,  KC_LALT, KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,                   KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_DEL,  \
-   M_RAN64, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2,                   KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  \
+   KC_VOLU, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,                     KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, KC_MNXT, \
+   KC_VOLD, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3,                   KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  KC_MPRV, \
+   KC_MUTE, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2,                   KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_MPLY, \
                                        _______, _______, _______,  KC_ENT, _______, _______ \
  ),
 
@@ -88,19 +88,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  ),
 
  [_AD] = LAYOUT (
-    RESET,   M_WIPE,   KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,                   UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_PSCR, \
-    TG(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,                   UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
-    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,                   UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, XXXXXXX, \
+    RESET,   M_WIPE,   KC_ACL0, KC_ACL1, KC_ACL2, KC_PSCR,                   UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, KC_NLCK, \
+    DF(_QW), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,                   UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, KC_CAPS, \
+    RGB_TOG, RGB_MOD,  RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,                   UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, KC_SLCK, \
                                          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX \
   )
 };
 
 void matrix_init_user(void) { // Runs boot tasks for keyboard
-  #ifdef UNICODE_ENABLe
+  #ifdef UNICODE_ENABLE
     set_unicode_input_mode(UC_LNX);
   #endif
 };
-
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -126,12 +125,13 @@ uint8_t keylogs_str_idx = 0;
 uint16_t log_timer = 0;
 
 const char code_to_name[60] = {
-    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-    'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-    '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
+  ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+  'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+  'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
+  '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '
+};
 
 void add_keylog(uint16_t keycode) {
     if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
@@ -189,8 +189,8 @@ void render_status(void) {
     oled_write_P(PSTR("Mods:"), false);
     oled_write_P( (modifiers & MOD_MASK_SHIFT || one_shot & MOD_MASK_SHIFT) ? PSTR(" SFT ") : PSTR("     "), false);
     oled_write_P( (modifiers & MOD_MASK_CTRL  || one_shot & MOD_MASK_CTRL ) ? PSTR(" CTL ") : PSTR("     "), false);
-    oled_write_P( (modifiers & MOD_MASK_ALT   || one_shot & MOD_MASK_ALT  ) ? PSTR(" ALT ") : PSTR("     "), false);
     oled_write_P( (modifiers & MOD_MASK_GUI   || one_shot & MOD_MASK_GUI  ) ? PSTR(" GUI ") : PSTR("     "), false);
+    oled_write_P( (modifiers & MOD_MASK_ALT   || one_shot & MOD_MASK_ALT  ) ? PSTR(" ALT ") : PSTR("     "), false);
 
     oled_write_P(PSTR("BTMGK"), false);
 
@@ -209,7 +209,6 @@ void render_status(void) {
     oled_write(keylog_str, false);
 }
 
-//void matrix_render_user(struct CharacterMatrix *matrix) {
 void oled_task_user(void) {
     if (is_master) {
         render_status();     // Renders the current keyboard state (layer, lock, caps, scroll, etc)
@@ -220,16 +219,6 @@ void oled_task_user(void) {
 }
 
 void matrix_scan_user(void) { update_log(); }
-#endif
-
-#ifdef RGB_MATRIX_ENABLE
-void suspend_power_down_user(void) {
-    rgb_matrix_set_suspend_state(true);
-}
-
-void suspend_wakeup_init_user(void) {
-    rgb_matrix_set_suspend_state(false);
-}
 #endif
 
 static uint16_t bspc_role;

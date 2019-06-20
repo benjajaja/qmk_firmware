@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USE_SERIAL_PD2
 
 // #define TAPPING_FORCE_HOLD
+#define IGNORE_MOD_TAP_INTERRUPT
 #define TAPPING_TERM 200
 #define FORCE_NKRO
 
@@ -43,14 +44,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef RGB_MATRIX_ENABLE
 #   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
-#   define RGB_DISABLE_WHEN_USB_SUSPENDED true // turn off effects when suspended
+#   define RGB_MATRIX_FRAMEBUFFER_EFFECTS // for the heatmap effect
 #   define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
 #   define RGB_MATRIX_HUE_STEP 8
 #   define RGB_MATRIX_SAT_STEP 8
 #   define RGB_MATRIX_VAL_STEP 8
 #   define RGB_MATRIX_SPD_STEP 10
 //#   define DISABLE_RGB_MATRIX_ALPHAS_MODS
-//#   define DISABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+#   define DISABLE_RGB_MATRIX_GRADIENT_UP_DOWN
 //#   define DISABLE_RGB_MATRIX_BREATHING
 #   define DISABLE_RGB_MATRIX_BAND_SAT
 //#   define DISABLE_RGB_MATRIX_BAND_VAL
@@ -75,9 +76,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   define DISABLE_RGB_MATRIX_DIGITAL_RAIN
 //#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE
 //#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
-//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
-//#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
+#   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
 #   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
 #   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
 #   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
@@ -96,4 +97,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
 #define MOUSEKEY_WHEEL_MAX_SPEED 2
-#define MOUSEKEY_WHEEL_TIME_TO_MAX 60
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 6
+
+/* Disable unused and unneeded features to reduce on firmware size */
+#ifdef LOCKING_SUPPORT_ENABLE
+#   undef LOCKING_SUPPORT_ENABLE
+#endif
+#ifdef LOCKING_RESYNC_ENABLE
+#   undef LOCKING_RESYNC_ENABLE
+#endif
