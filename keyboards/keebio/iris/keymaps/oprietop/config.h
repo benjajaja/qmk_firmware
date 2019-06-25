@@ -28,14 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define BACKLIGHT_BREATHING
 
 /* Mouse Settings */
-#define MOUSEKEY_DELAY             0
-#define MOUSEKEY_INTERVAL          16
-#define MOUSEKEY_MAX_SPEED         5
-#define MOUSEKEY_TIME_TO_MAX       60
-#define MOUSEKEY_WHEEL_MAX_SPEED   5
-#define MOUSEKEY_WHEEL_TIME_TO_MAX 60
+#define MOUSEKEY_INTERVAL 16
+#define MOUSEKEY_DELAY 0
+#define MOUSEKEY_TIME_TO_MAX 60
+#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_WHEEL_DELAY 0
+#define MOUSEKEY_WHEEL_MAX_SPEED 2
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 6
 
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_advanced_keycodes.md
 #define IGNORE_MOD_TAP_INTERRUPT
+#define TAPPING_TERM 200
+#define FORCE_NKRO
 //#define PERMISSIVE_HOLD
-//#define TAPPING_TERM 175
