@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_FN] = LAYOUT_ext_iso(
-    RESET  , UC_FLIP, UC_TABL, UC_SHRG, UC_DISA, UC_DANC, UC_SCRE, UC_WALL, UC_SOB , UC_DEAL, UC_RAGE, UC_NOOO, UC_SALU,          DF(_QW), DF(_DH), M_VER  ,                              XXXXXXX,
+    M_WIPE  , UC_FLIP, UC_TABL, UC_SHRG, UC_DISA, UC_DANC, UC_SCRE, UC_WALL, UC_SOB , UC_DEAL, UC_RAGE, UC_NOOO, UC_SALU,          DF(_QW), DF(_DH), M_VER  ,                              XXXXXXX,
     M_VER  , M_LS   , M_PULL , M_PUSH , M_INCL , M_RAN64, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______,
     _______, KC_ESC , COPY   , KC_WH_U, CUT    , PASTE  , KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______,
     _______, KC_TAB , KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3, KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, _______,                                       _______, _______, _______, _______,
