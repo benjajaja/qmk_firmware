@@ -97,8 +97,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * '--------------------------------------------------------------------------------------------------------------------------------------'
   */
   [_AD] = LAYOUT_ortho_5x15( /* ADJUST */
-    RESET,   DEBUG,   KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP, KC_NLCK, KC_SLCK, KC_CAPS, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR,
-    XXXXXXX, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_K, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, XXXXXXX,
+    RESET,   M_WIPE,  KC_ACL0, KC_ACL1, KC_ACL2, AG_SWAP, KC_NLCK, KC_SLCK, KC_CAPS, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR,
+    DEBUG,   RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_K, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UC_TABL, UC_FLIP, UC_RAGE, UC_NOOO, XXXXXXX, XXXXXXX,
     XXXXXXX, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU, KC_MSEL, KC_NLCK, KC_MYCM, UC_SCRE, UC_DISA, UC_WALL, UC_SOB,  XXXXXXX, XXXXXXX,
     KC_CAPS, RGB_RMD, RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID, KC_MPLY, KC_VOLU, KC_MUTE, UC_SALU, UC_DANC, UC_SHRG, UC_DEAL, XXXXXXX, KC_CAPS,
     RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_TOG, KC_MPRV, KC_VOLD, KC_MNXT, TG(_QW), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TG(_QW)
@@ -110,10 +110,11 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     set_unicode_input_mode(UC_LNX);
   #endif
   #ifdef RGBLIGHT_ENABLE
-    //rgblight_enable();
-    rgblight_sethsv(25, 255, 255); // Carbon Orange
+    rgblight_enable();
+    //rgblight_sethsv(25, 255, 255); // Carbon Orange
+    rgblight_sethsv(138, 100, 215); // Pulse Blue
     //rgblight_mode(13); // Swirling rainbow
-    //rgblight_mode(3);
+    rgblight_mode(3);
   #endif
 };
 

@@ -82,10 +82,13 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
   #endif
   #ifdef RGBLIGHT_ENABLE
     //rgblight_enable();
+    //rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), rgblight_get_val());
+    //rgblight_mode_noeeprom(rgblight_get_mode());
     //rgblight_sethsv(276,255,170); // Purple
     //rgblight_sethsv(0,0,100); // White
     //rgblight_sethsv(240,255,50); // blue
     //rgblight_sethsv(43,100,50); // Goldenrod
+    //rgblight_sethsv(236, 96, 100); // Goldenrod
     //rgblight_mode(21);
   #endif
 };
@@ -225,16 +228,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   uint32_t layer_state_set_user(uint32_t state) {
     switch (biton32(state)) {
       case _CO:
-        rgblight_sethsv(0,0,rgblight_get_val()); // White
+        rgblight_sethsv_noeeprom(0,0,rgblight_get_val()); // White
         break;
       case _QW:
-        rgblight_sethsv(191,255,rgblight_get_val()); // Purple
+        rgblight_sethsv_noeeprom(191,255,rgblight_get_val()); // Purple
         break;
       case _FN:
-        rgblight_sethsv(28,255,rgblight_get_val()); // Orange
+        rgblight_sethsv_noeeprom(28,255,rgblight_get_val()); // Orange
         break;
       case _AD:
-        rgblight_sethsv(0,255,rgblight_get_val()); // Red
+        rgblight_sethsv_noeeprom(0,255,rgblight_get_val()); // Red
         break;
     }
     return state;
