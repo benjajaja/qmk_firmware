@@ -7,7 +7,6 @@
 >>>>>>> upstream/master
 >>>>>>> e33afe035a4f0a68b24960adc6abe46556043034
 # MCU name
-#MCU = at90usb1287
 MCU = atmega32u4
 
 # Processor frequency.
