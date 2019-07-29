@@ -36,6 +36,9 @@ enum custom_keycodes {
 #define LSSP LSFT_T(KC_SPC)
 // ALTGR when held, Space when tapped
 #define RALSPC RALT_T(KC_SPC)
+// Shift Mod Taps
+#define S_MINS LSFT_T(KC_MINS)
+#define S_EQL RSFT_T(KC_EQL)
 // Cut/Paste shortcuts
 #define PASTE RSFT(KC_INS)
 #define CUT LSFT(KC_DEL)
@@ -46,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_HOME,         KC_END,  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS, \
     KC_LBRC, KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_PGDN,         KC_PGUP, KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_RBRC, \
     KC_GRV,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,    M_RAN64,         KC_INS,  KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
-    KC_MINS, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_TAB,          KC_DEL,  KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_EQL,  \
+    S_MINS,  KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_TAB,          KC_DEL,  KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, S_EQL,   \
     KC_LCTL, KC_LGUI, KC_LALT, KC_RALT, TT(_FN), LT_SPC,  XXXXXXX,         XXXXXXX, S_BSPC,  TT(_FN), KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_QW] = LAYOUT( /* QWERTY */
@@ -61,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, KC_ESC,  COPY,    KC_WH_U, CUT,     PASTE,   KC_VOLD,         KC_MPRV, KC_PGUP, KC_BTN1, KC_MS_U, KC_BTN2, KC_BTN3, _______, \
     _______, KC_TAB,  KC_WH_L, KC_WH_D, KC_WH_R, KC_BTN3, KC_MUTE,         KC_MPLY, KC_HOME, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, \
     _______, KC_LCTL, KC_LSFT, KC_LGUI, KC_BTN1, KC_BTN2, M_RAN64,         KC_INS,  KC_PGDN, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, \
-    _______, _______, _______, _______, TT(_AD), KC_SPC,  XXXXXXX,         XXXXXXX, KC_ENT,  TT(_AD), KC_LEFT, KC_DOWN, KC_RGHT, _______  \
+    _______, _______, _______, _______, TT(_AD), KC_ENT,  XXXXXXX,         XXXXXXX, KC_ENT,  TT(_AD), KC_LEFT, KC_DOWN, KC_RGHT, _______  \
   ),
   [_AD] = LAYOUT( /* ADJUST */
     RESET,   M_WIPE,  DEBUG,   KC_ACL0, KC_ACL1, KC_ACL2, M_RAN64,         M_RAN64, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PAUS, KC_PSCR, \
@@ -81,8 +84,8 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     //rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), rgblight_get_val());
     //rgblight_mode(rgblight_get_mode());
     //rgblight_sethsv(276,255,170); // Purple
-    rgblight_sethsv(0,0,25); // White
-    //rgblight_sethsv(240,255,50); // blue
+    rgblight_sethsv(0,0,10); // White
+    //00000ght_sethsv(240,255,50); // blue
     //rgblight_sethsv(43,100,50); // Goldenrod
     //rgblight_sethsv(236, 96, 100); // Goldenrod
     rgblight_mode(21);
