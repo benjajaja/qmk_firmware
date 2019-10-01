@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
 #   define RGB_MATRIX_FRAMEBUFFER_EFFECTS // for the heatmap effect
 #   define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
+#   define RGB_DISABLE_WHEN_USB_SUSPENDED true  // turn off effects when suspended
 #   define RGB_MATRIX_HUE_STEP 8
 #   define RGB_MATRIX_SAT_STEP 8
 #   define RGB_MATRIX_VAL_STEP 8
@@ -84,11 +85,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
 #   define DISABLE_RGB_MATRIX_SPLASH
 #   define DISABLE_RGB_MATRIX_MULTISPLASH
-//#     define DISABLE_RGB_MATRIX_SOLID_SPLASH
-//#     define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
+#     define DISABLE_RGB_MATRIX_SOLID_SPLASH
+#     define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif // RGB_MATRIX_ENABLE
 
 #define OLED_FONT_H "keyboards/crkbd/keymaps/oprietop/danger.c"
+#define OLED_DISABLE_TIMEOUT
 
 /* Mouse Settings */
 #define MOUSEKEY_INTERVAL 16
