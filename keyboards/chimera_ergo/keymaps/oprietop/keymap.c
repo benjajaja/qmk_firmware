@@ -6,12 +6,12 @@
 // Layers
 #define _DH 0
 #define _QW 1
-#define _LO 2
-#define _RA 3
+#define _DV 2
+#define _LO 3
+#define _RA 4
 // Aliases
 #define KC_     KC_TRNS
 #define KC_XXXX KC_NO
-#define KC_QWER TG(_QW)
 #define KC_RST  RESET
 // Shift when held, Backspace  when tapped
 #define KC_RSBS RSFT_T(KC_BSPC)
@@ -43,6 +43,8 @@
 #define KC_CTMI LCT(KC_MINS)
 #define KC_GUIZ LGT(KC_Z)
 #define KC_TATX TAT(KC_X)
+#define KC_GSCL LGT(KC_SCLN)
+#define KC_TATQ TAT(KC_Q)
 // Right
 #define KC_GUBS RGT(KC_BSLS)
 #define KC_TARB TAT(KC_RBRC)
@@ -50,10 +52,14 @@
 #define KC_CTEQ RCT(KC_EQL)
 #define KC_GUSL RGT(KC_SLSH)
 #define KC_TADO TAT(KC_DOT)
+#define KC_RGUZ RGT(KC_Z)
+#define KC_TATV TAT(KC_V)
 
-// Macros
 enum custom_keycodes {
-  KC_VER = SAFE_RANGE,
+  KC_CODH  = SAFE_RANGE,
+  KC_QWER,
+  KC_DVOR,
+  KC_VER,
   KC_PULL,
   KC_PUSH,
   KC_LS,
@@ -89,6 +95,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              ,    ,                   ,
   //                    `----+----'              `----+----'
   ),
+  [_DV] = KC_KEYMAP(
+  //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,QUOT,COMM,DOT , P  , Y  ,                F  , G  , C  , R  , L  ,    ,
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,    , O  , E  , U  , I  ,                D  , H  , T  , N  , S  ,SLSH,
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
+         ,GSCL,TATQ, J  , K  , X  ,                B  ,    , W  ,TATV,RGUZ,    ,
+  //`----+----+----+----+----+----|              |----+----+----+----+----+----'
+                             ,    ,                   ,
+  //                    `----+----'              `----+----'
+  ),
   [_LO] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,    ,
@@ -110,7 +129,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      CAPS,MPRV,MNXT,MSTP,MPLY,VOLD,               GRV ,MINS,EQL ,LBRC,RBRC,CAPS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     QWER,MUTE,INCL,PULL,PUSH, LS ,               BSLS,PIPE,    ,    ,    ,    ,
+     QWER,CODH,DVOR,PULL,PUSH, LS ,               BSLS,PIPE,    ,    ,    ,    ,
   //`----+----+----+----+----+----|              |----+----+----+----+----+----'
                              ,ENT ,               ENT ,
   //                    `----+----'              `----+----'
@@ -122,21 +141,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     switch(keycode) {
+      case KC_QWER:
+        if (record->event.pressed) {
+          set_single_persistent_default_layer(_QW);
+        }
+        return false;
+        break;
+      case KC_CODH:
+        if (record->event.pressed) {
+          set_single_persistent_default_layer(_DH);
+        }
+        return false;
+        break;
+      case KC_DVOR:
+        if (record->event.pressed) {
+          set_single_persistent_default_layer(_DV);
+        }
+        return false;
+        break;
       case KC_INCL:
         SEND_STRING("#include <>"SS_TAP(X_LEFT));
         return false;
+        break;
       case KC_PULL:
         SEND_STRING("git pull"SS_TAP(X_ENTER));
         return false;
+        break;
       case KC_PUSH:
         SEND_STRING("git push"SS_TAP(X_ENTER));
         return false;
+        break;
       case KC_LS:
         SEND_STRING("ls -la"SS_TAP(X_ENTER));
         return false;
+        break;
       case KC_VER:
         SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP "@" QMK_VERSION "@" QMK_BUILDDATE);
         return false;
+        break;
     }
   }
   return true;
