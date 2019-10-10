@@ -65,7 +65,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define LEDS_REAL 32
 #define LEDS_UNUSED 16
 #define BLINK true
-uint8_t cursor_pos;
+#define LED_LAYER LEDS_REAL - 1
+/* --- PRINTF_BYTE_TO_BINARY macro's --- */
+#define PRINTF_BINARY_PATTERN_INT8 "%c%c%c%c%c%c%c%c"
+#define PRINTF_BYTE_TO_BINARY_INT8(i)    \
+    (((i) & 0x80ll) ? '1' : '0'), \
+    (((i) & 0x40ll) ? '1' : '0'), \
+    (((i) & 0x20ll) ? '1' : '0'), \
+    (((i) & 0x10ll) ? '1' : '0'), \
+    (((i) & 0x08ll) ? '1' : '0'), \
+    (((i) & 0x04ll) ? '1' : '0'), \
+    (((i) & 0x02ll) ? '1' : '0'), \
+    (((i) & 0x01ll) ? '1' : '0')
+
+#define PRINTF_BINARY_PATTERN_INT16 \
+    PRINTF_BINARY_PATTERN_INT8              PRINTF_BINARY_PATTERN_INT8
+#define PRINTF_BYTE_TO_BINARY_INT16(i) \
+    PRINTF_BYTE_TO_BINARY_INT8((i) >> 8),   PRINTF_BYTE_TO_BINARY_INT8(i)
+#define PRINTF_BINARY_PATTERN_INT32 \
+    PRINTF_BINARY_PATTERN_INT16             PRINTF_BINARY_PATTERN_INT16
+#define PRINTF_BYTE_TO_BINARY_INT32(i) \
+    PRINTF_BYTE_TO_BINARY_INT16((i) >> 16), PRINTF_BYTE_TO_BINARY_INT16(i)
+#define PRINTF_BINARY_PATTERN_INT64    \
+    PRINTF_BINARY_PATTERN_INT32             PRINTF_BINARY_PATTERN_INT32
+#define PRINTF_BYTE_TO_BINARY_INT64(i) \
+    PRINTF_BYTE_TO_BINARY_INT32((i) >> 32), PRINTF_BYTE_TO_BINARY_INT32(i)
+/* --- end macros --- */
+
+uint64_t bits = 0; // desired state
+uint8_t phosphors[LEDS_REAL]; // decaying state
+uint8_t cursor_pos = 0;
 
 uint16_t interval_time = 10; // maybe too short...
 uint16_t reset_time = 5000;
@@ -74,19 +103,29 @@ uint16_t timer_pos = 0;
 uint16_t reset_timer = 0;
 
 void setled(uint8_t h, uint8_t s, uint8_t v, uint8_t i);
+void setled_range(uint8_t h, uint8_t s, uint8_t v, uint8_t f, uint8_t t);
 void reset_chars(void);
 void add_char(bool space);
 void remove_char(void);
-void animate_cursor(uint16_t);
+void animate_phosphor(void);
+
+void keyboard_pre_init_user(void) {
+  for (uint8_t i = 0; i < LEDS_REAL; i++) {
+    phosphors[i] = 0;
+  }
+}
 
 void keyboard_post_init_user(void) {
   rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL);
   // reset the bar and animation
   rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-  cursor_pos = 0;
+  for (uint8_t i = 0; i < LEDS_REAL; i++) {
+      setled(rgblight_get_hue(), 0, 0, i);
+  }
   reset_chars();
-  setled(0, 0, 0, LEDS_REAL - 1);
+  setled(0, 0, 0, LED_LAYER); // clear layer LED
   reset_timer = last_timer = timer_read();
+  dprintf("Terminal animation: %u bits\n", (sizeof (bits)) * 8);
 }
 
 
@@ -107,7 +146,7 @@ void matrix_scan_user(void) {
     timer_pos = 0;
     last_timer = timer_read();
   }
-  animate_cursor(timer_pos);
+  animate_phosphor();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -179,50 +218,94 @@ void setled(uint8_t h, uint8_t s, uint8_t v, uint8_t i) {
   rgblight_sethsv_at(h, s, modulated, LEDS_UNUSED + i);
 }
 
+void setled_range(uint8_t h, uint8_t s, uint8_t v, uint8_t f, uint8_t t) {
+  uint16_t modulated = v * rgblight_get_val() / 255;
+  /* dprintf("modulated: %u, %u, %u\n", h, s, modulated); */
+  rgblight_sethsv_range(h, s, modulated, LEDS_UNUSED + f, LEDS_UNUSED + t + 1);
+}
+
+
 
 void reset_chars(void) {
   // flush the whole thing, gets rid of previous animations
-  for (uint8_t i = 0; i < LEDS_REAL - 1; i++) {
-    // don't flicker the cursor if bar was empty on reset_timer
-    if (i == 0 && cursor_pos == 0) {
-        continue;
-    }
-    setled(0, 0, 0, i);
-  }
+  /* for (uint8_t i = 0; i < LEDS_REAL; i++) { */
+    /* phosphors[i] = 0; */
+  /* } */
+  dprintf("reset\n");
+  phosphors[cursor_pos] = timer_pos;
+  bits = 0;
   cursor_pos = 0;
 }
 
 void add_char(bool space) {
   if (cursor_pos == LEDS_REAL - 1) {
-    cursor_pos = 0;
+    dprintf("carriage return\n");
     reset_chars();
     return;
   }
 
-  if (space) {
-    setled(0, 0, 0, cursor_pos);
-  } else {
-    setled(rgblight_get_hue(), rgblight_get_sat(), 255, cursor_pos);
+  if (!space) {
+    bits = bits | ((uint64_t)1 << cursor_pos);
   }
+  phosphors[cursor_pos] = timer_pos;
   cursor_pos += 1;
+  dprintf("add char, cursor:%u, bits:" PRINTF_BINARY_PATTERN_INT64 "\n",
+      cursor_pos,
+      PRINTF_BYTE_TO_BINARY_INT64(bits));
+
 }
 
 void remove_char(void) {
   if (cursor_pos == 0) return;
 
-  setled(0, 0, 0, cursor_pos);
-  setled(0, 0, 0, cursor_pos - 1);
+  bits = bits & ~((uint64_t)1 << (cursor_pos - 1));
+  phosphors[cursor_pos] = timer_pos;
   cursor_pos -= 1;
+  dprintf("remove char, cursor:%u\n", cursor_pos);
 }
 
-void animate_cursor(uint16_t pos) {
-  if (BLINK) {
-    uint16_t value = fmax(0, fmin(255,
-        pos < 32
-          ? (pos * pos / 2)
-          : 255 - pos
-        ));
-    setled(rgblight_get_hue(), value, value, cursor_pos);
-  } else {
+void animate_phosphor() {
+  uint16_t value = fmax(0, fmin(255,
+      timer_pos < 32
+        ? (timer_pos * timer_pos / 2)
+        : 255 - timer_pos
+      ));
+  setled(rgblight_get_hue(), value, value, cursor_pos);
+
+  // reset case: find contiguous group of leds with same value (after cursor)
+  uint8_t fullLitCount = 0;
+  /* if (cursor_pos == 0 && bits == 0) { */
+    /* uint8_t firstValue = phosphors[1]; */
+    /* if (firstValue != 0) { */
+      /* phosphors[1] = fmax(0, firstValue - 4); */
+      /* while(fullLitCount < LEDS_REAL - 1) { */
+        /* if (phosphors[1 + fullLitCount + 1] == firstValue) { */
+          /* phosphors[1 + fullLitCount + 1] = phosphors[1]; */
+          /* fullLitCount += 1; */
+        /* } else { */
+          /* break; */
+        /* } */
+      /* } */
+      /* setled_range(rgblight_get_hue(), firstValue, firstValue, 1, fullLitCount + 1); */
+      /* dprintf("range: %u - %u", 1, fullLitCount + 1); */
+    /* } */
+  /* } */
+  for (uint8_t i = fullLitCount; i < LEDS_REAL; i++) {
+    if (i == cursor_pos) {
+      continue;
+    }
+
+    if (((bits >> i) & (uint64_t)1) == 1) {
+      if (phosphors[i] != 255) {
+        phosphors[i] = fmin(255, phosphors[i] + 4);
+        setled(rgblight_get_hue(), phosphors[i], phosphors[i], i);
+      }
+    } else {
+      if (phosphors[i] != 0) {
+        phosphors[i] = fmax(0, phosphors[i] - 4);
+        setled(rgblight_get_hue(), phosphors[i], phosphors[i], i);
+      }
+    }
   }
 }
+
