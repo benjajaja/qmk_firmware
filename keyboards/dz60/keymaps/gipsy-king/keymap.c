@@ -62,35 +62,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * interval, not on keypress. In the future all animations could be enhanced to
  * react to keystrokes in QMK.
  */
-#define LEDS_REAL 32
-#define LEDS_UNUSED 16
-#define BLINK true
-#define LED_LAYER LEDS_REAL - 1
-/* --- PRINTF_BYTE_TO_BINARY macro's --- */
-#define PRINTF_BINARY_PATTERN_INT8 "%c%c%c%c%c%c%c%c"
-#define PRINTF_BYTE_TO_BINARY_INT8(i)    \
-    (((i) & 0x80ll) ? '1' : '0'), \
-    (((i) & 0x40ll) ? '1' : '0'), \
-    (((i) & 0x20ll) ? '1' : '0'), \
-    (((i) & 0x10ll) ? '1' : '0'), \
-    (((i) & 0x08ll) ? '1' : '0'), \
-    (((i) & 0x04ll) ? '1' : '0'), \
-    (((i) & 0x02ll) ? '1' : '0'), \
-    (((i) & 0x01ll) ? '1' : '0')
-
-#define PRINTF_BINARY_PATTERN_INT16 \
-    PRINTF_BINARY_PATTERN_INT8              PRINTF_BINARY_PATTERN_INT8
-#define PRINTF_BYTE_TO_BINARY_INT16(i) \
-    PRINTF_BYTE_TO_BINARY_INT8((i) >> 8),   PRINTF_BYTE_TO_BINARY_INT8(i)
-#define PRINTF_BINARY_PATTERN_INT32 \
-    PRINTF_BINARY_PATTERN_INT16             PRINTF_BINARY_PATTERN_INT16
-#define PRINTF_BYTE_TO_BINARY_INT32(i) \
-    PRINTF_BYTE_TO_BINARY_INT16((i) >> 16), PRINTF_BYTE_TO_BINARY_INT16(i)
-#define PRINTF_BINARY_PATTERN_INT64    \
-    PRINTF_BINARY_PATTERN_INT32             PRINTF_BINARY_PATTERN_INT32
-#define PRINTF_BYTE_TO_BINARY_INT64(i) \
-    PRINTF_BYTE_TO_BINARY_INT32((i) >> 32), PRINTF_BYTE_TO_BINARY_INT32(i)
-/* --- end macros --- */
 
 uint64_t bits = 0; // desired state
 uint8_t phosphors[LEDS_REAL]; // decaying state
@@ -113,19 +84,21 @@ void keyboard_pre_init_user(void) {
   for (uint8_t i = 0; i < LEDS_REAL; i++) {
     phosphors[i] = 0;
   }
-}
-
-void keyboard_post_init_user(void) {
-  rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL);
   // reset the bar and animation
-  rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+  rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL);
+  rgblight_mode(RGBLIGHT_MODE_KNIGHT);
   for (uint8_t i = 0; i < LEDS_REAL; i++) {
       setled(rgblight_get_hue(), 0, 0, i);
   }
-  reset_chars();
+}
+
+void keyboard_post_init_user(void) {
   setled(0, 0, 0, LED_LAYER); // clear layer LED
   reset_timer = last_timer = timer_read();
   dprintf("Terminal animation: %u bits\n", (sizeof (bits)) * 8);
+  for (uint8_t i = 0; i < LEDS_REAL; i++) {
+    add_char(false);
+  }
 }
 
 
@@ -150,6 +123,8 @@ void matrix_scan_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // substract modifier keys
+  // TODO: deal with Ctrl-C etc?
   if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
     keycode = keycode & 0xFF;
   }
@@ -214,54 +189,43 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 void setled(uint8_t h, uint8_t s, uint8_t v, uint8_t i) {
   uint16_t modulated = v * rgblight_get_val() / 255;
-  /* dprintf("modulated: %u, %u, %u\n", h, s, modulated); */
   rgblight_sethsv_at(h, s, modulated, LEDS_UNUSED + i);
 }
 
 void setled_range(uint8_t h, uint8_t s, uint8_t v, uint8_t f, uint8_t t) {
   uint16_t modulated = v * rgblight_get_val() / 255;
-  /* dprintf("modulated: %u, %u, %u\n", h, s, modulated); */
   rgblight_sethsv_range(h, s, modulated, LEDS_UNUSED + f, LEDS_UNUSED + t + 1);
 }
 
-
-
 void reset_chars(void) {
-  // flush the whole thing, gets rid of previous animations
-  /* for (uint8_t i = 0; i < LEDS_REAL; i++) { */
-    /* phosphors[i] = 0; */
-  /* } */
-  dprintf("reset\n");
-  phosphors[cursor_pos] = timer_pos;
   bits = 0;
+  phosphors[cursor_pos] = timer_pos;
   cursor_pos = 0;
 }
 
 void add_char(bool space) {
   if (cursor_pos == LEDS_REAL - 1) {
-    dprintf("carriage return\n");
+    // like a carriage return
     reset_chars();
     return;
   }
 
   if (!space) {
+    // set bit at cursor
     bits = bits | ((uint64_t)1 << cursor_pos);
   }
   phosphors[cursor_pos] = timer_pos;
   cursor_pos += 1;
-  dprintf("add char, cursor:%u, bits:" PRINTF_BINARY_PATTERN_INT64 "\n",
-      cursor_pos,
-      PRINTF_BYTE_TO_BINARY_INT64(bits));
-
 }
 
 void remove_char(void) {
   if (cursor_pos == 0) return;
 
+  // unset bit behind cursor
   bits = bits & ~((uint64_t)1 << (cursor_pos - 1));
+
   phosphors[cursor_pos] = timer_pos;
   cursor_pos -= 1;
-  dprintf("remove char, cursor:%u\n", cursor_pos);
 }
 
 void animate_phosphor() {
@@ -272,37 +236,19 @@ void animate_phosphor() {
       ));
   setled(rgblight_get_hue(), value, value, cursor_pos);
 
-  // reset case: find contiguous group of leds with same value (after cursor)
-  uint8_t fullLitCount = 0;
-  /* if (cursor_pos == 0 && bits == 0) { */
-    /* uint8_t firstValue = phosphors[1]; */
-    /* if (firstValue != 0) { */
-      /* phosphors[1] = fmax(0, firstValue - 4); */
-      /* while(fullLitCount < LEDS_REAL - 1) { */
-        /* if (phosphors[1 + fullLitCount + 1] == firstValue) { */
-          /* phosphors[1 + fullLitCount + 1] = phosphors[1]; */
-          /* fullLitCount += 1; */
-        /* } else { */
-          /* break; */
-        /* } */
-      /* } */
-      /* setled_range(rgblight_get_hue(), firstValue, firstValue, 1, fullLitCount + 1); */
-      /* dprintf("range: %u - %u", 1, fullLitCount + 1); */
-    /* } */
-  /* } */
-  for (uint8_t i = fullLitCount; i < LEDS_REAL; i++) {
+  for (uint8_t i = 0; i < LEDS_REAL; i++) {
     if (i == cursor_pos) {
       continue;
     }
 
     if (((bits >> i) & (uint64_t)1) == 1) {
       if (phosphors[i] != 255) {
-        phosphors[i] = fmin(255, phosphors[i] + 4);
+        phosphors[i] = fmin(255, phosphors[i] + CHAR_DECAY);
         setled(rgblight_get_hue(), phosphors[i], phosphors[i], i);
       }
     } else {
       if (phosphors[i] != 0) {
-        phosphors[i] = fmax(0, phosphors[i] - 4);
+        phosphors[i] = fmax(0, phosphors[i] - CHAR_DECAY);
         setled(rgblight_get_hue(), phosphors[i], phosphors[i], i);
       }
     }
