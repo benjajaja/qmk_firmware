@@ -11,16 +11,13 @@
 #define RGBLED_NUM 54
 
 #undef RGBLIGHT_ANIMATIONS
-#define RGBLIGHT_EFFECT_STATIC_GRADIENT
-#define RGBLIGHT_EFFECT_KNIGHT
 
 // custom config constants
 #define LEDS_REAL 38
 #define LEDS_UNUSED 16
 #define LED_LAYER LEDS_REAL - 1
-#define CHAR_DECAY 16
-
-// garbage?
+#define CHAR_DECAY 4
+#define CHAR_RISE 16
 
 #ifndef CONFIG_H
 #define CONFIG_H

@@ -73,52 +73,65 @@ uint16_t last_timer = 0;
 uint16_t timer_pos = 0;
 uint16_t reset_timer = 0;
 
+uint16_t animation_timer = 0;
+uint8_t animate = 0;
+
 void setled(uint8_t h, uint8_t s, uint8_t v, uint8_t i);
-void setled_range(uint8_t h, uint8_t s, uint8_t v, uint8_t f, uint8_t t);
 void reset_chars(void);
 void add_char(bool space);
 void remove_char(void);
 void animate_phosphor(void);
 
 void keyboard_pre_init_user(void) {
-  for (uint8_t i = 0; i < LEDS_REAL; i++) {
-    phosphors[i] = 0;
-  }
   // reset the bar and animation
+  /* rgblight_mode(RGBLIGHT_MODE_KNIGHT); */
+  rgblight_disable_noeeprom();
   rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL);
-  rgblight_mode(RGBLIGHT_MODE_KNIGHT);
-  for (uint8_t i = 0; i < LEDS_REAL; i++) {
-      setled(rgblight_get_hue(), 0, 0, i);
-  }
 }
 
 void keyboard_post_init_user(void) {
-  setled(0, 0, 0, LED_LAYER); // clear layer LED
-  reset_timer = last_timer = timer_read();
+  rgblight_enable_noeeprom();
+  /* setled(0, 0, 0, LED_LAYER); // clear layer LED */
+  reset_timer = last_timer = animation_timer = timer_read();
   dprintf("Terminal animation: %u bits\n", (sizeof (bits)) * 8);
   for (uint8_t i = 0; i < LEDS_REAL; i++) {
-    add_char(false);
+    phosphors[i] = 255;
   }
+  bits = (((uint64_t) 1) << (LEDS_REAL - 1)) - 1;
+  cursor_pos = LEDS_REAL - 1;
+  animate = 1;
 }
 
 
 
 // animate, like the built-in animations, with timer_* functions
 void matrix_scan_user(void) {
-  if (timer_elapsed(reset_timer) > reset_time) {
-      reset_chars();
-      reset_timer = timer_read();
+  if (animate) {
+    if (timer_elapsed(animation_timer) > 10) {
+      animation_timer = timer_read();
+      remove_char();
+      if (cursor_pos == 0) {
+        animate = 0;
+      }
+    }
+
+  } else {
+    if (timer_elapsed(reset_timer) > reset_time) {
+        reset_timer = timer_read();
+        if (cursor_pos != 0) {
+          reset_chars();
+        }
+    } else if (timer_elapsed(last_timer) < interval_time) {
       return;
+    }
+    last_timer += interval_time;
+    timer_pos += 4;
+    if (timer_pos >= 255) {
+      timer_pos = 0;
+      last_timer = timer_read();
+    }
   }
-  if (timer_elapsed(last_timer) < interval_time) {
-    return;
-  }
-  last_timer += interval_time;
-  timer_pos += 4;
-  if (timer_pos >= 255) {
-    timer_pos = 0;
-    last_timer = timer_read();
-  }
+
   animate_phosphor();
 }
 
@@ -167,39 +180,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 layer_state_t layer_state_set_user(layer_state_t state) {
   switch (get_highest_layer(state)) {
   case _SL:
-      rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL - 1);
       setled(RGB_AZURE, LEDS_REAL - 1);
+      bits = (((uint64_t) 1) << (LEDS_REAL - 2)) - 1;
+      cursor_pos = LEDS_REAL - 2;
+      animate = 1;
       break;
   case _FL:
-      rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL - 1);
-      setled(HSV_CYAN, LEDS_REAL - 1);
+      setled(HSV_GOLDENROD, LEDS_REAL - 1);
       break;
   case _CL:
-      rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL - 1);
       setled(HSV_RED, LEDS_REAL - 1);
+      bits = (((uint64_t) 1) << (LEDS_REAL - 2)) - 1;
+      cursor_pos = LEDS_REAL - 2;
+      animate = 1;
       break;
   case _BL:
   default:
-      rgblight_set_effect_range(LEDS_UNUSED, LEDS_REAL);
       setled(0, 0, 0, LEDS_REAL - 1);
       break;
   }
+  rgblight_set();
   return state;
 }
 
 void setled(uint8_t h, uint8_t s, uint8_t v, uint8_t i) {
-  uint16_t modulated = v * rgblight_get_val() / 255;
-  rgblight_sethsv_at(h, s, modulated, LEDS_UNUSED + i);
-}
-
-void setled_range(uint8_t h, uint8_t s, uint8_t v, uint8_t f, uint8_t t) {
-  uint16_t modulated = v * rgblight_get_val() / 255;
-  rgblight_sethsv_range(h, s, modulated, LEDS_UNUSED + f, LEDS_UNUSED + t + 1);
+  uint16_t v_modulated = v * rgblight_get_val() / 255;
+  uint16_t s_modulated = s * rgblight_get_sat() / 255;
+  sethsv(h, s_modulated, v_modulated, (LED_TYPE *)&led[LEDS_UNUSED + i]);
 }
 
 void reset_chars(void) {
   bits = 0;
-  phosphors[cursor_pos] = timer_pos;
+  phosphors[cursor_pos] = 255;
   cursor_pos = 0;
 }
 
@@ -228,6 +240,16 @@ void remove_char(void) {
   cursor_pos -= 1;
 }
 
+void dump_phosphors(void) {
+  for (uint8_t i = 0; i < LEDS_REAL; i++) {
+    dprintf("%u,", phosphors[i]);
+    if (phosphors[i] == 0) {
+      break;
+    }
+  }
+  dprintf("\n");
+};
+
 void animate_phosphor() {
   uint16_t value = fmax(0, fmin(255,
       timer_pos < 32
@@ -243,7 +265,7 @@ void animate_phosphor() {
 
     if (((bits >> i) & (uint64_t)1) == 1) {
       if (phosphors[i] != 255) {
-        phosphors[i] = fmin(255, phosphors[i] + CHAR_DECAY);
+        phosphors[i] = fmin(255, phosphors[i] + CHAR_RISE);
         setled(rgblight_get_hue(), phosphors[i], phosphors[i], i);
       }
     } else {
@@ -253,5 +275,6 @@ void animate_phosphor() {
       }
     }
   }
+  rgblight_set();
 }
 
