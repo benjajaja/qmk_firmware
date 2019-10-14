@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 #define MASTER_LEFT
-// #define MASTER_RIGHT
+//#define MASTER_RIGHT
 //#define EE_HANDS
 
 #undef USE_I2C
@@ -55,12 +55,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#   define DISABLE_RGB_MATRIX_CYCLE_ALL
 //#   define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 //#   define DISABLE_RGB_MATRIX_CYCLE_UP_DOWN
-//#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN
-//#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
+#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN
+#   define DISABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
 #   define DISABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #   define DISABLE_RGB_MATRIX_DUAL_BEACON
-//#   define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
-//#   define DISABLE_RGB_MATRIX_CYCLE_SPIRAL
+#   define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
+#   define DISABLE_RGB_MATRIX_CYCLE_SPIRAL
 #   define DISABLE_RGB_MATRIX_RAINBOW_BEACON
 #   define DISABLE_RGB_MATRIX_RAINBOW_PINWHEELS
 #   define DISABLE_RGB_MATRIX_RAINDROPS
@@ -77,11 +77,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
 #   define DISABLE_RGB_MATRIX_SPLASH
 #   define DISABLE_RGB_MATRIX_MULTISPLASH
-#     define DISABLE_RGB_MATRIX_SOLID_SPLASH
-#     define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
+#   define DISABLE_RGB_MATRIX_SOLID_SPLASH
+#   define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif // RGB_MATRIX_ENABLE
 
-#define OLED_FONT_H "keyboards/crkbd/keymaps/oprietop/danger.c"
+//#define OLED_FONT_H "keyboards/crkbd/keymaps/oprietop/danger.c"
+#define OLED_FONT_H "keyboards/crkbd/keymaps/oprietop/alps.c"
 #define OLED_DISABLE_TIMEOUT
 
 /* Mouse Settings */
