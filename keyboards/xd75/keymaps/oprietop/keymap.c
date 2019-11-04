@@ -110,11 +110,11 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
     set_unicode_input_mode(UC_LNX);
   #endif
   #ifdef RGBLIGHT_ENABLE
-    rgblight_enable();
+  //  rgblight_enable();
     //rgblight_sethsv(25, 255, 255); // Carbon Orange
     rgblight_sethsv(138, 100, 215); // Pulse Blue
     //rgblight_mode(13); // Swirling rainbow
-    rgblight_mode(3);
+  //  rgblight_mode(3);
   #endif
 };
 

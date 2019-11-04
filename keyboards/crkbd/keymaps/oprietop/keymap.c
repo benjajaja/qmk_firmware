@@ -262,6 +262,9 @@ void render_layer_state(void) {
     case _AD:
       oled_write_P(PSTR(" ADJ "), false);
       break;
+    case _EM:
+      oled_write_P(PSTR(" EMO "), false);
+      break;
     default:
       oled_write_P(PSTR(" UNK "), false);
       break;
