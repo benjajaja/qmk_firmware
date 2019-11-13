@@ -211,6 +211,8 @@ void oled_write_ln(const char *data, bool invert);
 
 // Pans the buffer to the right (or left by passing true) by moving contents of the buffer
 void oled_pan(bool left);
+// Pans the buffer to the top (or bottom by passing true) by moving contents of the buffer
+void oled_pan_vertical(bool down);
 
 // Returns a pointer to the requested start index in the buffer plus remaining
 // buffer length as struct
@@ -292,6 +294,9 @@ bool oled_scroll_left(void);
 // Turns off display scrolling
 // Returns true if the screen was not scrolling or stops scrolling
 bool oled_scroll_off(void);
+
+// Set start line
+void oled_set_start_line(uint8_t start);
 
 // Returns the maximum number of characters that will fit on a line
 uint8_t oled_max_chars(void);

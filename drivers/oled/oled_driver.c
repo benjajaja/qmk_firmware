@@ -112,6 +112,7 @@ uint8_t         oled_rotation_width = 0;
 uint8_t         oled_scroll_speed   = 0;  // this holds the speed after being remapped to ssd1306 internal values
 uint8_t         oled_scroll_start   = 0;
 uint8_t         oled_scroll_end     = 7;
+uint8_t         oled_line_start     = 0;
 #if OLED_TIMEOUT > 0
 uint32_t oled_timeout;
 #endif
@@ -279,8 +280,13 @@ void oled_render(void) {
         ++update_start;
     }
 
+
     // Set column & page position
-    static uint8_t display_start[] = {I2C_CMD, COLUMN_ADDR, 0, OLED_DISPLAY_WIDTH - 1, PAGE_ADDR, 0, OLED_DISPLAY_HEIGHT / 8 - 1};
+    uint8_t display_start[] = {I2C_CMD,
+      COLUMN_ADDR, 0, OLED_DISPLAY_WIDTH - 1,
+      PAGE_ADDR, 0, OLED_DISPLAY_HEIGHT / 8 - 1,
+      DISPLAY_START_LINE | oled_line_start,
+    };
     if (!HAS_FLAGS(oled_rotation, OLED_ROTATION_90)) {
         calc_bounds(update_start, &display_start[1]);  // Offset from I2C_CMD byte at the start
     } else {
@@ -459,6 +465,28 @@ oled_buffer_reader_t oled_read_raw(uint16_t start_index) {
     return ret_reader;
 }
 
+void oled_pan_vertical(bool down) {
+    uint16_t i = 0;
+    for (uint16_t x = 0; x < OLED_DISPLAY_WIDTH - 1; x++) {
+        if (down) {
+            for (uint16_t y = OLED_DISPLAY_HEIGHT / 8 - 1; y > 0; y--) {
+                i              = y * OLED_DISPLAY_WIDTH + x;
+                oled_buffer[i] = oled_buffer[i - 1];
+            }
+        } else {
+            for (uint16_t y = 0; y < OLED_DISPLAY_HEIGHT / 8; y++) {
+                i              = y * OLED_DISPLAY_WIDTH + x;
+                if (y < OLED_DISPLAY_HEIGHT / 8 - 1) {
+                  oled_buffer[i] = oled_buffer[i + OLED_DISPLAY_WIDTH];
+                } else {
+                  oled_buffer[i] = 0;
+                }
+            }
+        }
+    }
+    oled_dirty = ~((OLED_BLOCK_TYPE)0);
+}
+
 void oled_write_raw_byte(const char data, uint16_t index) {
     if (index > OLED_MATRIX_SIZE) index = OLED_MATRIX_SIZE;
     if (oled_buffer[index] == data) return;
@@ -614,6 +642,11 @@ bool oled_scroll_off(void) {
         oled_dirty     = OLED_ALL_BLOCKS_MASK;
     }
     return !oled_scrolling;
+}
+
+void oled_set_start_line(uint8_t start) {
+    oled_line_start = start;
+    oled_dirty     = -1;
 }
 
 uint8_t oled_max_chars(void) {
