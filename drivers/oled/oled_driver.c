@@ -108,6 +108,7 @@ uint8_t         oled_rotation_width = 0;
 uint8_t         oled_scroll_speed   = 0;  // this holds the speed after being remapped to ssd1306 internal values
 uint8_t         oled_scroll_start   = 0;
 uint8_t         oled_scroll_end     = 7;
+uint8_t         oled_line_start     = 0;
 #if OLED_TIMEOUT > 0
 uint32_t oled_timeout;
 #endif
@@ -312,6 +313,9 @@ void oled_render(void) {
         }
     }
 
+    // Set start line if any
+    oled_start_line(oled_line_start);
+
     // Turn on display if it is off
     oled_on();
 
@@ -440,6 +444,28 @@ void oled_pan(bool left) {
             for (uint16_t x = OLED_DISPLAY_WIDTH - 1; x > 0; x--) {
                 i              = y * OLED_DISPLAY_WIDTH + x;
                 oled_buffer[i] = oled_buffer[i - 1];
+            }
+        }
+    }
+    oled_dirty = ~((OLED_BLOCK_TYPE)0);
+}
+
+void oled_pan_vertical(bool down) {
+    uint16_t i = 0;
+    for (uint16_t x = 0; x < OLED_DISPLAY_WIDTH - 1; x++) {
+        if (down) {
+            for (uint16_t y = OLED_DISPLAY_HEIGHT / 8 - 1; y > 0; y--) {
+                i              = y * OLED_DISPLAY_WIDTH + x;
+                oled_buffer[i] = oled_buffer[i - 1];
+            }
+        } else {
+            for (uint16_t y = 0; y < OLED_DISPLAY_HEIGHT / 8; y++) {
+                i              = y * OLED_DISPLAY_WIDTH + x;
+                if (y < OLED_DISPLAY_HEIGHT / 8 - 1) {
+                  oled_buffer[i] = oled_buffer[i + OLED_DISPLAY_WIDTH];
+                } else {
+                  oled_buffer[i] = 0;
+                }
             }
         }
     }
@@ -580,6 +606,24 @@ bool oled_scroll_off(void) {
     }
     return !oled_scrolling;
 }
+
+void oled_set_start_line(uint8_t start) {
+    oled_line_start = start;
+    oled_dirty     = -1;
+}
+
+bool oled_start_line(uint8_t start) {
+    uint8_t display_start_line[] = {
+        I2C_CMD,
+        DISPLAY_START_LINE | start
+    };
+    if (I2C_TRANSMIT(display_start_line) != I2C_STATUS_SUCCESS) {
+        print("oled_start_line cmd failed\n");
+        return false;
+    }
+    return true;
+}
+
 
 uint8_t oled_max_chars(void) {
     if (!HAS_FLAGS(oled_rotation, OLED_ROTATION_90)) {
