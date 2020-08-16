@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LBRC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_RBRC,
     LS_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, RS_QUOT,
     LCT_MINS,KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, RCT_EQL,
-    KC_LCTL, KC_LGUI, KC_LALT, KC_LSPO, XMONAD,  SPC_LWR, KC_SPC,  ENT_RSE, KC_RSPC, KC_RALT, ADJUST,  KC_BSPC
+    KC_LCTL, KC_LGUI, KC_LALT, KC_LSPO, XMONAD,  SPC_LWR, KC_SPC,  ENT_RSE, KC_RSPC, KC_RALT, ADJUST,  KC_RCTL
 ),
 
 [_XMONAD] = LAYOUT_plaid_grid( // Xmonad with MOD4
@@ -75,91 +75,61 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
-#define BLINKEN_RANDOM_STARTLE false
-static uint16_t blinken_timer = 0;
-static uint16_t next_timeout = 1000;
-enum blinken_modes {
-  BLINK_HOLD,
-  BLINK_STARTLED,
-  BLINK_STARTLED_LAYER
-};
-static uint16_t blinken_mode = BLINK_HOLD;
-static uint16_t blinken_timer_startled = 0;
-static uint16_t blinken_startled_state = 0;
 
-void keyboard_post_init_user(void) {
-  writePinHigh(LED_RED);
-  writePinHigh(LED_GREEN);
-  blinken_timer = timer_read();
+void matrix_init_user(void) {
+  eeconfig_init();
 }
 
-void matrix_scan_user(void) {
-  if (blinken_mode != BLINK_STARTLED_LAYER && timer_elapsed(blinken_timer) > next_timeout) {
-    blinken_timer = timer_read();
-    if (BLINKEN_RANDOM_STARTLE && rand() % 5 == 0) {
-      blinken_mode = BLINK_STARTLED;
-      blinken_timer_startled = timer_read();
-      blinken_startled_state = 0;
-    } else {
-      blinken_mode = BLINK_HOLD;
+#ifdef OLED_DRIVER_ENABLE
+/* oled_rotation_t oled_init_user(oled_rotation_t rotation) { */
+  /* return OLED_ROTATION_0; */
+/* } */
 
-      if(rand() % 2 == 0) {
-        next_timeout = 1000;
-      } else if(rand() % 2 == 0) {
-        next_timeout = 500;
-      } else {
-        next_timeout = 300;
-      }
+/* uint16_t screen_timer = 0; */
 
-      if(rand() % 2 == 0) {
-        writePinLow(LED_RED);
-      } else {
-        writePinHigh(LED_RED);
-      }
-      if(rand() % 2 == 0) {
-        writePinLow(LED_GREEN);
-      } else {
-        writePinHigh(LED_GREEN);
-      }
-    }
-  } else if ((blinken_mode == BLINK_STARTLED || blinken_mode == BLINK_STARTLED_LAYER)
-      && timer_elapsed(blinken_timer_startled) > 50) {
-      blinken_timer_startled = timer_read();
-      switch (blinken_startled_state) {
-        case 0:
-          writePinLow(LED_GREEN);
-          blinken_startled_state += 1;
-          break;
-        case 1:
-          writePinHigh(LED_RED);
-          blinken_startled_state += 1;
-          break;
-        case 2:
-          writePinHigh(LED_GREEN);
-          blinken_startled_state += 1;
-          break;
-        case 3:
-          writePinLow(LED_RED);
-          blinken_startled_state = 0;
-          break;
-      }
-  }
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-  switch (get_highest_layer(state)) {
-  case _RAISE:
-      blinken_mode = BLINK_STARTLED_LAYER;
+void oled_task_user(void) {
+  /* oled_clear(); */
+  /* for (uint8_t i = 0; i < 15; i++) { */
+    /* oled_write_pixel(i * 10, 10, true); */
+  /* } */
+  oled_write_P(PSTR("                           "), false);
+  switch (get_highest_layer(layer_state)) {
+    case _RAISE:
+      oled_write_ln_P(PSTR(" RAISE"), false);
       break;
-  case _XMONAD:
-      blinken_mode = BLINK_STARTLED_LAYER;
+    case _LOWER:
+      oled_write_ln_P(PSTR(" LOWER"), false);
       break;
-  case _LOWER:
-      blinken_mode = BLINK_STARTLED_LAYER;
+    case _XMONAD:
+      oled_write_ln_P(PSTR(" XMONAD"), false);
       break;
-  default:
-      blinken_mode = BLINK_HOLD;
+    case _ADJUST:
+      oled_write_ln_P(PSTR(" ADJUST"), false);
+      break;
+    default: //  for any other layers, or the default layer
+      oled_write_ln_P(PSTR(" NULL"), false);
       break;
   }
-  return state;
+  oled_write_P(PSTR("      "), false);
+
+  uint8_t modifiers = get_mods();
+  if (modifiers & MOD_MASK_SHIFT) {
+    oled_write_ln_P(PSTR(" SHIFT"), false);
+  } else if (modifiers & MOD_MASK_CTRL) {
+    oled_write_ln_P(PSTR(" CONTROL"), false);
+  } else if (modifiers & MOD_MASK_ALT) {
+    oled_write_ln_P(PSTR(" ALT"), false);
+  } else if (modifiers & MOD_MASK_GUI) {
+    oled_write_ln_P(PSTR(" MOD4"), false);
+  } else {
+    oled_write_ln_P(PSTR(" NULL"), false);
+  }
+  oled_write_P(PSTR("      "), false);
+  /* if (timer_elapsed(screen_timer) > 600) { */
+    /* prompt = !prompt; */
+    /* screen_timer = timer_read(); */
+  /* } */
+  oled_write_P(PSTR(" PLAID"), false);
+  /* oled_scroll_left(); */
 }
+#endif

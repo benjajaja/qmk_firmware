@@ -16,3 +16,16 @@
 
 #pragma once
 
+#ifdef OLED_DRIVER_ENABLE
+#define OLED_DISPLAY_CUSTOM
+#define OLED_DISPLAY_WIDTH 128
+#define OLED_DISPLAY_HEIGHT 32
+#define OLED_MATRIX_SIZE (OLED_DISPLAY_HEIGHT / 8 * OLED_DISPLAY_WIDTH)  // 1024 (compile time mathed)
+#define OLED_BLOCK_TYPE uint16_t
+#define OLED_BLOCK_COUNT (sizeof(OLED_BLOCK_TYPE) * 8)  // 32 (compile time mathed)
+#define OLED_BLOCK_SIZE (OLED_MATRIX_SIZE / OLED_BLOCK_COUNT)  // 32 (compile time mathed)
+#define OLED_COM_PINS COM_PINS_ALT
+#define OLED_SOURCE_MAP { 0, 8, 16, 24}
+#define OLED_TARGET_MAP { 24, 16, 8, 0 }
+// #define OLED_TIMEOUT 60000
+#endif
