@@ -9,6 +9,16 @@ void lines_init(void);
 #define PROMPT_WIDTH 21
 #define PROMPT_LINES 5
 #define PROMPT_SIZE (PROMPT_WIDTH * PROMPT_LINES)
+static const char PROGMEM crkbd_logo[] = 
+  {0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
+   0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
+   0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
+   0};
+static const char PROGMEM crkbd_logo2[] = 
+  {0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
+   0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xbb, 0xbc, 0xbd, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
+   0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
+   0};
 char prompt_buffer[PROMPT_SIZE];
 /* static const char PROGMEM crkbd_logo_1[64] = { */
   /* 0x80, 0x81, 0x82, 0x83, 0x84, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, */
@@ -35,7 +45,8 @@ char prompt_buffer[PROMPT_SIZE];
 #define _QW 0
 #define _WM 1
 #define _RA 2
-#define _AD 3
+#define _FN 3
+#define _NP 4
 
 enum custom_keycodes {
   MODDH  = SAFE_RANGE,
@@ -65,16 +76,6 @@ enum custom_keycodes {
 #define AGT(X) RALT_T(X)
 
 // Modifiers
-#define LT_ESC LT(_AD, KC_ESC)
-#define LT_GUI LT(_AD, KC_RGUI)
-#define LT_TAB LT(_LO, KC_TAB)
-#define LT_DEL LT(_RA, KC_DEL)
-#define LT_SPC LT(_LO, KC_SPC)
-#define S_SPC LSFT_T(KC_SPC)
-#define S_TAB LSFT_T(KC_TAB)
-#define S_DEL RSFT_T(KC_DEL)
-#define LT_BSPC LT(_RA, KC_BSPC)
-
 #define MOD4 LM(_WM, MOD_LGUI)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -93,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TAB,      KC_Q,     KC_W,     KC_E, KC_R, KC_T,            KC_Y, KC_U, KC_I,    KC_O,        KC_P,         KC_BSPC, \
       KC_ESC,      KC_A,     KC_S,     KC_D, KC_F, KC_G,            KC_H, KC_J, KC_K,    KC_L,        KC_SCLN,      KC_QUOT, \
       LCT(KC_MINS),TAT(KC_Z),LGT(KC_X),KC_C, KC_V, KC_B,            KC_N, KC_M, KC_COMM, RGT(KC_DOT), AGT(KC_SLSH), RCT(KC_EQL),\
-                         MOD4, KC_LSPO, LT(_RA, KC_SPC),            LT(_RA, KC_ENT), KC_RSPC, MO(_AD) \
+                                  MOD4, KC_LSPO, KC_SPC,            LT(_RA, KC_ENT), KC_RSPC, TG(_NP) \
       ),
   /* Raise
    * ,-----------------------------------------.         ,-----------------------------------------.
@@ -107,10 +108,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                          `--------------------' `--------------------'
    */
   [_RA] = LAYOUT (
-      KC_TILD, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSLS, \
+      KC_TILD, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSLS, \
       KC_GRV,  KC_LCBR, KC_PGUP,KC_PGDN, KC_END,  KC_HOME,                  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RCBR, KC_PIPE, \
-      KC_LBRC, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_RBRC, \
-      XXXXXXX, XXXXXXX, KC_ENT, _______, XXXXXXX, XXXXXXX \
+      KC_LBRC, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_RBRC, \
+                                    XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX \
       ),
   /* XMonad window manager shortcuts.
    * Needs MOD_LGUI
@@ -128,14 +129,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_P,    XXXXXXX, \
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_T,        KC_H,    KC_J,    KC_K,    KC_L,    XXXXXXX, XXXXXXX, \
       XXXXXXX, XXXXXXX, XXXXXXX, KC_C,    XXXXXXX, KC_B,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-      KC_LSFT, TO(_AD), KC_SPC,     KC_ENT,  XXXXXXX, XXXXXXX \
+                                 KC_LSFT, TO(_NP), KC_SPC,      KC_ENT,  XXXXXXX, XXXXXXX \
       ),
-  // F1-12, RGB, Gimmicks
-  [_AD] = LAYOUT (
-      M_WIPE, RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,           UC_FLIP, UC_DISA, UC_SHRG, UC_CRY,  XXXXXXX, XXXXXXX, \
-      RGB_TOG, RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,           KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, XXXXXXX, \
+  // Numpad, RGB, Reset/wipe, Gimmicks
+  [_NP] = LAYOUT (
+      OSL(_FN), RGB_RMOD, RGB_HUI, RGB_SAI, RGB_VAI, KC_BRIU,     KC_7,    KC_8,    KC_9,    UC_FLIP, UC_DISA, KC_BSPC, \
+      RGB_TOG, RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID,     KC_4,    KC_5,    KC_6,    UC_SHRG, UC_CRY,  XXXXXXX, \
+      KC_MINS, XXXXXXX, XXXXXXX, XXXXXXX, M_WIPE,  RESET,       KC_1,    KC_2,    KC_3,    KC_0,    KC_COMM, KC_DOT,  \
+                                 MOD4,    KC_LSPO, KC_SPC,      KC_ENT,  KC_RSPC, TG(_NP) \
+      ),
+  // F1-12
+  [_FN] = LAYOUT (
       KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
-      M_RAN64, TG(_AD), XXXXXXX,           KC_BSPC, _______, XXXXXXX \
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+                                 XXXXXXX, XXXXXXX, XXXXXXX,           XXXXXXX, XXXXXXX, XXXXXXX \
       ),
 };
 
@@ -161,37 +169,6 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   return OLED_ROTATION_0;
 }
-
-
-
-void render_layer_state(void) {
-  switch (biton32(layer_state)) {
-    case 0:
-      oled_write_P(PSTR("NUL "), false);
-      break;
-    case _WM:
-      oled_write_P(PSTR("XMN "), false);
-      break;
-    case _RA:
-      oled_write_P(PSTR("RSE "), false);
-      break;
-    case _AD:
-      oled_write_P(PSTR("ADJ "), false);
-      break;
-    default:
-      oled_write_P(PSTR("ERR "), false);
-      break;
-  }
-}
-
-#ifdef RGB_MATRIX_ENABLE
-static char* dec_to_str(uint32_t val) {
-  static char str [3] = {'0', '0', 0};
-  str[0] = val / 10 + 48;
-  str[1] = val % 10 + 48;
-  return str;
-}
-#endif
 
 static uint8_t prompt_cursor = 0;
 static uint8_t prompt_buffer_line = 0;
@@ -289,10 +266,12 @@ void lines_render(void) {
   uint8_t elapsed = timer_elapsed(prompt_timer);
   char current = prompt_buffer[prompt_buffer_line * PROMPT_WIDTH + prompt_cursor];
   if (current != 0) {
-    if (elapsed > 5 && prompt_screen_line == 4) {
+    if (elapsed > 20 && prompt_screen_line == 4) {
       if (prompt_scroll == 0) {
         oled_set_cursor(prompt_blink_cursor, prompt_screen_line - 1);
         oled_write_char(' ', false);
+        oled_set_cursor(0, prompt_screen_line);
+        oled_write_P(PSTR("                     "), false);
         prompt_blink = false;
       }
       prompt_scroll++;
@@ -379,36 +358,49 @@ void lines_render(void) {
   }
 }
 
-void render_mod_status(uint8_t modifiers) {
-  /* oled_set_start_line(0); */
-  oled_set_cursor(0, 0);
-  oled_write_P(PSTR("SHF"), (modifiers & MOD_MASK_SHIFT));
-  oled_write_P(PSTR("CTL"), (modifiers & MOD_MASK_CTRL));
-  oled_write_P(PSTR("MOD"), (modifiers & MOD_MASK_GUI));
-  oled_write_P(PSTR("ALT"), (modifiers & MOD_MASK_ALT));
-  oled_write_P(PSTR("A"), false);
-#ifdef RGB_MATRIX_ENABLE
-  oled_write(dec_to_str(rgb_matrix_get_mode()), false);
-  oled_write_P(PSTR("C"), false);
-#endif
-  /* oled_write_P(crkbd_logo_2, false); */
-}
-
+const char *read_logo(void);
 /* #define OLED_MODE_RAIN 0 */
 /* #define OLED_MODE_INFO 1 */
 /* static uint8_t oled_mode = OLED_MODE_RAIN; */
+#define LOGO_STATE_SCROLL 0
+#define LOGO_STATE_WAIT 1
+#define LOGO_STATE_IDLE 2
+#define LOGO_1 0
+#define LOGO_2 1
+static uint16_t logo_scroll_timer = 0;
+static uint16_t logo_scroll_state = LOGO_STATE_WAIT;
+static uint8_t logo_select = LOGO_1;
+
 void oled_task_user(void) {
-  /* if (biton32(layer_state) != 0) { */
-    /* lines_init(); */
-    /* oled_clear(); */
-  /* } else { */
+  if (is_master) {
     lines_render();
-  /* } */
-  /* if (biton32(layer_state) == 0) { */
-  /* } else { */
-    /* uint8_t modifiers = get_mods()|get_oneshot_mods(); */
-    /* render_mod_status(modifiers); */
-  /* } */
+  } else {
+    if (logo_scroll_state == LOGO_STATE_IDLE
+        && timer_elapsed(logo_scroll_timer) > 50) {
+      oled_scroll_right();
+      logo_scroll_timer = timer_read();
+      logo_scroll_state = LOGO_STATE_SCROLL;
+
+    } else if (logo_scroll_state == LOGO_STATE_SCROLL
+        && timer_elapsed(logo_scroll_timer) > 3500) {
+      oled_scroll_off();
+      oled_off();
+      if (logo_select == LOGO_1) {
+        oled_write_P(crkbd_logo2, false);
+        logo_select = LOGO_2;
+      } else {
+        oled_write_P(crkbd_logo, false);
+        logo_select = LOGO_1;
+      }
+      logo_scroll_timer = timer_read();
+      logo_scroll_state = LOGO_STATE_WAIT;
+    } else if (logo_scroll_state == LOGO_STATE_WAIT
+        && timer_elapsed(logo_scroll_timer) > 50) {
+      logo_scroll_timer = timer_read();
+      logo_scroll_state = LOGO_STATE_IDLE;
+      oled_on();
+    }
+  }
 }
 #endif
 
@@ -425,8 +417,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       prompt_add_P(PSTR("Raise layer active"));
       prompt_timeout_timer = timer_read();
       break;
-    case _AD:
-      prompt_add_P(PSTR("Adjust layer active"));
+    case _NP:
+      prompt_add_P(PSTR("Lower layer active"));
       prompt_timeout_timer = timer_read();
       break;
     default:
@@ -440,15 +432,19 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
-#ifdef RGB_MATRIX_ENABLE
 void suspend_power_down_keymap(void) {
+  oled_off();
+#ifdef RGB_MATRIX_ENABLE
   rgb_matrix_set_suspend_state(true);
+#endif
 }
 
 void suspend_wakeup_init_keymap(void) {
+  oled_on();
+#ifdef RGB_MATRIX_ENABLE
   rgb_matrix_set_suspend_state(false);
-}
 #endif
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {

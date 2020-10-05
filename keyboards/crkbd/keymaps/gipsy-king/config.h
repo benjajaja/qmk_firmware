@@ -79,11 +79,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   define DISABLE_RGB_MATRIX_SPLASH
 //#   define DISABLE_RGB_MATRIX_MULTISPLASH
 #   define DISABLE_RGB_MATRIX_SOLID_SPLASH
-//#   define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
+#   define DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif // RGB_MATRIX_ENABLE
 
-#define OLED_FONT_H "keyboards/crkbd/keymaps/gipsy-king/laser.c"
-#define OLED_DISPLAY_HEIGHT 32
+#define OLED_FONT_H "keyboards/crkbd/keymaps/gipsy-king/alps.c"
+#define OLED_DISPLAY_CUSTOM
+#    ifndef OLED_DISPLAY_WIDTH
+#        define OLED_DISPLAY_WIDTH 128
+#    endif
+#    ifndef OLED_DISPLAY_HEIGHT
+#        define OLED_DISPLAY_HEIGHT 32
+#    endif
+#    ifndef OLED_MATRIX_SIZE
+#        define OLED_MATRIX_SIZE ((OLED_DISPLAY_HEIGHT + 1) / 8 * OLED_DISPLAY_WIDTH)  // 512 (compile time mathed)
+#    endif
+#    ifndef OLED_BLOCK_TYPE
+#        define OLED_BLOCK_TYPE uint16_t  // Type to use for segmenting the oled display for smart rendering, use unsigned types only
+#    endif
+#    ifndef OLED_BLOCK_COUNT
+#        define OLED_BLOCK_COUNT (sizeof(OLED_BLOCK_TYPE) * 8)  // 16 (compile time mathed)
+#    endif
+#    ifndef OLED_BLOCK_SIZE
+#        define OLED_BLOCK_SIZE (OLED_MATRIX_SIZE / OLED_BLOCK_COUNT)  // 32 (compile time mathed)
+#    endif
+#    ifndef OLED_COM_PINS
+#        define OLED_COM_PINS COM_PINS_SEQ
+#    endif
+#    ifndef OLED_SOURCE_MAP
+#        define OLED_SOURCE_MAP \
+            { 0, 8, 16, 24 }
+#    endif
+#    ifndef OLED_TARGET_MAP
+#        define OLED_TARGET_MAP \
+            { 24, 16, 8, 0 }
+#    endif
 
 /* Mouse Settings */
 // #define MOUSEKEY_INTERVAL 16
