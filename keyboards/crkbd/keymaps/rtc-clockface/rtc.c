@@ -22,14 +22,14 @@ bool readDS3231time(uint8_t *second,
     return false;
   }
 
-  *second     = (time[0] & 0x70) * 10 + (time[0] & 0x0f);
-  *minute     = (time[1] & 0x70) * 10 + (time[1] & 0x0f);
-  *hour       = (time[2] & 0x40) ? /* 12 hour mode */ ((time[2] & 0x20) ? 12 : 0) + ((time[2] & 0x10) ? 10 : 0) + (time[2] & 0x0f)
-                                 : /* 24 hour mode */ ((time[2] & 0x20) ? 20 : 0) + ((time[2] & 0x10) ? 10 : 0) + (time[2] & 0x0f);
-  *dayOfWeek  = (time[3] & 0x07);
-  *dayOfMonth = (time[4] & 0x30) * 10 + (time[4] & 0x0f);
-  *month      = (time[5] & 0x10) * 10 + (time[5] & 0x0f);
-  *year       = (time[6] & 0xf0) * 10 + (time[6] & 0x0f) + ((time[5] & 0x80) ? 2000 : 1999);
+  *second     = ((time[0] & 0x70) >> 4) * 10 + (time[0] & 0x0f);
+  *minute     = ((time[1] & 0x70) >> 4) * 10 + (time[1] & 0x0f);
+  *hour       = ((time[2] & 0x40) >> 4) ? /* 12 hour mode */ ((time[2] & 0x20) ? 12 : 0) + ((time[2] & 0x10) ? 10 : 0) + (time[2] & 0x0f)
+                                        : /* 24 hour mode */ ((time[2] & 0x20) ? 20 : 0) + ((time[2] & 0x10) ? 10 : 0) + (time[2] & 0x0f);
+  *dayOfWeek  =                                (time[3] & 0x07);
+  *dayOfMonth = ((time[4] & 0x30) >> 4) * 10 + (time[4] & 0x0f);
+  *month      = ((time[5] & 0x10) >> 4) * 10 + (time[5] & 0x0f);
+  *year       = ((time[6] & 0xf0) >> 4) * 10 + (time[6] & 0x0f) + ((time[5] & 0x80) ? 2000 : 1999);
   return true;
 }
 
