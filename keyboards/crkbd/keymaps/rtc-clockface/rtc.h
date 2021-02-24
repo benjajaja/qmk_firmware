@@ -16,6 +16,4 @@ bool readDS3231time(uint8_t *second,
                     uint8_t *year
 );
 
-bool readDS3231temp(uint8_t *temp_int, uint8_t *temp_frac);
-
 bool writeDS3231time_field(uint8_t offset, uint8_t value);

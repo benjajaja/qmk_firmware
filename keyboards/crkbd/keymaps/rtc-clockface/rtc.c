@@ -18,15 +18,7 @@ bool readDS3231time(uint8_t *second,
                     uint8_t *month,
                     uint8_t *year
 ) {
-  if (i2c_start(RTC_ADDRESS | I2C_WRITE, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  if (i2c_write(RTC_DATETIME_REGISTER, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  i2c_stop();
-
-  if (i2c_receive(RTC_ADDRESS, time, RTC_DATETIME_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+  if (i2c_readReg(RTC_ADDRESS, RTC_DATETIME_REGISTER, time, RTC_DATETIME_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
 
@@ -57,15 +49,7 @@ bool writeDS3231time(uint8_t second,
   time_write[5] = month;
   time_write[6] = year;
 
-  if (i2c_start(RTC_ADDRESS | I2C_WRITE, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  if (i2c_write(RTC_DATETIME_REGISTER, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  i2c_stop();
-
-  if (i2c_transmit(RTC_ADDRESS, time_write, RTC_DATETIME_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+  if (i2c_writeReg(RTC_ADDRESS, RTC_DATETIME_REGISTER, time_write, RTC_DATETIME_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
   return true;
@@ -73,56 +57,10 @@ bool writeDS3231time(uint8_t second,
 
 /* static uint8_t time_fields[] = {0,0,0,0,0,0,0}; */
 bool writeDS3231time_field(uint8_t offset, uint8_t value) {
-  if (i2c_start(RTC_ADDRESS | I2C_WRITE, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  if (i2c_write(RTC_DATETIME_REGISTER | offset, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-
   uint8_t bcd_value = decToBcd(value);
   if (i2c_writeReg(RTC_ADDRESS, 6 - offset, &bcd_value, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
-  i2c_stop();
-  return true;
-  /* if (!readDS3231time(&time_fields[0], */
-                 /* &time_fields[1], */
-                 /* &time_fields[2], */
-                 /* &time_fields[3], */
-                 /* &time_fields[4], */
-                 /* &time_fields[5], */
-                 /* &time_fields[6])) { */
-    /* return false; */
-  /* } */
-  /* time_fields[6 - offset] = value; */
-  /* return writeDS3231time(decToBcd(time_fields[0]), */
-                         /* decToBcd(time_fields[1]), */
-                         /* decToBcd(time_fields[2]), */
-                         /* decToBcd(time_fields[3]), */
-                         /* decToBcd(time_fields[4]), */
-                         /* decToBcd(time_fields[5]), */
-                         /* decToBcd(time_fields[6])); */
-}
-
-bool readDS3231temp(uint8_t *upper, uint8_t *lower) {
-  static uint8_t temp[] = {0,0};
-
-  if (i2c_start(RTC_ADDRESS | I2C_WRITE, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  if (i2c_write(RTC_TEMPERATURE_REGISTER, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  i2c_stop();
-  if (i2c_receive(RTC_ADDRESS, temp, RTC_TEMPERATURE_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-
-  *upper = bcdToDec(temp[0]);
-  *lower = bcdToDec(temp[1]);
-  while (*lower >= 10) {
-    *lower = *lower / 10;
-  }
   return true;
 }
+

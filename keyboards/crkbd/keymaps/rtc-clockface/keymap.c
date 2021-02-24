@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       ),
   // Numpad, RGB, Reset/wipe, Gimmicks
   [_NUMPAD] = LAYOUT (
-      OSL(_FUNC),RGB_RMOD,RGB_HUI,RGB_SAI,RGB_VAI,KC_BRIU,  KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX, KC_BSPC, \
+      OSL(_FUNC),RGB_RMOD,RGB_HUI,RGB_SAI,RGB_VAI,KC_BRIU,  KC_7,    KC_8,    KC_9,    XXXXXXX, M_TIME, KC_BSPC, \
       RGB_TOG, RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID, KC_4,    KC_5,    KC_6,    XXXXXXX, XXXXXXX,  XXXXXXX, \
       KC_MINS, TO(_FUNC), TO(_PLAIN),M_TIME,M_WIPE,  RESET, KC_1,    KC_2,    KC_3,    KC_0,    KC_COMM, KC_DOT,  \
                                  MOD4,    KC_LSPO, KC_SPC,  KC_ENT,  KC_RSPC, TG(_NUMPAD) \
@@ -110,8 +110,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 static uint16_t clock_timeout;
 static bool clock_timeout_off = false;
+static uint16_t clock_skip_timeout;
 void matrix_init_user(void) { // Runs boot tasks for keyboard
   clock_timeout = timer_read();
+  clock_skip_timeout = timer_read();
 }
 
 #ifdef OLED_DRIVER_ENABLE
@@ -180,6 +182,12 @@ void oled_render_logo(void) {
 
 
 void oled_render_time(void) {
+  if (timer_elapsed(clock_skip_timeout) < 1000) {
+    oled_set_cursor(0, 10);
+    return;
+  }
+  clock_skip_timeout = timer_read();
+
   static uint8_t second;
   static uint8_t minute;
   static uint8_t hour;
@@ -198,7 +206,7 @@ void oled_render_time(void) {
       oled_render_face();
       oled_render_hand_second(second, false);
       oled_render_hand_minute(minute);
-      oled_render_hand_hour((hour % 12) * 5 + minute);
+      oled_render_hand_hour((hour % 12) * 5 + (minute / 12));
 
       oled_set_cursor(0, 5);
 
@@ -279,15 +287,6 @@ void oled_render_time(void) {
   }
   oled_set_cursor(0, 10);
 
-  /* static uint8_t tem_int; */
-  /* static uint8_t tem_frac; */
-  /* static char temp_str[10] = {}; */
-  /* if (readDS3231temp(&tem_int, &tem_frac)) { */
-    /* snprintf(temp_str, sizeof(temp_str), "%02d.%01dC", tem_int, tem_frac); */
-    /* oled_write(temp_str, false); */
-  /* } else { */
-    /* oled_write_P(PSTR(" ERR "), false); */
-  /* } */
 }
 
 void oled_task_user(void) {
