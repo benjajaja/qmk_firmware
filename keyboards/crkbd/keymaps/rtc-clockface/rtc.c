@@ -29,7 +29,21 @@ bool readDS3231time(uint8_t *second,
   *dayOfWeek  =                                (time[3] & 0x07);
   *dayOfMonth = ((time[4] & 0x30) >> 4) * 10 + (time[4] & 0x0f);
   *month      = ((time[5] & 0x10) >> 4) * 10 + (time[5] & 0x0f);
-  *year       = ((time[6] & 0xf0) >> 4) * 10 + (time[6] & 0x0f) + ((time[5] & 0x80) ? 2000 : 1999);
+  *year       = ((time[6] & 0xf0) >> 4) * 10 + (time[6] & 0x0f);
+    // + ((time[5] & 0x80) ? 2000 : 1900);
+  return true;
+}
+
+bool readDS3231control_status(uint8_t *control, uint8_t *status, uint8_t *aging) {
+  if (i2c_readReg(RTC_ADDRESS, 0x0e, control, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
+  if (i2c_readReg(RTC_ADDRESS, 0x0f, status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
+  if (i2c_readReg(RTC_ADDRESS, 0x10, aging, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
   return true;
 }
 
@@ -50,16 +64,28 @@ bool writeDS3231time(uint8_t second,
   time_write[5] = month;
   time_write[6] = year;
 
-  if (i2c_writeReg(RTC_ADDRESS, RTC_DATETIME_REGISTER, time_write, RTC_DATETIME_LENGTH, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+  if (i2c_writeReg(RTC_ADDRESS, RTC_DATETIME_REGISTER, time_write, sizeof(time_write) / sizeof(time_write[0]), RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
   return true;
 }
 
-/* static uint8_t time_fields[] = {0,0,0,0,0,0,0}; */
 bool writeDS3231time_field(uint8_t offset, uint8_t value) {
   uint8_t bcd_value = decToBcd(value);
   if (i2c_writeReg(RTC_ADDRESS, 6 - offset, &bcd_value, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
+  return true;
+}
+
+bool writeDS3231osf(void) {
+  static uint8_t status = 0;
+  if (i2c_readReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
+  status = status & 0x7f;
+
+  if (i2c_writeReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
   return true;

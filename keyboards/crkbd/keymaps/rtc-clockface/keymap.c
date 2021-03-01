@@ -182,11 +182,11 @@ void oled_render_logo(void) {
 
 
 void oled_render_time(void) {
-  if (timer_elapsed(clock_skip_timeout) < 1000) {
-    oled_set_cursor(0, 10);
-    return;
-  }
-  clock_skip_timeout = timer_read();
+  /* if (timer_elapsed(clock_skip_timeout) < 500) { */
+    /* oled_set_cursor(0, 12); */
+    /* return; */
+  /* } */
+  /* clock_skip_timeout = timer_read(); */
 
   static uint8_t second;
   static uint8_t minute;
@@ -196,96 +196,131 @@ void oled_render_time(void) {
   static uint8_t month;
   static uint8_t year;
   static uint8_t last_second = 60;
+  static bool half_step = true;
+
   if (readDS3231time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year)) {
 
-    if (second != last_second) {
+    static bool render_clockface = false;
+    if (half_step && second != last_second) {
+      last_second = second;
+      half_step = false;
+      clock_skip_timeout = timer_read();
+      render_clockface = true;
+
+    } else if (!half_step && timer_elapsed(clock_skip_timeout) > 500) {
+      half_step = true;
+      render_clockface = true;
+    }
+    if (render_clockface) {
+      render_clockface = false;
       oled_write_P(PSTR("     "), false);
       oled_write_P(PSTR("     "), false);
       oled_write_P(PSTR("     "), false);
       oled_write_P(PSTR("     "), false);
       oled_render_face();
-      oled_render_hand_second(second, false);
+      oled_render_hand_second(second, half_step);
       oled_render_hand_minute(minute);
       oled_render_hand_hour((hour % 12) * 5 + (minute / 12));
+    }
 
-      oled_set_cursor(0, 5);
+    oled_set_cursor(0, 4);
 
 
-      if (!clock_timeout_off) {
-        static char time_str[8] = {};
-        snprintf(time_str, sizeof(time_str), "%02d:%02d", hour, minute);
-        oled_write(time_str, time_mode_on);
+    if (!clock_timeout_off) {
 
-        switch (dayOfWeek) {
-          case 1:
-            oled_write_P(PSTR(" Mon "), false); break;
-          case 2:
-            oled_write_P(PSTR(" Tue "), false); break;
-          case 3:
-            oled_write_P(PSTR(" Wed "), false); break;
-          case 4:
-            oled_write_P(PSTR(" Thu "), false); break;
-          case 5:
-            oled_write_P(PSTR(" Fri "), false); break;
-          case 6:
-            oled_write_P(PSTR(" Sat "), false); break;
+      oled_write_P(PSTR("     "), false);
+
+      static char time_str[8] = {};
+      snprintf(time_str, sizeof(time_str), "%02d:%02d", hour, minute);
+      oled_write(time_str, false);
+
+
+      static char sec_str[8] = {};
+      snprintf(sec_str, sizeof(sec_str), half_step ? "   %02d" : "  :%02d", second);
+      oled_write(sec_str, false);
+
+      oled_write_P(PSTR("     "), false);
+
+      switch (dayOfWeek) {
+        case 1:
+          oled_write_P(PSTR(" Mon "), false); break;
+        case 2:
+          oled_write_P(PSTR(" Tue "), false); break;
+        case 3:
+          oled_write_P(PSTR(" Wed "), false); break;
+        case 4:
+          oled_write_P(PSTR(" Thu "), false); break;
+        case 5:
+          oled_write_P(PSTR(" Fri "), false); break;
+        case 6:
+          oled_write_P(PSTR(" Sat "), false); break;
+        default:
+          oled_write_P(PSTR(" Sun "), false); break;
+      }
+
+      oled_write_P(PSTR("     "), false);
+
+      static char date_daymonth[8] = {};
+      snprintf(date_daymonth, sizeof(date_daymonth), "%02d/%02d", dayOfMonth, month);
+      oled_write(date_daymonth, false);
+
+      static char date_year[8] = {};
+      snprintf(date_year, sizeof(date_year), " %04d", 2000 + year);
+      oled_write(date_year, false);
+
+      if (time_mode_on) {
+        switch (time_cursor_field) {
+          case TIMECUR_SECOND:
+            oled_write_P(PSTR("Sec"), false);
+            break;
+          case TIMECUR_MINUTE:
+            oled_write_P(PSTR("Min"), false);
+            break;
+          case TIMECUR_HOUR:
+            oled_write_P(PSTR("Hou"), false);
+            break;
+          case TIMECUR_DAY:
+            oled_write_P(PSTR("Day"), false);
+            break;
+          case TIMECUR_WEEKDAY:
+            oled_write_P(PSTR("Wkd"), false);
+            break;
+          case TIMECUR_MONTH:
+            oled_write_P(PSTR("Mon"), false);
+            break;
+          case TIMECUR_YEAR:
+            oled_write_P(PSTR("Yea"), false);
+            break;
           default:
-            oled_write_P(PSTR(" Sun "), false); break;
+            oled_write_P(PSTR("???"), false);
+            break;
         }
-
-        static char date_daymonth[8] = {};
-        snprintf(date_daymonth, sizeof(date_daymonth), "%02d/%02d", dayOfMonth, month);
-        oled_write(date_daymonth, false);
-
-        static char date_year[8] = {};
-        snprintf(date_year, sizeof(date_year), "/%04d", year + 2000);
-        oled_write(date_year, false);
-
-        if (time_mode_on) {
-          switch (time_cursor_field) {
-            case TIMECUR_SECOND:
-              oled_write_P(PSTR("Sec"), false);
-              break;
-            case TIMECUR_MINUTE:
-              oled_write_P(PSTR("Min"), false);
-              break;
-            case TIMECUR_HOUR:
-              oled_write_P(PSTR("Hou"), false);
-              break;
-            case TIMECUR_DAY:
-              oled_write_P(PSTR("Day"), false);
-              break;
-            case TIMECUR_WEEKDAY:
-              oled_write_P(PSTR("Wkd"), false);
-              break;
-            case TIMECUR_MONTH:
-              oled_write_P(PSTR("Mon"), false);
-              break;
-            case TIMECUR_YEAR:
-              oled_write_P(PSTR("Yea"), false);
-              break;
-            default:
-              oled_write_P(PSTR("???"), false);
-              break;
-          }
-          static char set_value[4] = {};
-          snprintf(set_value, sizeof(set_value), "%1d", time_field[0]);
-          oled_write(set_value, true);
-          snprintf(set_value, sizeof(set_value), "%1d", time_field[1]);
-          oled_write(set_value, true);
-        } else {
-          oled_write_P(PSTR("     "), false);
-        }
+        static char set_value[4] = {};
+        snprintf(set_value, sizeof(set_value), "%1d", time_field[0]);
+        oled_write(set_value, true);
+        snprintf(set_value, sizeof(set_value), "%1d", time_field[1]);
+        oled_write(set_value, true);
+      } else {
+        /* static uint8_t control = 0; */
+        /* static uint8_t status = 0; */
+        /* static uint8_t aging = 0; */
+        /* readDS3231control_status(&control, &status, &aging); */
+        /* static char debug_control[6] = {}; */
+        /* snprintf(debug_control, sizeof(debug_control), "C:%03d", control); */
+        /* oled_write(debug_control, second % 3 == 0); */
+        /* snprintf(debug_control, sizeof(debug_control), "S:%03d", status); */
+        /* oled_write(debug_control, second % 3 == 1); */
+        /* snprintf(debug_control, sizeof(debug_control), "A:%03d", aging); */
+        /* oled_write(debug_control, second % 3 == 2); */
       }
     }
 
-    last_second = second;
 
   } else {
     oled_write_P(PSTR(" ERR "), false);
     oled_write_P(PSTR(" ERR "), false);
   }
-  oled_set_cursor(0, 10);
+  oled_set_cursor(0, 12);
 
 }
 
@@ -294,9 +329,11 @@ void oled_task_user(void) {
     oled_render_time();
 
     if (!clock_timeout_off) {
-      if (timer_elapsed(clock_timeout) > 10000) {
+      if (timer_elapsed(clock_timeout) > 60000) {
         clock_timeout_off = true;
-        oled_set_cursor(0, 5);
+        oled_set_cursor(0, 4);
+        oled_write_P(PSTR("     "), false);
+        oled_write_P(PSTR("     "), false);
         oled_write_P(PSTR("     "), false);
         oled_write_P(PSTR("     "), false);
         oled_write_P(PSTR("     "), false);
@@ -323,6 +360,7 @@ void mode_set_time_toggle(void) {
   if (time_mode_on) {
     time_cursor_field = TIMECUR_HOUR;
     time_cursor_digit = 0;
+    /* writeDS3231osf(); */
   }
 }
 
@@ -356,7 +394,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     clock_timeout = timer_read();
     clock_timeout_off = false;
-    oled_on();
   }
   switch (keycode) {
     case M_TIME:

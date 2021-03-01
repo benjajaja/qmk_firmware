@@ -17,3 +17,7 @@ bool readDS3231time(uint8_t *second,
 );
 
 bool writeDS3231time_field(uint8_t offset, uint8_t value);
+
+bool readDS3231control_status(uint8_t *control, uint8_t *status, uint8_t *aging);
+
+bool writeDS3231osf(void);
