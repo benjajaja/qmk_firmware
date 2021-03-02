@@ -118,7 +118,7 @@ void matrix_init_user(void) { // Runs boot tasks for keyboard
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_master) {
+  if (isLeftHand) {
     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
   }
   return OLED_ROTATION_270;  // flips the display 180 degrees if offhand
@@ -325,7 +325,7 @@ void oled_render_time(void) {
 }
 
 void oled_task_user(void) {
-  if (is_master) {
+  if (!isLeftHand) {
     oled_render_time();
 
     if (!clock_timeout_off) {
@@ -346,7 +346,7 @@ void oled_task_user(void) {
     }
 
   } else {
-    oled_render_logo();
+    /* oled_render_logo(); */
   }
 }
 
