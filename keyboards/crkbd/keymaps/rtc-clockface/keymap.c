@@ -55,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       OSL(_FUNC),RGB_RMOD,RGB_HUI,RGB_SAI,RGB_VAI,KC_BRIU,  KC_7,    KC_8,    KC_9,    XXXXXXX, M_TIME, KC_BSPC, \
       RGB_TOG, RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, KC_BRID, KC_4,    KC_5,    KC_6,    XXXXXXX, XXXXXXX,  XXXXXXX, \
       KC_MINS, TO(_FUNC), TO(_PLAIN),M_TIME,M_WIPE,  RESET, KC_1,    KC_2,    KC_3,    KC_0,    KC_COMM, KC_DOT,  \
-                                 MOD4,    KC_LSPO, KC_SPC,  KC_ENT,  KC_RSPC, TG(_NUMPAD) \
+                                 MOD4,    KC_LSPO, KC_SPC,  KC_ENT,  TG(_NUMPAD), XXXXXXX \
       ),
   // No modtaps, for games and such
   [_PLAIN] = LAYOUT (
@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TILD, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSLS, \
       KC_GRV,  KC_LCBR, KC_PGUP,KC_PGDN, KC_END,  KC_HOME,                  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RCBR, KC_PIPE, \
       KC_LBRC, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_RBRC, \
-                                    XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX \
+                                    XXXXXXX, XXXXXXX, XXXXXXX, _______, TG(_NUMPAD), XXXXXXX \
       ),
   /* XMonad window manager shortcuts.
    * Needs MOD_LGUI
@@ -413,3 +413,60 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 #endif // OLED_DRIVER_ENABLE
+
+#ifdef ENCODER_ENABLE 
+void encoder_update_user(uint8_t index, bool clockwise) {
+  if (time_mode_on) {
+    static uint8_t second;
+    static uint8_t minute;
+    static uint8_t hour;
+    static uint8_t dayOfWeek;
+    static uint8_t dayOfMonth;
+    static uint8_t month;
+    static uint8_t year;
+    if (readDS3231time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year)) {
+      if (clockwise) {
+        minute += 1;
+        if (minute > 59) {
+          minute = 0;
+          hour += 1;
+          if (hour > 23) {
+            hour = 0;
+          }
+        }
+      } else {
+        if (minute > 0) {
+          minute -= 1;
+        } else {
+          minute = 59;
+          if (hour > 0) {
+            hour -= 1;
+          } else {
+            hour = 23;
+          }
+        }
+      }
+      writeDS3231time_field(TIMECUR_MINUTE, minute);
+      writeDS3231time_field(TIMECUR_HOUR, hour);
+    }
+    return;
+  }
+  if (clockwise) {
+    if (layer_state_is(_BASE)) {
+      tap_code(KC_MS_WH_DOWN);
+    } else if (layer_state_is(_RAISE)) {
+      tap_code(KC_VOLU);
+    } else if (layer_state_is(_NUMPAD)) {
+      tap_code(KC_BRIU);
+    }
+  } else {
+    if (layer_state_is(_BASE)) {
+      tap_code(KC_MS_WH_UP);
+    } else if (layer_state_is(_RAISE)) {
+      tap_code(KC_VOLD);
+    } else if (layer_state_is(_NUMPAD)) {
+      tap_code(KC_BRID);
+    }
+  }
+}
+#endif
