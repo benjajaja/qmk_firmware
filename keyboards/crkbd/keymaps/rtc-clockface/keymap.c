@@ -1,5 +1,7 @@
 #include "rtc.h"
 #include "oled_clockface.h"
+#include "pimoroni_trackball.h"
+#include "pointing_device.h"
 
 #include QMK_KEYBOARD_H
 
@@ -435,5 +437,39 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       tap_code(KC_BRID);
     }
   }
+}
+#endif
+
+#ifdef PIMORONI_TRACKBALL_ENABLE
+void run_trackball_cleanup(void) {
+    if (trackball_is_scrolling()) {
+        trackball_set_rgbw(RGB_CYAN, 0x00);
+    } else if (trackball_get_precision() != 1.0) {
+        trackball_set_rgbw(RGB_GREEN, 0x00);
+    } else {
+        trackball_set_rgbw(RGB_MAGENTA, 0x00);
+    }
+}
+
+void keyboard_post_init_keymap(void) {
+    trackball_set_precision(1.5);
+    trackball_set_rgbw(RGB_MAGENTA, 0x88);
+}
+void keyboard_post_init_user(void) {
+    trackball_set_rgbw(RGB_MAGENTA, 0x88);
+}
+void shutdown_keymap(void) {
+    trackball_set_rgbw(RGB_RED, 0x00);
+}
+
+static bool mouse_button_one, trackball_button_one;
+
+void trackball_check_click(bool pressed, report_mouse_t* mouse) {
+    if (mouse_button_one | pressed) {
+        mouse->buttons |= MOUSE_BTN1;
+    } else {
+        mouse->buttons &= ~MOUSE_BTN1;
+    }
+    trackball_button_one = pressed;
 }
 #endif
