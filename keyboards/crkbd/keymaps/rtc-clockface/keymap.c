@@ -109,7 +109,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 static uint16_t clock_timeout;
+#ifdef OLED_DRIVER_ENABLE
 static bool clock_timeout_off = false;
+#endif
 static uint16_t clock_skip_timeout;
 void matrix_init_user(void) { // Runs boot tasks for keyboard
   clock_timeout = timer_read();
@@ -416,41 +418,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef ENCODER_ENABLE 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (time_mode_on) {
-    static uint8_t second;
-    static uint8_t minute;
-    static uint8_t hour;
-    static uint8_t dayOfWeek;
-    static uint8_t dayOfMonth;
-    static uint8_t month;
-    static uint8_t year;
-    if (readDS3231time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year)) {
-      if (clockwise) {
-        minute += 1;
-        if (minute > 59) {
-          minute = 0;
-          hour += 1;
-          if (hour > 23) {
-            hour = 0;
-          }
-        }
-      } else {
-        if (minute > 0) {
-          minute -= 1;
-        } else {
-          minute = 59;
-          if (hour > 0) {
-            hour -= 1;
-          } else {
-            hour = 23;
-          }
-        }
-      }
-      writeDS3231time_field(TIMECUR_MINUTE, minute);
-      writeDS3231time_field(TIMECUR_HOUR, hour);
-    }
-    return;
-  }
   if (clockwise) {
     if (layer_state_is(_BASE)) {
       tap_code(KC_MS_WH_DOWN);
