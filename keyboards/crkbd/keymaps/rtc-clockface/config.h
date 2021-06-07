@@ -18,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define TRACKBALL_RIGHT
-
 #pragma once
 
 //#define USE_MATRIX_I2C
@@ -103,5 +101,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define ENCODERS_PAD_A { F1 }
 #define ENCODERS_PAD_B { D5 }
-#define ENCODER_DIRECTION_FLIP
 #define ENCODER_RESOLUTION 4
+#define OLED_CLOCK_TIMEOUT 10000
+
+#define FB_ERM_LRA 1
+#define DRV_GREETING 78 // transition_rampdown_med_sharp1
+#define DRV_MODE_DEFAULT 26 // sharp_tick3_60
+

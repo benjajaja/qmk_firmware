@@ -10,7 +10,7 @@ uint8_t bcdToDec(uint8_t val) {
 }
 
 static uint8_t time[] = {0,0,0,0,0,0,0};
-bool readDS3231time(uint8_t *second,
+bool readRTCtime(uint8_t *second,
                     uint8_t *minute,
                     uint8_t *hour,
                     uint8_t *dayOfWeek,
@@ -34,7 +34,7 @@ bool readDS3231time(uint8_t *second,
   return true;
 }
 
-bool readDS3231control_status(uint8_t *control, uint8_t *status, uint8_t *aging) {
+bool readRTCcontrol_status(uint8_t *control, uint8_t *status, uint8_t *aging) {
   if (i2c_readReg(RTC_ADDRESS, 0x0e, control, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
@@ -48,7 +48,7 @@ bool readDS3231control_status(uint8_t *control, uint8_t *status, uint8_t *aging)
 }
 
 static uint8_t time_write[] = {0,0,0,0,0,0,0};
-bool writeDS3231time(uint8_t second,
+bool writeRTCtime(uint8_t second,
                      uint8_t minute,
                      uint8_t hour,
                      uint8_t dayOfWeek,
@@ -70,7 +70,7 @@ bool writeDS3231time(uint8_t second,
   return true;
 }
 
-bool writeDS3231time_field(uint8_t offset, uint8_t value) {
+bool writeRTCtime_field(uint8_t offset, uint8_t value) {
   uint8_t bcd_value = decToBcd(value);
   if (i2c_writeReg(RTC_ADDRESS, 6 - offset, &bcd_value, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
@@ -78,16 +78,17 @@ bool writeDS3231time_field(uint8_t offset, uint8_t value) {
   return true;
 }
 
-bool writeDS3231osf(void) {
-  static uint8_t status = 0;
-  if (i2c_readReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
-    return false;
-  }
-  status = status & 0x7f;
-
-  if (i2c_writeReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+bool readRTCReg(uint8_t reg, uint8_t *data) {
+  if (i2c_readReg(RTC_ADDRESS, reg, data, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
     return false;
   }
   return true;
 }
+bool writeRTCReg(uint8_t reg, uint8_t data) {
+  if (i2c_writeReg(RTC_ADDRESS, reg, &data, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    return false;
+  }
+  return true;
+}
+
 

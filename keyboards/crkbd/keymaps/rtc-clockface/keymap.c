@@ -18,6 +18,10 @@ enum custom_keycodes {
   M_WIPE,
   M_RAN64,
   M_TIME,
+  M_RESET,
+  PM_SCROLL,
+  PM_PRECISION,
+  BALL_NCL,
 };
 
 // Mod-Taps
@@ -41,16 +45,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------|         |------+------+------+------+------+------|
    * | Esc  |   A  |   S  |   D  |   F  |   G  |         |   H  |   J  |   K  |   L  |   ;  |  '   |
    * |------+------+------+------+------+------|         |------+------+------+------+------+------|
-   * |-/LCTR|Z/LGUI|X/LALT|   C  |   V  |   B  |         |   N  |   M  |   ,  |./LALT|/_RGUI|=/RCTR|
+   * |-/LCTR|Z/LGUI|X/LALT|   C  |   V  |   B  |         |   N  |   M  |   ,  |./RALT|//RGUI|=/RCTR|
    * `------+------+------+------+------+------+---. ,---+------+------+------+------+------+------'
-   *                          | Mod4 |Shift|Spac/Ra| |Entr/Ra|Shift|   Lo |
+   *                          |  Lwr |Shift| Space | |Ent/Rai|Shift|  Enc |
    *                          `--------------------' `--------------------'
    */
   [_BASE] = LAYOUT (
       KC_TAB,      KC_Q,     KC_W,     KC_E, KC_R, KC_T,    KC_Y, KC_U, KC_I,    KC_O,        KC_P,         KC_BSPC, \
       KC_ESC,      KC_A,     KC_S,     KC_D, KC_F, KC_G,    KC_H, KC_J, KC_K,    KC_L,        KC_SCLN,      KC_QUOT, \
       LCT(KC_MINS),TAT(KC_Z),LGT(KC_X),KC_C, KC_V, KC_B,    KC_N, KC_M, KC_COMM, RGT(KC_DOT), AGT(KC_SLSH), RCT(KC_EQL),\
-                                  MOD4, KC_LSPO, KC_SPC,    LT(_RAISE, KC_ENT), KC_RSPC, TG(_NUMPAD) \
+                                  MOD4, KC_LSPO, KC_SPC,    LT(_RAISE, KC_ENT), KC_RSPC, KC_MUTE \
       ),
   // Numpad, RGB, Reset/wipe, Gimmicks
   [_NUMPAD] = LAYOUT (
@@ -81,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TILD, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSLS, \
       KC_GRV,  KC_LCBR, KC_PGUP,KC_PGDN, KC_END,  KC_HOME,                  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RCBR, KC_PIPE, \
       KC_LBRC, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_RBRC, \
-                                    XXXXXXX, XXXXXXX, XXXXXXX, _______, TG(_NUMPAD), XXXXXXX \
+                                    XXXXXXX, XXXXXXX, XXXXXXX, _______, KC_MS_BTN1, XXXXXXX \
       ),
   /* XMonad window manager shortcuts.
    * Needs MOD_LGUI
@@ -99,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_P,    XXXXXXX, \
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_T,        KC_H,    KC_J,    KC_K,    KC_L,    XXXXXXX, XXXXXXX, \
       XXXXXXX, XXXXXXX, XXXXXXX, KC_C,    XXXXXXX, KC_B,        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-                                 KC_LSFT, TO(_NUMPAD), KC_SPC,      KC_ENT,  XXXXXXX, XXXXXXX \
+                                 KC_LSFT, TG(_NUMPAD), KC_SPC,      KC_ENT,  XXXXXXX, XXXXXXX \
       ),
   // F1-12
   [_FUNC] = LAYOUT (
@@ -110,21 +114,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       ),
 };
 
+#ifdef RTC_ENABLE
 static uint16_t clock_timeout;
-#ifdef OLED_DRIVER_ENABLE
 static bool clock_timeout_off = false;
-#endif
 static uint16_t clock_skip_timeout;
 void matrix_init_user(void) { // Runs boot tasks for keyboard
   clock_timeout = timer_read();
   clock_skip_timeout = timer_read();
+
 }
+void keyboard_post_init_user(void) {
+  char rtc_debug[6] = "NULL ";
+  uint8_t eeprom = 0;
+  if (readRTCReg(0x37, &eeprom)) {
+    snprintf(rtc_debug, sizeof(rtc_debug), "R0%03d", eeprom);
+    if (eeprom != 0x1c) {
+      snprintf(rtc_debug, sizeof(rtc_debug), "R1%03d", eeprom);
+      if (writeRTCReg(0x37, 0x1c)) {
+        snprintf(rtc_debug, sizeof(rtc_debug), "W1%03d", eeprom);
+        if (readRTCReg(0x37, &eeprom)) {
+          snprintf(rtc_debug, sizeof(rtc_debug), "W2%03d", eeprom);
+        }
+      }
+    }
+  }
+  oled_set_cursor(0, 12);
+  oled_write_P(rtc_debug, false);
+}
+#endif
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (isLeftHand) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  }
   return OLED_ROTATION_270;  // flips the display 180 degrees if offhand
 }
 
@@ -145,6 +165,7 @@ void oled_render_layer_state(void) {
 }
 
 
+#ifdef RTC_ENABLE
 static bool time_mode_on = false;
 static uint8_t time_field[2] = {0,0};
 enum time_cursor_fields {
@@ -158,32 +179,6 @@ enum time_cursor_fields {
 };
 static uint8_t time_cursor_field = TIMECUR_YEAR;
 static uint8_t time_cursor_digit = 0;
-
-/* void render_bootmagic_status(bool status) { */
-    /* Show Ctrl-Gui Swap options */
-    /* static const char PROGMEM logo[][2][3] = { */
-        /* {{0x97, 0x98, 0}, {0xb7, 0xb8, 0}}, */
-        /* {{0x95, 0x96, 0}, {0xb5, 0xb6, 0}}, */
-    /* }; */
-    /* if (status) { */
-        /* oled_write_ln_P(logo[0][0], false); */
-        /* oled_write_ln_P(logo[0][1], false); */
-    /* } else { */
-        /* oled_write_ln_P(logo[1][0], false); */
-        /* oled_write_ln_P(logo[1][1], false); */
-    /* } */
-/* } */
-
-/* void oled_render_logo(void) { */
-    /* static const char PROGMEM crkbd_logo[] = { */
-        /* 0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94, */
-        /* 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4, */
-        /* 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4, */
-        /* 0}; */
-    /* oled_write_P(crkbd_logo, false); */
-/* } */
-
-
 
 void oled_render_time(void) {
   /* if (timer_elapsed(clock_skip_timeout) < 500) { */
@@ -202,7 +197,7 @@ void oled_render_time(void) {
   static uint8_t last_second = 60;
   static bool half_step = true;
 
-  if (readDS3231time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year)) {
+  if (readRTCtime(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year)) {
 
     static bool render_clockface = false;
     if (half_step && second != last_second) {
@@ -231,36 +226,6 @@ void oled_render_time(void) {
 
 
     if (!clock_timeout_off) {
-
-      oled_write_P(PSTR("     "), false);
-
-      static char time_str[8] = {};
-      snprintf(time_str, sizeof(time_str), "%02d:%02d", hour, minute);
-      oled_write(time_str, false);
-
-
-      static char sec_str[8] = {};
-      snprintf(sec_str, sizeof(sec_str), half_step ? "   %02d" : "  :%02d", second);
-      oled_write(sec_str, false);
-
-      oled_write_P(PSTR("     "), false);
-
-      switch (dayOfWeek) {
-        case 1:
-          oled_write_P(PSTR(" Mon "), false); break;
-        case 2:
-          oled_write_P(PSTR(" Tue "), false); break;
-        case 3:
-          oled_write_P(PSTR(" Wed "), false); break;
-        case 4:
-          oled_write_P(PSTR(" Thu "), false); break;
-        case 5:
-          oled_write_P(PSTR(" Fri "), false); break;
-        case 6:
-          oled_write_P(PSTR(" Sat "), false); break;
-        default:
-          oled_write_P(PSTR(" Sun "), false); break;
-      }
 
       if (time_mode_on) {
         switch (time_cursor_field) {
@@ -295,19 +260,38 @@ void oled_render_time(void) {
         snprintf(set_value, sizeof(set_value), "%1d", time_field[1]);
         oled_write(set_value, true);
       } else {
-        /* static uint8_t control = 0; */
-        /* static uint8_t status = 0; */
-        /* static uint8_t aging = 0; */
-        /* readDS3231control_status(&control, &status, &aging); */
-        /* static char debug_control[6] = {}; */
-        /* snprintf(debug_control, sizeof(debug_control), "C:%03d", control); */
-        /* oled_write(debug_control, second % 3 == 0); */
-        /* snprintf(debug_control, sizeof(debug_control), "S:%03d", status); */
-        /* oled_write(debug_control, second % 3 == 1); */
-        /* snprintf(debug_control, sizeof(debug_control), "A:%03d", aging); */
-        /* oled_write(debug_control, second % 3 == 2); */
         oled_write_P(PSTR("     "), false);
       }
+
+      static char time_str[8] = {};
+      snprintf(time_str, sizeof(time_str), "%02d:%02d", hour, minute);
+      oled_write(time_str, false);
+
+
+      static char sec_str[8] = {};
+      snprintf(sec_str, sizeof(sec_str), half_step ? "   %02d" : "  :%02d", second);
+      oled_write(sec_str, false);
+
+      oled_write_P(PSTR("     "), false);
+
+      switch (dayOfWeek) {
+        case 1:
+          oled_write_P(PSTR(" Mon "), false); break;
+        case 2:
+          oled_write_P(PSTR(" Tue "), false); break;
+        case 3:
+          oled_write_P(PSTR(" Wed "), false); break;
+        case 4:
+          oled_write_P(PSTR(" Thu "), false); break;
+        case 5:
+          oled_write_P(PSTR(" Fri "), false); break;
+        case 6:
+          oled_write_P(PSTR(" Sat "), false); break;
+        default:
+          oled_write_P(PSTR(" Sun "), false); break;
+      }
+
+      oled_write_P(PSTR("     "), false);
 
       static char date_daymonth[8] = {};
       snprintf(date_daymonth, sizeof(date_daymonth), "%02d/%02d", dayOfMonth, month);
@@ -318,53 +302,49 @@ void oled_render_time(void) {
       oled_write(date_year, false);
 
     }
-
+    oled_set_cursor(0, 12);
 
   } else {
-    oled_write_P(PSTR(" ERR "), false);
-    oled_write_P(PSTR(" ERR "), false);
+    oled_write_P(PSTR("CLOCK"), false);
+    oled_write_P(PSTR("ERROR"), false);
+    oled_scroll_right();
+    oled_set_cursor(0, 12);
   }
-  oled_set_cursor(0, 12);
 
 }
+#endif
 
 void oled_task_user(void) {
-  if (!isLeftHand) {
-    oled_render_time();
+#ifdef RTC_ENABLE
+  oled_render_time();
 
-    if (!clock_timeout_off) {
-      if (timer_elapsed(clock_timeout) > 60000) {
-        clock_timeout_off = true;
-        oled_set_cursor(0, 4);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-        oled_write_P(PSTR("     "), false);
-      } else {
-        oled_render_layer_state();
-      }
+  if (!clock_timeout_off) {
+    if (timer_elapsed(clock_timeout) > OLED_CLOCK_TIMEOUT) {
+      clock_timeout_off = true;
+      oled_set_cursor(0, 4);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      oled_write_P(PSTR("     "), false);
+      rtc_debug[0] = 0;
+    } else {
+      oled_render_layer_state();
     }
-
-  } else {
-    /* oled_render_logo(); */
   }
+#endif
 }
 
-/* const uint8_t TIMECUR_LENGTHS[] = { */
-  /* [TIMECUR_HOUR] = 2, */
-  /* [TIMECUR_MINUTE] = 2, */
-  /* [TIMECUR_SECOND] = 2, */
-/* }; */
+#ifdef RTC_ENABLE
 void mode_set_time_toggle(void) {
   time_mode_on = !time_mode_on;
   if (time_mode_on) {
     time_cursor_field = TIMECUR_HOUR;
     time_cursor_digit = 0;
-    /* writeDS3231osf(); */
+    /* writeRTCosf(); */
   }
 }
 
@@ -374,7 +354,7 @@ void mode_set_time_add(uint8_t num) {
   if (time_cursor_digit >= 2) {
 
     uint8_t value = time_field[0] * 10 + time_field[1];
-    if (!writeDS3231time_field(time_cursor_field, value)) {
+    if (!writeRTCtime_field(time_cursor_field, value)) {
       time_mode_on = false;
       return;
     }
@@ -393,19 +373,61 @@ void mode_set_time_add(uint8_t num) {
     time_field[1] = 0;
   }
 }
+#endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef RTC_ENABLE
   if (record->event.pressed) {
     clock_timeout = timer_read();
     clock_timeout_off = false;
   }
+#endif
+
   switch (keycode) {
+#ifdef RTC_ENABLE
     case M_TIME:
       if (record->event.pressed) {
         mode_set_time_toggle();
       }
       break;
+#endif
+    case M_RESET:
+      if (record->event.pressed) {
+#ifdef PIMORONI_TRACKBALL_ENABLE
+        trackball_set_rgbw(RGB_GREEN, 0x44);
+#endif
+        reset_keyboard();
+      }
+      break;
+#ifdef PIMORONI_TRACKBALL_ENABLE
+    case PM_SCROLL:
+        trackball_set_scrolling(record->event.pressed);
+        /* run_trackball_cleanup(); */
+        break;
+    case PM_PRECISION:
+        if (record->event.pressed) {
+            trackball_set_precision(1.5);
+        } else {
+            trackball_set_precision(1);
+        }
+        /* run_trackball_cleanup(); */
+        break;
+#if !defined(MOUSEKEY_ENABLE)
+    case KC_MS_BTN1:
+        mouse_button_one = record->event.pressed;
+        trackball_register_button(mouse_button_one | trackball_button_one, MOUSE_BTN1);
+        break;
+    case KC_MS_BTN2:
+        trackball_register_button(record->event.pressed, MOUSE_BTN2);
+        break;
+    case KC_MS_BTN3:
+        trackball_register_button(record->event.pressed, MOUSE_BTN3);
+        break;
+#    endif
+#endif
   }
+
+#ifdef RTC_ENABLE
   if (time_mode_on && record->event.pressed && keycode >= 30 && keycode < 40) {
     if (keycode == 39) {
       mode_set_time_add(0);
@@ -413,12 +435,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       mode_set_time_add(keycode - 29);
     }
   }
+#endif
   return true;
 }
 
 #endif // OLED_DRIVER_ENABLE
 
-#ifdef ENCODER_ENABLE 
+#ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
   if (clockwise) {
     if (layer_state_is(_BASE)) {
@@ -437,29 +460,17 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       tap_code(KC_BRID);
     }
   }
+  DRV_pulse(26);
 }
 #endif
 
 #ifdef PIMORONI_TRACKBALL_ENABLE
-void run_trackball_cleanup(void) {
-    if (trackball_is_scrolling()) {
-        trackball_set_rgbw(RGB_CYAN, 0x00);
-    } else if (trackball_get_precision() != 1.0) {
-        trackball_set_rgbw(RGB_GREEN, 0x00);
-    } else {
-        trackball_set_rgbw(RGB_MAGENTA, 0x00);
-    }
-}
-
 void keyboard_post_init_keymap(void) {
-    trackball_set_precision(1.5);
-    trackball_set_rgbw(RGB_MAGENTA, 0x88);
-}
-void keyboard_post_init_user(void) {
-    trackball_set_rgbw(RGB_MAGENTA, 0x88);
+    trackball_set_precision(1.0);
+    /* trackball_set_rgbw(RGB_RED, 0x00); */
 }
 void shutdown_keymap(void) {
-    trackball_set_rgbw(RGB_RED, 0x00);
+    trackball_set_rgbw(RGB_WHITE, 0xFF);
 }
 
 static bool mouse_button_one, trackball_button_one;
@@ -471,5 +482,31 @@ void trackball_check_click(bool pressed, report_mouse_t* mouse) {
         mouse->buttons &= ~MOUSE_BTN1;
     }
     trackball_button_one = pressed;
+    trackball_set_rgbw(RGB_WHITE, 0xFF);
+    DRV_pulse(4);
+}
+#endif
+
+#ifdef PIMORONI_TRACKBALL_ENABLE
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case _RAISE:
+        trackball_set_rgbw(RGB_PINK, 0x00);
+        DRV_pulse(7);
+        break;
+    case _LOWER:
+        trackball_set_rgbw(RGB_MAGENTA, 0x88);
+        DRV_pulse(4);
+        break;
+    case _NUMPAD:
+        trackball_set_rgbw(RGB_GREEN, 0x00);
+        DRV_pulse(12);
+        break;
+    default:
+        trackball_set_rgbw(RGB_PURPLE, 0x00);
+        DRV_pulse(24);
+        break;
+    }
+    return state;
 }
 #endif

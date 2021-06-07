@@ -131,7 +131,7 @@ void oled_render_hand(uint8_t minute, int8_t length, bool half_step) {
 }
 
 void oled_render_hand_second(uint8_t minute, bool half_step) {
-  oled_render_hand(minute, -2, half_step);
+  oled_render_hand(minute, -4, half_step);
 }
 void oled_render_hand_minute(uint8_t minute) {
   oled_render_hand(minute, 12, false);
