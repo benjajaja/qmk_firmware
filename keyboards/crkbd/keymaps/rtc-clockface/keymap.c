@@ -118,30 +118,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 static uint16_t clock_timeout;
 static bool clock_timeout_off = false;
 static uint16_t clock_skip_timeout;
-static uint8_t rtc_debug[6];
+/* static char rtc_debug[] = {'N', 'U', 'L', 'L', '*', 0}; */
 void matrix_init_user(void) { // Runs boot tasks for keyboard
   clock_timeout = timer_read();
   clock_skip_timeout = timer_read();
 
 }
-void keyboard_post_init_user(void) {
-  char rtc_debug[6] = "NULL ";
-  uint8_t eeprom = 0;
-  if (readRTCReg(0x37, &eeprom)) {
-    snprintf(rtc_debug, sizeof(rtc_debug), "R0%03d", eeprom);
-    if (eeprom != 0x1c) {
-      snprintf(rtc_debug, sizeof(rtc_debug), "R1%03d", eeprom);
-      if (writeRTCReg(0x37, 0x1c)) {
-        snprintf(rtc_debug, sizeof(rtc_debug), "W1%03d", eeprom);
-        if (readRTCReg(0x37, &eeprom)) {
-          snprintf(rtc_debug, sizeof(rtc_debug), "W2%03d", eeprom);
-        }
-      }
-    }
-  }
-  oled_set_cursor(0, 12);
-  oled_write_P(rtc_debug, false);
-}
+/* void keyboard_post_init_user(void) { */
+  /* uint8_t eeprom = 0; */
+  /* if (readRTCReg(0x37, &eeprom)) { */
+    /* snprintf(rtc_debug, sizeof(rtc_debug), "I0x%02X", eeprom); */
+  /* } */
+/* } */
 #endif
 
 #ifdef OLED_DRIVER_ENABLE
@@ -169,15 +157,6 @@ void oled_render_layer_state(void) {
 #ifdef RTC_ENABLE
 static bool time_mode_on = false;
 static uint8_t time_field[2] = {0,0};
-enum time_cursor_fields {
-  TIMECUR_YEAR,
-  TIMECUR_MONTH,
-  TIMECUR_DAY,
-  TIMECUR_WEEKDAY,
-  TIMECUR_HOUR,
-  TIMECUR_MINUTE,
-  TIMECUR_SECOND,
-};
 static uint8_t time_cursor_field = TIMECUR_YEAR;
 static uint8_t time_cursor_digit = 0;
 
@@ -261,7 +240,7 @@ void oled_render_time(void) {
         snprintf(set_value, sizeof(set_value), "%1d", time_field[1]);
         oled_write(set_value, true);
       } else {
-        oled_write_P(PSTR("     "), false);
+        /* oled_write_P(PSTR("     "), false); */
       }
 
       static char time_str[8] = {};
@@ -274,6 +253,7 @@ void oled_render_time(void) {
       oled_write(sec_str, false);
 
       oled_write_P(PSTR("     "), false);
+      /* oled_write(rtc_debug, false); */
 
       switch (dayOfWeek) {
         case 1:
@@ -331,7 +311,7 @@ void oled_task_user(void) {
       oled_write_P(PSTR("     "), false);
       oled_write_P(PSTR("     "), false);
       oled_write_P(PSTR("     "), false);
-      rtc_debug[0] = 0;
+      /* rtc_debug[0] = 0; */
     } else {
       oled_render_layer_state();
     }
@@ -360,6 +340,19 @@ void mode_set_time_add(uint8_t num) {
       return;
     }
 
+    if (time_cursor_field == TIMECUR_HOUR) {
+      // Set Fast Edge Detection Enable and Level Switching Mode (use battery if no V).
+      // https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-3028-C7_App-Manual.pdf
+      // This only needs to be written once as it's saved to EEPROM, so we only do it here.
+      if (!writeRTCReg(RTC_EEPROM_BACKUP, 0x1C)) {
+        time_mode_on = false;
+        return;
+      }
+      /* uint8_t eeprom = 0; */
+      /* if (readRTCReg(RTC_EEPROM_BACKUP, &eeprom)) { */
+        /* snprintf(rtc_debug, sizeof(rtc_debug), "R0x%02X", eeprom); */
+      /* } */
+    }
     if (time_cursor_field == TIMECUR_WEEKDAY) {
       time_mode_on = false;
       return;
@@ -435,6 +428,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     } else {
       mode_set_time_add(keycode - 29);
     }
+    return false;
   }
 #endif
   return true;

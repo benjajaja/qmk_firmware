@@ -70,6 +70,7 @@ bool writeRTCtime(uint8_t second,
   return true;
 }
 
+// offset is one of time_cursor_fields
 bool writeRTCtime_field(uint8_t offset, uint8_t value) {
   uint8_t bcd_value = decToBcd(value);
   if (i2c_writeReg(RTC_ADDRESS, 6 - offset, &bcd_value, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
@@ -90,5 +91,18 @@ bool writeRTCReg(uint8_t reg, uint8_t data) {
   }
   return true;
 }
+
+/* bool writeRTCosf(void) { */
+  /* static uint8_t status = 0; */
+  /* if (i2c_readReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) { */
+    /* return false; */
+  /* } */
+  /* status = status & 0x7f; */
+/*  */
+  /* if (i2c_writeReg(RTC_ADDRESS, 0x0f, &status, 1, RTC_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) { */
+    /* return false; */
+  /* } */
+  /* return true; */
+/* } */
 
 
